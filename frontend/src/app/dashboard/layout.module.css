@@ -1,0 +1,208 @@
+/* =============================================================================
+ * SUMA — Estilos del Layout Dashboard
+ * CSS Modules para el sidebar, header y contenido principal.
+ * ============================================================================= */
+
+.layoutDashboard {
+  display: flex;
+  min-height: 100dvh;
+}
+
+/* =============================================================================
+ * SIDEBAR
+ * ============================================================================= */
+.sidebar {
+  width: var(--sidebar-ancho);
+  background: var(--color-superficie);
+  border-right: 1px solid var(--color-borde);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-6);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.sidebarLogo {
+  font-size: 1.5rem;
+}
+
+.sidebarTitulo {
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-bold);
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- Navegación --- */
+.sidebarNav {
+  flex: 1;
+  padding: var(--espacio-4);
+  overflow-y: auto;
+}
+
+.navLista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto-secundario);
+  cursor: pointer;
+  transition: all var(--transicion-rapida);
+}
+
+.navItem:hover {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.navItemActivo {
+  background: var(--color-primario-light);
+  color: var(--color-primario);
+  font-weight: var(--peso-semibold);
+}
+
+.navIcono {
+  font-size: 1.1rem;
+  width: 24px;
+  text-align: center;
+}
+
+.navSeparador {
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto-terciario);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: var(--espacio-4) var(--espacio-4) var(--espacio-2);
+  margin-top: var(--espacio-2);
+}
+
+/* --- Footer del Sidebar --- */
+.sidebarFooter {
+  padding: var(--espacio-4) var(--espacio-6);
+  border-top: 1px solid var(--color-borde);
+}
+
+.usuarioInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.usuarioAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radio-full);
+  background: var(--color-primario-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.usuarioNombre {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+}
+
+.usuarioRol {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* =============================================================================
+ * CONTENIDO PRINCIPAL
+ * ============================================================================= */
+.contenidoPrincipal {
+  flex: 1;
+  margin-left: var(--sidebar-ancho);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+.header {
+  height: var(--header-alto);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--espacio-8);
+  background: var(--color-superficie);
+  border-bottom: 1px solid var(--color-borde);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.headerTitulo {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-semibold);
+}
+
+.headerDerecha {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.headerIcono {
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: var(--espacio-2);
+  border-radius: var(--radio-md);
+  transition: background var(--transicion-rapida);
+}
+
+.headerIcono:hover {
+  background: var(--color-fondo);
+}
+
+/* --- Área de Contenido --- */
+.main {
+  flex: 1;
+  padding: var(--espacio-8);
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* --- Responsive (ocultar sidebar en mobile) --- */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transicion-normal);
+  }
+
+  .sidebar.abierto {
+    transform: translateX(0);
+  }
+
+  .contenidoPrincipal {
+    margin-left: 0;
+  }
+
+  .main {
+    padding: var(--espacio-4);
+  }
+}

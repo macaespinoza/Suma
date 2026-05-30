@@ -1,0 +1,127 @@
+/* =============================================================================
+ * SUMA — Estilos del Componente Botón
+ * ============================================================================= */
+
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  border: 1px solid transparent;
+  border-radius: var(--radio-md);
+  font-weight: var(--peso-semibold);
+  cursor: pointer;
+  transition: all var(--transicion-rapida);
+  position: relative;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Tamaños --- */
+.boton--sm {
+  padding: var(--espacio-2) var(--espacio-3);
+  font-size: var(--texto-sm);
+  border-radius: var(--radio-sm);
+}
+
+.boton--md {
+  padding: var(--espacio-3) var(--espacio-5);
+  font-size: var(--texto-sm);
+}
+
+.boton--lg {
+  padding: var(--espacio-4) var(--espacio-8);
+  font-size: var(--texto-base);
+  border-radius: var(--radio-lg);
+}
+
+/* --- Ancho completo --- */
+.boton--ancho {
+  width: 100%;
+}
+
+/* --- Variantes --- */
+.boton--primario {
+  background: var(--color-primario);
+  color: var(--color-texto-invertido);
+}
+
+.boton--primario:hover:not(:disabled) {
+  background: var(--color-primario-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-md);
+}
+
+.boton--primario:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.boton--secundario {
+  background: var(--color-secundario);
+  color: var(--color-texto-invertido);
+}
+
+.boton--secundario:hover:not(:disabled) {
+  background: var(--color-secundario-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-md);
+}
+
+.boton--outline {
+  background: transparent;
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.boton--outline:hover:not(:disabled) {
+  background: var(--color-primario-light);
+}
+
+.boton--fantasma {
+  background: transparent;
+  color: var(--color-texto-secundario);
+}
+
+.boton--fantasma:hover:not(:disabled) {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.boton--peligro {
+  background: var(--color-error);
+  color: var(--color-texto-invertido);
+}
+
+.boton--peligro:hover:not(:disabled) {
+  background: hsl(0, 72%, 44%);
+  transform: translateY(-1px);
+  box-shadow: var(--sombra-md);
+}
+
+/* --- Estado de carga --- */
+.boton--cargando {
+  cursor: wait;
+}
+
+.textoOculto {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

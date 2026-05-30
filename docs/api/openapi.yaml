@@ -1,0 +1,641 @@
+# =============================================================================
+# SUMA — Especificación OpenAPI 3.0 — Módulo 1: Core
+# Contrato formal de la API para Condominios, Unidades Vecinales y Usuarios.
+# Autor: Antigravity (Arquitecto Cloud)
+# =============================================================================
+
+openapi: 3.0.3
+info:
+  title: SUMA API — Módulo Core
+  description: |
+    API RESTful para la plataforma SUMA: gestión y cohesión comunitaria
+    para condominios en Arica, Chile.
+
+    ## Módulo Core
+    Gestión de la estructura base del sistema:
+    - **Condominios**: Entidad raíz del ecosistema.
+    - **Unidades Vecinales**: Departamentos, casas o unidades dentro de un condominio.
+    - **Usuarios**: Personas registradas con validación de RUT chileno (Módulo 11).
+
+    ## Autenticación
+    Todas las rutas protegidas requieren un token JWT de Firebase Authentication
+    en el header `Authorization: Bearer <token>`.
+  version: 1.0.0
+  contact:
+    name: ComunidApp
+    url: https://comunidapp.cl
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Desarrollo local
+  - url: https://suma-backend-xxxxx-uc.a.run.app/api/v1
+    description: Producción (Cloud Run)
+
+# =============================================================================
+# Seguridad Global
+# =============================================================================
+security:
+  - BearerAuth: []
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token JWT de Firebase Authentication.
+
+  # ===========================================================================
+  # Esquemas de Datos
+  # ===========================================================================
+  schemas:
+    # --- Respuestas estándar ---
+    RespuestaExitosa:
+      type: object
+      properties:
+        exito:
+          type: boolean
+          example: true
+        datos:
+          type: object
+        metadata:
+          type: object
+          nullable: true
+
+    RespuestaError:
+      type: object
+      properties:
+        exito:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            codigo:
+              type: integer
+            mensaje:
+              type: string
+            detalles:
+              type: array
+              nullable: true
+              items:
+                type: object
+
+    # --- Condominio ---
+    Condominio:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 200
+          example: "Condominio Alto Arica"
+        direccion:
+          type: string
+          maxLength: 300
+          example: "Av. Santa María 1234, Arica"
+        rut_comunidad:
+          type: string
+          pattern: '^[0-9]{7,8}-[0-9Kk]$'
+          example: "65123456-7"
+          description: "RUT de la comunidad, validado con Módulo 11."
+        cantidad_unidades:
+          type: integer
+          minimum: 0
+          example: 24
+        activo:
+          type: boolean
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    CondominioCrear:
+      type: object
+      required: [nombre, direccion, rut_comunidad, cantidad_unidades]
+      properties:
+        nombre:
+          type: string
+          maxLength: 200
+        direccion:
+          type: string
+          maxLength: 300
+        rut_comunidad:
+          type: string
+          pattern: '^[0-9]{7,8}-[0-9Kk]$'
+        cantidad_unidades:
+          type: integer
+          minimum: 0
+
+    CondominioActualizar:
+      type: object
+      properties:
+        nombre:
+          type: string
+          maxLength: 200
+        direccion:
+          type: string
+          maxLength: 300
+        rut_comunidad:
+          type: string
+        cantidad_unidades:
+          type: integer
+          minimum: 0
+
+    # --- Unidad Vecinal ---
+    UnidadVecinal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        condominio_id:
+          type: string
+          format: uuid
+        bloque_edificio:
+          type: string
+          maxLength: 100
+          nullable: true
+          example: "Torre A"
+          description: "Agrupación por bloque/torre (crucial en condominios de Arica)."
+        numero:
+          type: string
+          maxLength: 20
+          example: "101"
+        alicuota:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 1
+          example: 0.0417
+          description: "Porcentaje de participación (ej: 0.0417 = 4.17%)."
+        activo:
+          type: boolean
+          readOnly: true
+        condominio_nombre:
+          type: string
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    UnidadVecinalCrear:
+      type: object
+      required: [condominio_id, numero, alicuota]
+      properties:
+        condominio_id:
+          type: string
+          format: uuid
+        bloque_edificio:
+          type: string
+          maxLength: 100
+        numero:
+          type: string
+          maxLength: 20
+        alicuota:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 1
+
+    UnidadVecinalActualizar:
+      type: object
+      properties:
+        bloque_edificio:
+          type: string
+          maxLength: 100
+        numero:
+          type: string
+          maxLength: 20
+        alicuota:
+          type: number
+          format: decimal
+
+    # --- Usuario ---
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        firebase_uid:
+          type: string
+          readOnly: true
+        rut:
+          type: string
+          pattern: '^[0-9]{7,8}-[0-9Kk]$'
+          example: "12345678-5"
+          description: "RUT chileno validado con Módulo 11."
+        nombre_completo:
+          type: string
+          maxLength: 200
+          example: "Juan Pérez González"
+        email:
+          type: string
+          format: email
+          example: "juan.perez@email.cl"
+        telefono:
+          type: string
+          maxLength: 20
+          nullable: true
+          example: "+56912345678"
+        rol:
+          type: string
+          enum: [admin, propietario, arrendatario, conserje]
+          example: "propietario"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    UsuarioCrear:
+      type: object
+      required: [firebase_uid, rut, nombre_completo, email]
+      properties:
+        firebase_uid:
+          type: string
+        rut:
+          type: string
+          pattern: '^[0-9]{7,8}-[0-9Kk]$'
+        nombre_completo:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+        telefono:
+          type: string
+          maxLength: 20
+        rol:
+          type: string
+          enum: [admin, propietario, arrendatario, conserje]
+
+    UsuarioActualizar:
+      type: object
+      properties:
+        nombre_completo:
+          type: string
+          maxLength: 200
+        email:
+          type: string
+          format: email
+        telefono:
+          type: string
+          maxLength: 20
+        rol:
+          type: string
+          enum: [admin, propietario, arrendatario, conserje]
+
+    # --- Verificación ---
+    VerificacionResultado:
+      type: object
+      properties:
+        registrado:
+          type: boolean
+          description: "true si el usuario ya está registrado en PostgreSQL."
+        usuario:
+          $ref: '#/components/schemas/Usuario'
+          nullable: true
+
+# =============================================================================
+# Rutas (Paths)
+# =============================================================================
+paths:
+  # ---------------------------------------------------------------------------
+  # CONDOMINIOS
+  # ---------------------------------------------------------------------------
+  /condominios:
+    get:
+      tags: [Condominios]
+      summary: Listar condominios activos
+      operationId: listarCondominios
+      responses:
+        '200':
+          description: Lista de condominios.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Condominio'
+    post:
+      tags: [Condominios]
+      summary: Crear un condominio
+      operationId: crearCondominio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CondominioCrear'
+      responses:
+        '201':
+          description: Condominio creado exitosamente.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/Condominio'
+        '400':
+          description: Error de validación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RespuestaError'
+        '409':
+          description: RUT de comunidad ya registrado.
+
+  /condominios/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Condominios]
+      summary: Obtener un condominio por ID
+      operationId: obtenerCondominio
+      responses:
+        '200':
+          description: Condominio encontrado.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/Condominio'
+        '404':
+          description: Condominio no encontrado.
+    put:
+      tags: [Condominios]
+      summary: Actualizar un condominio
+      operationId: actualizarCondominio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CondominioActualizar'
+      responses:
+        '200':
+          description: Condominio actualizado.
+        '404':
+          description: Condominio no encontrado.
+    delete:
+      tags: [Condominios]
+      summary: Desactivar un condominio (eliminación lógica)
+      operationId: desactivarCondominio
+      responses:
+        '204':
+          description: Condominio desactivado exitosamente.
+        '404':
+          description: Condominio no encontrado.
+
+  /condominios/{id}/unidades:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Condominios, Unidades Vecinales]
+      summary: Listar unidades de un condominio
+      operationId: listarUnidadesDeCondominio
+      responses:
+        '200':
+          description: Lista de unidades del condominio.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UnidadVecinal'
+        '404':
+          description: Condominio no encontrado.
+
+  # ---------------------------------------------------------------------------
+  # UNIDADES VECINALES
+  # ---------------------------------------------------------------------------
+  /unidades:
+    post:
+      tags: [Unidades Vecinales]
+      summary: Crear una unidad vecinal
+      operationId: crearUnidad
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnidadVecinalCrear'
+      responses:
+        '201':
+          description: Unidad creada exitosamente.
+        '400':
+          description: Error de validación.
+
+  /unidades/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Unidades Vecinales]
+      summary: Obtener una unidad vecinal por ID
+      operationId: obtenerUnidad
+      responses:
+        '200':
+          description: Unidad encontrada.
+        '404':
+          description: Unidad no encontrada.
+    put:
+      tags: [Unidades Vecinales]
+      summary: Actualizar una unidad vecinal
+      operationId: actualizarUnidad
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnidadVecinalActualizar'
+      responses:
+        '200':
+          description: Unidad actualizada.
+        '404':
+          description: Unidad no encontrada.
+    delete:
+      tags: [Unidades Vecinales]
+      summary: Desactivar una unidad vecinal
+      operationId: desactivarUnidad
+      responses:
+        '204':
+          description: Unidad desactivada.
+        '404':
+          description: Unidad no encontrada.
+
+  # ---------------------------------------------------------------------------
+  # USUARIOS
+  # ---------------------------------------------------------------------------
+  /usuarios:
+    get:
+      tags: [Usuarios]
+      summary: Listar usuarios activos
+      operationId: listarUsuarios
+      responses:
+        '200':
+          description: Lista de usuarios.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Usuario'
+    post:
+      tags: [Usuarios]
+      summary: Registrar un nuevo usuario
+      operationId: crearUsuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioCrear'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente.
+        '400':
+          description: Error de validación (RUT inválido, etc.).
+        '409':
+          description: RUT o email ya registrado.
+
+  /usuarios/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Usuarios]
+      summary: Obtener un usuario por ID
+      operationId: obtenerUsuario
+      responses:
+        '200':
+          description: Usuario encontrado.
+        '404':
+          description: Usuario no encontrado.
+    put:
+      tags: [Usuarios]
+      summary: Actualizar datos de un usuario
+      operationId: actualizarUsuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UsuarioActualizar'
+      responses:
+        '200':
+          description: Usuario actualizado.
+        '404':
+          description: Usuario no encontrado.
+    delete:
+      tags: [Usuarios]
+      summary: Eliminar un usuario (soft delete)
+      operationId: eliminarUsuario
+      responses:
+        '204':
+          description: Usuario eliminado lógicamente.
+        '404':
+          description: Usuario no encontrado.
+
+  /usuarios/verificar:
+    post:
+      tags: [Autenticación]
+      summary: Verificar token de Firebase y obtener usuario
+      description: |
+        Verifica si el Firebase UID corresponde a un usuario registrado en PostgreSQL.
+        Si `registrado` es false, el frontend debe redirigir al formulario de registro completo.
+      operationId: verificarUsuario
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [firebase_uid]
+              properties:
+                firebase_uid:
+                  type: string
+                  description: UID de Firebase Authentication.
+      responses:
+        '200':
+          description: Resultado de la verificación.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/VerificacionResultado'
+
+tags:
+  - name: Condominios
+    description: Gestión de condominios (entidad raíz del sistema).
+  - name: Unidades Vecinales
+    description: Departamentos, casas o unidades dentro de un condominio.
+  - name: Usuarios
+    description: Gestión de usuarios con validación de RUT chileno.
+  - name: Autenticación
+    description: Verificación de identidad mediante Firebase Authentication.

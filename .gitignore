@@ -1,0 +1,50 @@
+# =============================================================================
+# SUMA — .gitignore
+# =============================================================================
+
+# --- Dependencias ---
+node_modules/
+.pnp
+.pnp.js
+
+# --- Build ---
+.next/
+out/
+build/
+dist/
+
+# --- Variables de entorno (NUNCA subir a git) ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+backend/.env
+frontend/.env.local
+
+# --- Firebase ---
+firebase-service-account.json
+*-firebase-adminsdk-*.json
+
+# --- Logs ---
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- IDE ---
+.vscode/
+.idea/
+*.code-workspace
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- Volúmenes de datos locales ---
+pgdata/

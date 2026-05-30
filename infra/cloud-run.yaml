@@ -1,0 +1,74 @@
+# =============================================================================
+# SUMA — Configuración del Servicio Cloud Run
+# Despliega el backend como contenedor serverless con conexión a Cloud SQL.
+# =============================================================================
+# Despliegue:
+#   gcloud run services replace infra/cloud-run.yaml --region=us-west1
+# =============================================================================
+
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: suma-backend
+  labels:
+    cloud.googleapis.com/location: us-west1
+  annotations:
+    # Conexión a Cloud SQL (PostgreSQL).
+    run.googleapis.com/cloudsql-instances: "PROYECTO_GCP:us-west1:suma-db"
+spec:
+  template:
+    metadata:
+      annotations:
+        # Escalamiento a cero (sin costo cuando no hay tráfico).
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "5"
+        # Tiempo máximo de inactividad antes de apagar la instancia (segundos).
+        run.googleapis.com/startup-cpu-boost: "true"
+    spec:
+      containerConcurrency: 80
+      timeoutSeconds: 300
+      serviceAccountName: suma-backend-sa@PROYECTO_GCP.iam.gserviceaccount.com
+      containers:
+        - image: us-west1-docker.pkg.dev/PROYECTO_GCP/suma/backend:latest
+          ports:
+            - containerPort: 3001
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3001"
+            # --- Secretos desde Secret Manager ---
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: latest
+                  name: suma-db-password
+            - name: DB_USER
+              value: suma
+            - name: DB_NAME
+              value: suma_db
+            # Conexión via Unix socket (Cloud SQL Proxy automático en Cloud Run).
+            - name: DB_CLOUD_SQL_CONNECTION_NAME
+              value: "PROYECTO_GCP:us-west1:suma-db"
+            - name: FIREBASE_PROJECT_ID
+              value: PROYECTO_GCP
+            - name: CORS_ORIGENES_PERMITIDOS
+              value: "https://suma.tudominio.cl"
+          # Health check.
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 5
+            periodSeconds: 15
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 3001
+            initialDelaySeconds: 3
+            failureThreshold: 10
+            periodSeconds: 5

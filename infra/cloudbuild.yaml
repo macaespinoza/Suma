@@ -1,0 +1,60 @@
+# =============================================================================
+# SUMA — Pipeline CI/CD con Google Cloud Build
+# Build → Push a Artifact Registry → Deploy a Cloud Run.
+# =============================================================================
+# Activar:
+#   1. Conectar el repositorio en Cloud Build > Triggers.
+#   2. Crear trigger para push a la rama 'main'.
+#   3. Reemplazar PROYECTO_GCP con el ID real del proyecto GCP.
+# =============================================================================
+
+steps:
+  # --- Paso 1: Build de la imagen Docker del backend ---
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend:${SHORT_SHA}'
+      - '-t'
+      - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend:latest'
+      - '-f'
+      - 'backend/Dockerfile'
+      - 'backend/'
+    id: 'build-backend'
+
+  # --- Paso 2: Push de la imagen a Artifact Registry ---
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - '--all-tags'
+      - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend'
+    id: 'push-backend'
+    waitFor: ['build-backend']
+
+  # --- Paso 3: Deploy a Cloud Run ---
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'suma-backend'
+      - '--image'
+      - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend:${SHORT_SHA}'
+      - '--region'
+      - 'us-west1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--set-cloudsql-instances=${PROJECT_ID}:us-west1:suma-db'
+    id: 'deploy-backend'
+    waitFor: ['push-backend']
+
+# Imágenes resultantes que se pushearán automáticamente.
+images:
+  - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend:${SHORT_SHA}'
+  - 'us-west1-docker.pkg.dev/${PROJECT_ID}/suma/backend:latest'
+
+# Opciones generales del build.
+options:
+  logging: CLOUD_LOGGING_ONLY
+  machineType: 'E2_MEDIUM'

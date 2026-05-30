@@ -1,0 +1,64 @@
+# =============================================================================
+# SUMA — Docker Compose para Desarrollo Local
+# Levanta PostgreSQL 16 y el Backend Node.js con hot-reload.
+# =============================================================================
+# Uso:
+#   docker-compose up -d        → Levanta todo en background.
+#   docker-compose logs -f api  → Ver logs del backend.
+#   docker-compose down -v      → Destruir todo (incluyendo volúmenes).
+# =============================================================================
+
+services:
+  # --- PostgreSQL 16 (simula Cloud SQL) ---
+  db:
+    image: postgres:16-alpine
+    container_name: suma-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: suma_db
+      POSTGRES_USER: suma
+      POSTGRES_PASSWORD: suma_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persistencia de datos entre reinicios.
+      - suma_pg_datos:/var/lib/postgresql/data
+      # Ejecución automática de scripts SQL al inicializar.
+      - ../init.sql:/docker-entrypoint-initdb.d/01_init.sql:ro
+      - ../scripts/seed.sql:/docker-entrypoint-initdb.d/02_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U suma -d suma_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # --- Backend Node.js (API) ---
+  api:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: suma-api
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: suma_db
+      DB_USER: suma
+      DB_PASSWORD: suma_dev_password
+      CORS_ORIGENES_PERMITIDOS: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    # En desarrollo, montamos el código fuente para hot-reload.
+    volumes:
+      - ../backend/src:/app/src:ro
+    # Sobreescribimos CMD para usar nodemon en desarrollo.
+    command: ["npx", "nodemon", "src/server.js"]
+
+volumes:
+  suma_pg_datos:
+    driver: local

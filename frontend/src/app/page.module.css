@@ -1,0 +1,187 @@
+/* =============================================================================
+ * SUMA — Estilos de la Página Principal (Landing / Login)
+ * CSS Modules para estilos de alcance local.
+ * ============================================================================= */
+
+.principal {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at 20% 50%, hsla(220, 72%, 50%, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, hsla(35, 92%, 55%, 0.06) 0%, transparent 50%),
+    var(--color-fondo);
+  padding: var(--espacio-6);
+}
+
+.contenedor {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-8);
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* --- Hero / Branding --- */
+.hero {
+  text-align: center;
+}
+
+.logoContenedor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-3);
+  margin-bottom: var(--espacio-4);
+}
+
+.logoIcono {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 2px 8px hsla(220, 72%, 50%, 0.3));
+}
+
+.logoTexto {
+  font-size: var(--texto-4xl);
+  font-weight: var(--peso-extrabold);
+  background: linear-gradient(135deg, var(--color-primario), var(--color-secundario));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.02em;
+}
+
+.subtitulo {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto-secundario);
+  margin-bottom: var(--espacio-2);
+}
+
+.descripcion {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+  line-height: var(--interlineado);
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* --- Login Card --- */
+.loginCard {
+  width: 100%;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-8);
+  box-shadow: var(--sombra-lg);
+}
+
+.loginTitulo {
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-semibold);
+  margin-bottom: var(--espacio-2);
+}
+
+.loginSubtitulo {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin-bottom: var(--espacio-6);
+}
+
+.loginPlaceholder {
+  padding: var(--espacio-6);
+  background: var(--color-primario-light);
+  border: 1px dashed var(--color-primario);
+  border-radius: var(--radio-md);
+  text-align: center;
+  font-size: var(--texto-sm);
+  color: var(--color-primario);
+  margin-bottom: var(--espacio-6);
+}
+
+/* --- Separador --- */
+.separador {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  margin-bottom: var(--espacio-6);
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: var(--peso-semibold);
+}
+
+.separador::before,
+.separador::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-borde);
+}
+
+/* --- Grid de Módulos --- */
+.modulosGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3);
+}
+
+.moduloItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-lg);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  transition: all var(--transicion-normal);
+  cursor: default;
+}
+
+.moduloItem:hover {
+  border-color: var(--color-primario);
+  box-shadow: var(--sombra-sm);
+  transform: translateY(-2px);
+}
+
+.moduloIcono {
+  font-size: 1.5rem;
+}
+
+.moduloNombre {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.moduloDesc {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  text-align: center;
+}
+
+/* --- Footer --- */
+.footer {
+  text-align: center;
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* --- Responsive --- */
+@media (max-width: 480px) {
+  .principal {
+    padding: var(--espacio-4);
+  }
+
+  .loginCard {
+    padding: var(--espacio-6);
+  }
+
+  .logoTexto {
+    font-size: var(--texto-3xl);
+  }
+}

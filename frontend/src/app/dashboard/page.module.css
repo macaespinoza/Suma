@@ -1,0 +1,138 @@
+/* =============================================================================
+ * SUMA — Estilos de la Página Dashboard
+ * ============================================================================= */
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-8);
+}
+
+/* --- Saludo --- */
+.saludo {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+.saludoTitulo {
+  font-size: var(--texto-2xl);
+  font-weight: var(--peso-bold);
+  margin-bottom: var(--espacio-2);
+}
+
+.saludoSubtitulo {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+}
+
+/* --- Grid de Métricas --- */
+.metricasGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--espacio-6);
+}
+
+.metricaCard {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-6);
+  border-radius: var(--radio-xl);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  box-shadow: var(--sombra-sm);
+  transition: all var(--transicion-normal);
+  animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.metricaCard:nth-child(1) { animation-delay: 0.05s; }
+.metricaCard:nth-child(2) { animation-delay: 0.1s; }
+.metricaCard:nth-child(3) { animation-delay: 0.15s; }
+.metricaCard:nth-child(4) { animation-delay: 0.2s; }
+
+.metricaCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-lg);
+}
+
+.metricaIcono {
+  font-size: 2rem;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radio-lg);
+}
+
+.metricaPrimario .metricaIcono { background: var(--color-primario-light); }
+.metricaExito .metricaIcono { background: hsla(142, 71%, 45%, 0.1); }
+.metricaAdvertencia .metricaIcono { background: hsla(38, 92%, 50%, 0.1); }
+.metricaError .metricaIcono { background: hsla(0, 72%, 51%, 0.1); }
+
+.metricaInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.metricaValor {
+  font-size: var(--texto-2xl);
+  font-weight: var(--peso-bold);
+  line-height: var(--interlineado-tight);
+}
+
+.metricaEtiqueta {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+}
+
+/* --- Grid de Contenido --- */
+.contenidoGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-6);
+}
+
+.seccion {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-6);
+  box-shadow: var(--sombra-sm);
+  animation: fadeInUp 0.5s ease-out backwards;
+  animation-delay: 0.25s;
+}
+
+.seccionTitulo {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semibold);
+  margin-bottom: var(--espacio-4);
+  padding-bottom: var(--espacio-3);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.placeholder {
+  padding: var(--espacio-8) var(--espacio-4);
+  text-align: center;
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-sm);
+  background: var(--color-fondo);
+  border-radius: var(--radio-md);
+  border: 1px dashed var(--color-borde);
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .metricasGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .metricasGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contenidoGrid {
+    grid-template-columns: 1fr;
+  }
+}
