@@ -15,12 +15,12 @@ INSERT INTO Condominios (id, nombre, direccion, rut_comunidad, cantidad_unidades
   ('a1b2c3d4-e5f6-7890-abcd-ef1234567890',
    'Condominio Alto Arica',
    'Av. Santa María 1234, Arica',
-   '76123456-K',  -- RUT válido Módulo 11
+   '76123456-0',  -- RUT válido Módulo 11
    12),
   ('b2c3d4e5-f6a7-8901-bcde-f12345678901',
    'Residencial Los Olivos',
    'Pasaje Los Aromos 567, Arica',
-   '76234567-8',  -- RUT válido Módulo 11
+   '76234567-6',  -- RUT válido Módulo 11
    8);
 
 
@@ -69,7 +69,7 @@ INSERT INTO Usuarios (id, firebase_uid, rut, nombre_completo, email, telefono, r
   -- Propietario
   ('22222222-2222-2222-2222-222222222222',
    'firebase_uid_propietario_001',
-   '13456789-0',  -- RUT válido Módulo 11
+   '13456789-9',  -- RUT válido Módulo 11
    'Carlos Muñoz Rojas',
    'carlos.munoz@email.cl',
    '+56922222222',
@@ -77,7 +77,7 @@ INSERT INTO Usuarios (id, firebase_uid, rut, nombre_completo, email, telefono, r
   -- Arrendatario
   ('33333333-3333-3333-3333-333333333333',
    'firebase_uid_arrendatario_001',
-   '14567890-4',  -- RUT válido Módulo 11
+   '14567890-0',  -- RUT válido Módulo 11
    'Ana Vargas Pinto',
    'ana.vargas@email.cl',
    '+56933333333',
@@ -85,7 +85,7 @@ INSERT INTO Usuarios (id, firebase_uid, rut, nombre_completo, email, telefono, r
   -- Conserje
   ('44444444-4444-4444-4444-444444444444',
    'firebase_uid_conserje_001',
-   '15678901-8',  -- RUT válido Módulo 11
+   '15678901-1',  -- RUT válido Módulo 11
    'Pedro Soto Díaz',
    'pedro.soto@email.cl',
    '+56944444444',
@@ -203,7 +203,7 @@ LIMIT 1;
 
 INSERT INTO Registro_Visitas (unidad_id, nombre_visita, rut_visita, patente_vehiculo) VALUES
   ('c3d4e5f6-a7b8-9012-cdef-123456789012',
-   'Roberto Jiménez', '16789012-3', 'ABCD12'),
+   'Roberto Jiménez', '16789012-1', 'ABCD12'),
   ('d4e5f6a7-b8c9-0123-defa-234567890123',
    'Laura Mendoza', NULL, NULL);  -- Visita sin RUT (extranjera) y sin vehículo.
 
