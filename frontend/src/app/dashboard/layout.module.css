@@ -84,6 +84,19 @@
   font-weight: var(--peso-semibold);
 }
 
+.navItemDeshabilitado {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.sidebarLogoLink {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  text-decoration: none;
+}
+
 .navIcono {
   font-size: 1.1rem;
   width: 24px;

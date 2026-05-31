@@ -68,6 +68,7 @@
 .metricaExito .metricaIcono { background: hsla(142, 71%, 45%, 0.1); }
 .metricaAdvertencia .metricaIcono { background: hsla(38, 92%, 50%, 0.1); }
 .metricaError .metricaIcono { background: hsla(0, 72%, 51%, 0.1); }
+.metricaInfo .metricaIcono { background: hsla(210, 92%, 54%, 0.1); }
 
 .metricaInfo {
   display: flex;
@@ -118,6 +119,38 @@
   background: var(--color-fondo);
   border-radius: var(--radio-md);
   border: 1px dashed var(--color-borde);
+}
+
+.accesosRapidos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.accesoRapido {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3) var(--espacio-4);
+  border-radius: var(--radio-md);
+  background: var(--color-fondo);
+  text-decoration: none;
+  color: var(--color-texto);
+  transition: all var(--transicion-rapida);
+}
+
+.accesoRapido:hover {
+  background: var(--color-primario-light);
+  color: var(--color-primario);
+}
+
+.accesoIcono {
+  font-size: 1.25rem;
+}
+
+.accesoTexto {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
 }
 
 /* --- Responsive --- */

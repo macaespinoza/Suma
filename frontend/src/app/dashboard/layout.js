@@ -1,14 +1,22 @@
+'use client';
 // =============================================================================
 // SUMA — Layout del Dashboard (con Sidebar)
 // Estructura de layout para las páginas internas post-login.
-// Open Code implementará el sidebar completo y la navegación.
 // =============================================================================
 
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styles from './layout.module.css';
 
-export const metadata = {
-  title: 'Dashboard',
-};
+/**
+ * Definición de navegación del sidebar.
+ */
+const navegacion = [
+  { href: '/dashboard', icono: '📊', etiqueta: 'Dashboard' },
+  { href: '/dashboard/condominios', icono: '🏘️', etiqueta: 'Condominios' },
+  { href: '/dashboard/unidades', icono: '🏠', etiqueta: 'Unidades' },
+  { href: '/dashboard/usuarios', icono: '👥', etiqueta: 'Usuarios' },
+];
 
 /**
  * Layout del Dashboard.
@@ -18,63 +26,62 @@ export const metadata = {
  * @param {React.ReactNode} props.children - Contenido de la página del dashboard.
  */
 export default function LayoutDashboard({ children }) {
+  const pathname = usePathname();
+
   return (
     <div className={styles.layoutDashboard}>
       {/* --- Sidebar --- */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
-          <span className={styles.sidebarLogo}>🏢</span>
-          <span className={styles.sidebarTitulo}>SUMA</span>
+          <Link href="/dashboard" className={styles.sidebarLogoLink}>
+            <span className={styles.sidebarLogo}>🏢</span>
+            <span className={styles.sidebarTitulo}>SUMA</span>
+          </Link>
         </div>
 
         <nav className={styles.sidebarNav}>
-          {/* TODO (Open Code): Implementar navegación dinámica con Link de Next.js */}
           <ul className={styles.navLista}>
-            <li className={`${styles.navItem} ${styles.navItemActivo}`}>
-              <span className={styles.navIcono}>📊</span>
-              <span>Dashboard</span>
-            </li>
-            <li className={styles.navItem}>
-              <span className={styles.navIcono}>🏘️</span>
-              <span>Condominios</span>
-            </li>
-            <li className={styles.navItem}>
-              <span className={styles.navIcono}>🏠</span>
-              <span>Unidades</span>
-            </li>
-            <li className={styles.navItem}>
-              <span className={styles.navIcono}>👥</span>
-              <span>Usuarios</span>
-            </li>
+            {/* Módulo Core */}
+            {navegacion.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={`${styles.navItem} ${pathname === item.href ? styles.navItemActivo : ''}`}
+                >
+                  <span className={styles.navIcono}>{item.icono}</span>
+                  <span>{item.etiqueta}</span>
+                </Link>
+              </li>
+            ))}
 
             <li className={styles.navSeparador}>Administración</li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>💰</span>
               <span>Gastos Comunes</span>
             </li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>📄</span>
               <span>Cobros</span>
             </li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>💳</span>
               <span>Pagos</span>
             </li>
 
             <li className={styles.navSeparador}>Comunidad</li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>📢</span>
               <span>Muro Social</span>
             </li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>🛒</span>
               <span>Mercadito</span>
             </li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>📅</span>
               <span>Eventos</span>
             </li>
-            <li className={styles.navItem}>
+            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>🐾</span>
               <span>Mascotas</span>
             </li>

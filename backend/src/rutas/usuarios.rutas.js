@@ -6,7 +6,12 @@
 import { Router } from 'express';
 import * as controlador from '../controladores/usuarios.controlador.js';
 // import { verificarAutenticacion } from '../middlewares/autenticacion.js';
-// import { validar } from '../middlewares/validacion.js';
+import { validar } from '../middlewares/validacion.js';
+import {
+  esquemaCrearUsuario,
+  esquemaActualizarUsuario,
+  esquemaVerificarUsuario,
+} from '../validaciones/usuarios.validacion.js';
 
 const router = Router();
 
@@ -26,13 +31,13 @@ router.get('/:id', controlador.obtenerPorId);
  * POST /api/v1/usuarios
  * Registra un nuevo usuario (vinculado a Firebase Auth).
  */
-router.post('/', controlador.crear);
+router.post('/', validar(esquemaCrearUsuario, 'body'), controlador.crear);
 
 /**
  * PUT /api/v1/usuarios/:id
  * Actualiza los datos de un usuario.
  */
-router.put('/:id', controlador.actualizar);
+router.put('/:id', validar(esquemaActualizarUsuario, 'body'), controlador.actualizar);
 
 /**
  * DELETE /api/v1/usuarios/:id
@@ -45,6 +50,6 @@ router.delete('/:id', controlador.eliminar);
  * Verifica un token de Firebase y retorna/crea el usuario en PostgreSQL.
  * Este es el endpoint principal para el flujo de login.
  */
-router.post('/verificar', controlador.verificar);
+router.post('/verificar', validar(esquemaVerificarUsuario, 'body'), controlador.verificar);
 
 export default router;

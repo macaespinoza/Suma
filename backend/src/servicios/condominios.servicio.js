@@ -5,6 +5,7 @@
 
 import * as repositorio from '../repositorios/condominios.repositorio.js';
 import { ErrorApp } from '../middlewares/errores.js';
+import { validarRut, formatearRut } from '../utilidades/rut.js';
 
 /**
  * Lista todos los condominios activos.
@@ -30,21 +31,38 @@ export const obtenerPorId = async (id) => {
 
 /**
  * Crea un nuevo condominio.
- * TODO (Open Code): Agregar validaciones de negocio adicionales.
+ * Valida el RUT de la comunidad con Módulo 11 antes de persistir.
  * @param {object} datos - Datos del condominio.
  * @returns {Promise<object>} Condominio creado.
  */
 export const crear = async (datos) => {
+  // Validar RUT con Módulo 11 antes de enviar a la BD.
+  if (!validarRut(datos.rut_comunidad)) {
+    throw new ErrorApp('El RUT de la comunidad no es válido (Módulo 11).', 400);
+  }
+
+  // Normalizar RUT al formato canónico (sin puntos, con guión, DV mayúscula).
+  datos.rut_comunidad = formatearRut(datos.rut_comunidad);
+
   return await repositorio.crear(datos);
 };
 
 /**
  * Actualiza un condominio existente.
+ * Si se envía rut_comunidad, lo valida con Módulo 11.
  * @param {string} id - UUID del condominio.
  * @param {object} datos - Campos a actualizar.
  * @returns {Promise<object>} Condominio actualizado.
  */
 export const actualizar = async (id, datos) => {
+  // Si se proporciona RUT, validarlo y formatearlo.
+  if (datos.rut_comunidad) {
+    if (!validarRut(datos.rut_comunidad)) {
+      throw new ErrorApp('El RUT de la comunidad no es válido (Módulo 11).', 400);
+    }
+    datos.rut_comunidad = formatearRut(datos.rut_comunidad);
+  }
+
   const condominio = await repositorio.actualizar(id, datos);
   if (!condominio) {
     throw new ErrorApp('Condominio no encontrado o ya está desactivado.', 404);

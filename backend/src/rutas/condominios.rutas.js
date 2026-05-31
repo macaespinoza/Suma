@@ -6,7 +6,8 @@
 import { Router } from 'express';
 import * as controlador from '../controladores/condominios.controlador.js';
 // import { verificarAutenticacion } from '../middlewares/autenticacion.js';
-// import { validar } from '../middlewares/validacion.js';
+import { validar } from '../middlewares/validacion.js';
+import { esquemaCrearCondominio, esquemaActualizarCondominio } from '../validaciones/condominios.validacion.js';
 
 const router = Router();
 
@@ -26,13 +27,13 @@ router.get('/:id', controlador.obtenerPorId);
  * POST /api/v1/condominios
  * Crea un nuevo condominio.
  */
-router.post('/', controlador.crear);
+router.post('/', validar(esquemaCrearCondominio, 'body'), controlador.crear);
 
 /**
  * PUT /api/v1/condominios/:id
  * Actualiza un condominio existente.
  */
-router.put('/:id', controlador.actualizar);
+router.put('/:id', validar(esquemaActualizarCondominio, 'body'), controlador.actualizar);
 
 /**
  * DELETE /api/v1/condominios/:id

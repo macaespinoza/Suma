@@ -1,0 +1,62 @@
+/* =============================================================================
+ * SUMA — Estilos del Componente Select
+ * ============================================================================= */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.etiqueta {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto);
+}
+
+.requerido {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+.select {
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.select:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px var(--color-primario-light);
+}
+
+.select:disabled {
+  background-color: var(--color-fondo);
+  color: var(--color-texto-terciario);
+  cursor: not-allowed;
+}
+
+.selectError {
+  border-color: var(--color-error);
+}
+
+.selectError:focus {
+  box-shadow: 0 0 0 3px hsla(0, 72%, 51%, 0.12);
+}
+
+.error {
+  font-size: var(--texto-xs);
+  color: var(--color-error);
+  font-weight: var(--peso-medium);
+}

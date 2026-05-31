@@ -6,7 +6,8 @@
 import { Router } from 'express';
 import * as controlador from '../controladores/unidades.controlador.js';
 // import { verificarAutenticacion } from '../middlewares/autenticacion.js';
-// import { validar } from '../middlewares/validacion.js';
+import { validar } from '../middlewares/validacion.js';
+import { esquemaCrearUnidad, esquemaActualizarUnidad } from '../validaciones/unidades.validacion.js';
 
 const router = Router();
 
@@ -20,13 +21,13 @@ router.get('/:id', controlador.obtenerPorId);
  * POST /api/v1/unidades
  * Crea una nueva unidad vecinal.
  */
-router.post('/', controlador.crear);
+router.post('/', validar(esquemaCrearUnidad, 'body'), controlador.crear);
 
 /**
  * PUT /api/v1/unidades/:id
  * Actualiza una unidad vecinal existente.
  */
-router.put('/:id', controlador.actualizar);
+router.put('/:id', validar(esquemaActualizarUnidad, 'body'), controlador.actualizar);
 
 /**
  * DELETE /api/v1/unidades/:id

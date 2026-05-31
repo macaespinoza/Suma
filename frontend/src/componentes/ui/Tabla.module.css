@@ -1,0 +1,127 @@
+/* =============================================================================
+ * SUMA — Estilos del Componente Tabla
+ * ============================================================================= */
+
+.contenedor {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: var(--espacio-3) var(--espacio-4);
+  text-align: left;
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto-terciario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--color-fondo);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tr {
+  transition: background var(--transicion-rapida);
+}
+
+.tr:not(:last-child) {
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.trClickable {
+  cursor: pointer;
+}
+
+.trClickable:hover {
+  background: var(--color-fondo);
+}
+
+.td {
+  padding: var(--espacio-3) var(--espacio-4);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+  vertical-align: middle;
+}
+
+.acciones {
+  display: flex;
+  gap: var(--espacio-2);
+  justify-content: flex-end;
+}
+
+.accionBtn {
+  padding: var(--espacio-1) var(--espacio-3);
+  border: none;
+  border-radius: var(--radio-sm);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-medium);
+  cursor: pointer;
+  transition: all var(--transicion-rapida);
+}
+
+.accion--fantasma {
+  background: transparent;
+  color: var(--color-primario);
+}
+
+.accion--fantasma:hover {
+  background: var(--color-primario-light);
+}
+
+.accion--peligro {
+  background: transparent;
+  color: var(--color-error);
+}
+
+.accion--peligro:hover {
+  background: hsla(0, 72%, 51%, 0.08);
+}
+
+/* --- Estado vacío --- */
+.vacio {
+  padding: var(--espacio-12) var(--espacio-4);
+  text-align: center;
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-sm);
+}
+
+/* --- Estado de carga --- */
+.cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-12) var(--espacio-4);
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-sm);
+}
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--color-borde);
+  border-top-color: var(--color-primario);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .contenedor {
+    overflow-x: auto;
+  }
+
+  .th, .td {
+    padding: var(--espacio-2) var(--espacio-3);
+  }
+}

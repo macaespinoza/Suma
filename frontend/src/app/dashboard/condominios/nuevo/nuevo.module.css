@@ -1,0 +1,34 @@
+/* =============================================================================
+ * SUMA — Estilos de la Página Nuevo Condominio
+ * ============================================================================= */
+
+.pagina {
+  max-width: 720px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-5);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-5);
+}
+
+.error {
+  padding: var(--espacio-4);
+  background: hsla(0, 72%, 51%, 0.08);
+  border: 1px solid hsla(0, 72%, 51%, 0.2);
+  border-radius: var(--radio-md);
+  color: var(--color-error);
+  font-size: var(--texto-sm);
+}
+
+@media (max-width: 768px) {
+  .fila {
+    grid-template-columns: 1fr;
+  }
+}

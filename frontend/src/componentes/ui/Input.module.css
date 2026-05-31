@@ -1,0 +1,65 @@
+/* =============================================================================
+ * SUMA — Estilos del Componente Input
+ * ============================================================================= */
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+.etiqueta {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto);
+}
+
+.requerido {
+  color: var(--color-error);
+  margin-left: 2px;
+}
+
+.input {
+  padding: var(--espacio-3) var(--espacio-4);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+  background: var(--color-superficie);
+  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-texto-terciario);
+}
+
+.input:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px var(--color-primario-light);
+}
+
+.input:disabled {
+  background: var(--color-fondo);
+  color: var(--color-texto-terciario);
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  box-shadow: 0 0 0 3px hsla(0, 72%, 51%, 0.12);
+}
+
+.ayuda {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+.error {
+  font-size: var(--texto-xs);
+  color: var(--color-error);
+  font-weight: var(--peso-medium);
+}
