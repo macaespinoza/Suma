@@ -316,6 +316,132 @@ components:
           $ref: '#/components/schemas/Usuario'
           nullable: true
 
+    # --- Gastos Comunes ---
+    GastoComunMes:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        condominio_id:
+          type: string
+          format: uuid
+        mes_anio:
+          type: string
+          format: date
+          example: "2026-05-01"
+        total_gastos:
+          type: number
+          format: decimal
+          example: 450000.00
+        estado:
+          type: string
+          enum: [borrador, publicado]
+          example: "borrador"
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    GastoComunMesCrear:
+      type: object
+      required: [mes_anio]
+      properties:
+        mes_anio:
+          type: string
+          format: date
+          example: "2026-05-01"
+
+    # --- Egresos Operativos ---
+    EgresoOperativo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        gasto_comun_mes_id:
+          type: string
+          format: uuid
+        categoria:
+          type: string
+          example: "Electricidad"
+        descripcion:
+          type: string
+          example: "Luces áreas comunes"
+        monto:
+          type: number
+          format: decimal
+          example: 62000.00
+        archivo_respaldo_url:
+          type: string
+          format: uri
+          nullable: true
+          example: "https://storage.googleapis.com/..."
+
+    EgresoOperativoCrear:
+      type: object
+      required: [categoria, monto]
+      properties:
+        categoria:
+          type: string
+          example: "Electricidad"
+        descripcion:
+          type: string
+        monto:
+          type: number
+          format: decimal
+          example: 62000.00
+        archivo_respaldo_url:
+          type: string
+          format: uri
+
+    # --- Cobros por Unidad ---
+    CobroUnidad:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        unidad_id:
+          type: string
+          format: uuid
+        gasto_comun_mes_id:
+          type: string
+          format: uuid
+        monto_cobrado:
+          type: number
+          format: decimal
+        saldo_anterior:
+          type: number
+          format: decimal
+        total_a_pagar:
+          type: number
+          format: decimal
+        estado_pago:
+          type: string
+          enum: [pendiente, pagado, moroso]
+
+    # --- Pagos ---
+    PagoRegistradoCrear:
+      type: object
+      required: [monto_pagado]
+      properties:
+        monto_pagado:
+          type: number
+          format: decimal
+          example: 37485.00
+        comprobante_url:
+          type: string
+          format: uri
+          example: "https://storage.googleapis.com/..."
+
 # =============================================================================
 # Rutas (Paths)
 # =============================================================================
@@ -630,6 +756,187 @@ paths:
                       datos:
                         $ref: '#/components/schemas/VerificacionResultado'
 
+  # ---------------------------------------------------------------------------
+  # GASTOS COMUNES Y EGRESOS
+  # ---------------------------------------------------------------------------
+  /condominios/{id}/gastos-comunes:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Gastos Comunes]
+      summary: Listar periodos de gastos comunes del condominio
+      operationId: listarGastosComunes
+      responses:
+        '200':
+          description: Lista de periodos.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GastoComunMes'
+    post:
+      tags: [Gastos Comunes]
+      summary: Abrir un nuevo periodo mensual de gastos comunes (en borrador)
+      operationId: crearGastoComunMes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GastoComunMesCrear'
+      responses:
+        '201':
+          description: Periodo creado exitosamente.
+
+  /gastos-comunes/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Gastos Comunes]
+      summary: Obtener detalle del periodo de gastos comunes (incluye egresos)
+      operationId: obtenerGastoComunMes
+      responses:
+        '200':
+          description: Detalle del periodo.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        allOf:
+                          - $ref: '#/components/schemas/GastoComunMes'
+                          - type: object
+                            properties:
+                              egresos:
+                                type: array
+                                items:
+                                  $ref: '#/components/schemas/EgresoOperativo'
+
+  /gastos-comunes/{id}/publicar:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Gastos Comunes]
+      summary: Publicar el periodo y generar cobros a todas las unidades activas
+      operationId: publicarGastoComunMes
+      responses:
+        '200':
+          description: Periodo publicado y cobros generados.
+
+  /gastos-comunes/{id}/egresos:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Gastos Comunes]
+      summary: Agregar un egreso operativo al periodo de gastos comunes
+      operationId: agregarEgreso
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EgresoOperativoCrear'
+      responses:
+        '201':
+          description: Egreso agregado exitosamente.
+
+  /egresos/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    delete:
+      tags: [Gastos Comunes]
+      summary: Eliminar un egreso operativo
+      operationId: eliminarEgreso
+      responses:
+        '204':
+          description: Egreso eliminado.
+
+  # ---------------------------------------------------------------------------
+  # COBROS Y PAGOS
+  # ---------------------------------------------------------------------------
+  /unidades/{id}/cobros:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      tags: [Cobros y Pagos]
+      summary: Listar cobros de una unidad vecinal
+      operationId: listarCobrosUnidad
+      responses:
+        '200':
+          description: Lista de cobros de la unidad.
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaExitosa'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CobroUnidad'
+
+  /cobros/{id}/pagar-manual:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      tags: [Cobros y Pagos]
+      summary: Registrar un pago manual (administrador)
+      operationId: registrarPagoManual
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PagoRegistradoCrear'
+      responses:
+        '201':
+          description: Pago registrado y cobro actualizado a pagado.
+
 tags:
   - name: Condominios
     description: Gestión de condominios (entidad raíz del sistema).
@@ -639,3 +946,7 @@ tags:
     description: Gestión de usuarios con validación de RUT chileno.
   - name: Autenticación
     description: Verificación de identidad mediante Firebase Authentication.
+  - name: Gastos Comunes
+    description: Gestión y prorrateo de gastos comunes mensuales.
+  - name: Cobros y Pagos
+    description: Registro de cobros individuales y control de pagos.
