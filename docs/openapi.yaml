@@ -1,0 +1,271 @@
+openapi: 3.0.3
+info:
+  title: SUMA API - PropTech & ComunidApp (Arica, Chile)
+  description: API Backend para la gestión administrativa y comunitaria de condominios.
+  version: "1.0.0"
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Servidor de Desarrollo Local
+  - url: https://api.suma.cl/api/v1
+    description: Servidor de Producción (Cloud Run)
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # Firebase Auth Token
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        exito:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            codigo:
+              type: integer
+            mensaje:
+              type: string
+    Usuario:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        rut:
+          type: string
+          description: RUT validado con módulo 11
+        nombre_completo:
+          type: string
+        email:
+          type: string
+          format: email
+        telefono:
+          type: string
+        rol:
+          type: string
+          enum: [admin, propietario, arrendatario, conserje]
+    Condominio:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        nombre:
+          type: string
+        direccion:
+          type: string
+        rut_comunidad:
+          type: string
+        cantidad_unidades:
+          type: integer
+    UnidadVecinal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        condominio_id:
+          type: string
+          format: uuid
+        bloque_edificio:
+          type: string
+        numero:
+          type: string
+        alicuota:
+          type: number
+          format: float
+    GastoComunMes:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        condominio_id:
+          type: string
+          format: uuid
+        mes_anio:
+          type: string
+          format: date
+        total_gastos:
+          type: number
+        estado:
+          type: string
+          enum: [borrador, publicado]
+    CobroUnidad:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        unidad_id:
+          type: string
+          format: uuid
+        gasto_comun_mes_id:
+          type: string
+          format: uuid
+        monto_cobrado:
+          type: number
+        saldo_anterior:
+          type: number
+        total_a_pagar:
+          type: number
+        estado_pago:
+          type: string
+          enum: [pendiente, pagado, moroso]
+    PublicacionMuro:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        condominio_id:
+          type: string
+          format: uuid
+        autor_id:
+          type: string
+          format: uuid
+        tipo:
+          type: string
+          enum: [aviso_oficial, social, mercadito, evento, encuesta]
+        titulo:
+          type: string
+        contenido:
+          type: string
+        imagen_url:
+          type: string
+
+security:
+  - BearerAuth: []
+
+paths:
+  /usuarios/me:
+    get:
+      summary: Obtiene el perfil del usuario autenticado
+      responses:
+        "200":
+          description: Perfil de usuario
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exito:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/Usuario'
+        "401":
+          description: No autorizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /condominios:
+    get:
+      summary: Lista condominios a los que pertenece el usuario
+      responses:
+        "200":
+          description: Lista de condominios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exito:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Condominio'
+  /condominios/{id}/gastos-comunes:
+    get:
+      summary: Obtiene el historial de gastos comunes del condominio
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de gastos comunes mensuales
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exito:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/GastoComunMes'
+  /condominios/{id}/muro:
+    get:
+      summary: Obtiene las publicaciones del muro social del condominio
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Lista de publicaciones (feed)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exito:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PublicacionMuro'
+    post:
+      summary: Crea una nueva publicación en el muro
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tipo:
+                  type: string
+                  enum: [aviso_oficial, social, mercadito, evento, encuesta]
+                titulo:
+                  type: string
+                contenido:
+                  type: string
+                imagen_url:
+                  type: string
+      responses:
+        "201":
+          description: Publicación creada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  exito:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/PublicacionMuro'

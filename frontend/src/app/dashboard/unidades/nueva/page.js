@@ -7,12 +7,12 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import api from '../../../lib/api.js';
-import { useUnidades } from '../../../lib/hooks/useUnidades.js';
-import TarjetaFormulario from '../../../componentes/ui/TarjetaFormulario.jsx';
-import Input from '../../../componentes/ui/Input.jsx';
-import Select from '../../../componentes/ui/Select.jsx';
-import Boton from '../../../componentes/ui/Boton.jsx';
+import api from '../../../../lib/api.js';
+import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
+import TarjetaFormulario from '../../../../componentes/ui/TarjetaFormulario.jsx';
+import Input from '../../../../componentes/ui/Input.jsx';
+import Select from '../../../../componentes/ui/Select.jsx';
+import Boton from '../../../../componentes/ui/Boton.jsx';
 import styles from './nueva.module.css';
 
 /**

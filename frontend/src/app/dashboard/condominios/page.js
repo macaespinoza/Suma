@@ -7,10 +7,10 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { useCondominios } from '../../../../lib/hooks/useCondominios.js';
-import Tabla from '../../../../componentes/ui/Tabla.jsx';
-import Boton from '../../../../componentes/ui/Boton.jsx';
-import Modal from '../../../../componentes/ui/Modal.jsx';
+import { useCondominios } from '../../../lib/hooks/useCondominios.js';
+import Tabla from '../../../componentes/ui/Tabla.jsx';
+import Boton from '../../../componentes/ui/Boton.jsx';
+import Modal from '../../../componentes/ui/Modal.jsx';
 import styles from './page.module.css';
 
 /**

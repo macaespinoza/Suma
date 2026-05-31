@@ -1,0 +1,15 @@
+{
+  "name": "suma-workspace",
+  "version": "0.1.0",
+  "description": "SUMA — Workspace raíz para ambos paquetes (backend + frontend)",
+  "private": true,
+  "scripts": {
+    "dev:backend": "cd backend && pnpm dev",
+    "dev:frontend": "cd frontend && pnpm dev",
+    "lint:backend": "cd backend && pnpm lint",
+    "lint:frontend": "cd frontend && pnpm lint",
+    "build:frontend": "cd frontend && pnpm build",
+    "install:all": "pnpm install && cd backend && pnpm install && cd ../frontend && pnpm install"
+  },
+  "packageManager": "pnpm@10.11.0"
+}

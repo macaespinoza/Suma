@@ -3,17 +3,13 @@
 // Wrapper sobre fetch con interceptor de autenticación y manejo de errores.
 // =============================================================================
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003/api/v1';
+const IS_DEV = process.env.NODE_ENV === 'development';
 
 /**
  * Clase de error para respuestas HTTP no exitosas.
  */
 class ErrorAPI extends Error {
-  /**
-   * @param {string} mensaje
-   * @param {number} codigo - Código HTTP.
-   * @param {object} [detalles] - Detalles del error desde la API.
-   */
   constructor(mensaje, codigo, detalles = null) {
     super(mensaje);
     this.nombre = 'ErrorAPI';
@@ -23,18 +19,33 @@ class ErrorAPI extends Error {
 }
 
 /**
- * Obtiene el token JWT de Firebase del usuario autenticado.
- * TODO (Open Code): Implementar con el estado de autenticación real.
+ * Obtiene el token JWT según el entorno:
+ * - Desarrollo: mock token local (no requiere Firebase).
+ * - Producción: Firebase Auth token real.
  *
  * @returns {Promise<string|null>} Token JWT o null si no está autenticado.
  */
 const obtenerToken = async () => {
-  // Placeholder: Open Code implementará con Firebase Auth.
-  // Ejemplo:
-  //   import { auth } from './firebase';
-  //   const usuario = auth.currentUser;
-  //   return usuario ? await usuario.getIdToken() : null;
-  return null;
+  if (typeof window === 'undefined') return null;
+
+  if (IS_DEV) {
+    try {
+      const { mockAuth } = await import('./auth-mock');
+      const user = mockAuth.currentUser;
+      return user ? await user.getIdToken() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  try {
+    const { getAuth } = await import('./firebase');
+    const auth = getAuth();
+    const usuario = auth?.currentUser;
+    return usuario ? await usuario.getIdToken() : null;
+  } catch {
+    return null;
+  }
 };
 
 /**
@@ -57,13 +68,11 @@ export const peticion = async (ruta, opciones = {}) => {
     autenticado = true,
   } = opciones;
 
-  // Construir headers.
   const headersFinales = {
     'Content-Type': 'application/json',
     ...headers,
   };
 
-  // Adjuntar token de autenticación si corresponde.
   if (autenticado) {
     const token = await obtenerToken();
     if (token) {
@@ -71,21 +80,18 @@ export const peticion = async (ruta, opciones = {}) => {
     }
   }
 
-  // Ejecutar petición.
   const respuesta = await fetch(`${API_URL}${ruta}`, {
     method: metodo,
     headers: headersFinales,
     body: cuerpo ? JSON.stringify(cuerpo) : null,
   });
 
-  // Manejar respuestas sin contenido (204).
   if (respuesta.status === 204) {
     return null;
   }
 
   const datos = await respuesta.json();
 
-  // Lanzar error si la respuesta no es exitosa.
   if (!respuesta.ok) {
     throw new ErrorAPI(
       datos.error?.mensaje || 'Error en la petición.',

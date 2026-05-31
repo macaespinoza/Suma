@@ -7,11 +7,11 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useUsuarios } from '../../../lib/hooks/useUsuarios.js';
-import TarjetaFormulario from '../../../componentes/ui/TarjetaFormulario.jsx';
-import Input from '../../../componentes/ui/Input.jsx';
-import Select from '../../../componentes/ui/Select.jsx';
-import Boton from '../../../componentes/ui/Boton.jsx';
+import { useUsuarios } from '../../../../lib/hooks/useUsuarios.js';
+import TarjetaFormulario from '../../../../componentes/ui/TarjetaFormulario.jsx';
+import Input from '../../../../componentes/ui/Input.jsx';
+import Select from '../../../../componentes/ui/Select.jsx';
+import Boton from '../../../../componentes/ui/Boton.jsx';
 import styles from './nuevo.module.css';
 
 /**
