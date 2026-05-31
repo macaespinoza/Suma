@@ -9,29 +9,30 @@
 
 /* =============================================================================
  * VARIABLES GLOBALES (LIGHT MODE)
- * Inspiración: Desierto de Atacama + Pacífico + Identidad Aricena
+ * Inspiración: Paleta Lúdica SUMA — Naranjo vibrante como protagonista
  * ============================================================================= */
 :root {
-  /* --- Paleta de Colores: Desierto Cálido --- */
-  --color-primario: #1B4B6E;          /* Azul Pacífico profundo */
-  --color-primario-hover: #163E57;
-  --color-primario-light: #E8F1F7;
-  --color-secundario: #D4920A;         /* Dorado del desierto / ámaras */
-  --color-secundario-hover: #B87D09;
-  --color-acento: #C85A38;             /* Terracota ariceno */
-  --color-acento-hover: #A84B2F;
+  /* --- Paleta de Colores: Lúdica y Amigable --- */
+  --color-primario: #f9951a;          /* Naranjo Carrot — Protagonista */
+  --color-primario-hover: #e08516;
+  --color-primario-light: hsla(33, 95%, 54%, 0.12);
+  --color-secundario: #5122a7;         /* Índigo profundo */
+  --color-secundario-hover: #421c8a;
+  --color-acento: #d5165c;             /* Berry Lipstick */
+  --color-acento-hover: #b0124d;
 
   /* --- Semánticos --- */
   --color-exito: #2D8659;
-  --color-advertencia: #E5A000;
-  --color-error: #C44040;
-  --color-info: #2A7BBF;
+  --color-advertencia: #f9951a;
+  --color-error: #f54d0b;             /* Crimson Carrot */
+  --color-error-hover: #d93d08;
+  --color-info: #8e4fb0;              /* Amethyst */
 
   /* --- Neutros --- */
-  --color-fondo: #FAF7F2;              /* Arena tibia */
-  --color-superficie: #FFFDF8;        /* Blanco cálido */
+  --color-fondo: #FFF8F0;              /* Blanco cálido naranja */
+  --color-superficie: #FFFFFF;        
   --color-superficie-elevada: #FFFFFF;
-  --color-borde: #E5DDD3;
+  --color-borde: rgba(0, 0, 0, 0.06);
   --color-borde-focus: var(--color-primario);
 
   /* --- Texto --- */
@@ -76,55 +77,66 @@
   --espacio-16: 4rem;      /* 64px */
 
   /* --- Bordes --- */
-  --radio-sm: 0.375rem;    /* 6px */
-  --radio-md: 0.5rem;      /* 8px */
-  --radio-lg: 0.75rem;     /* 12px */
-  --radio-xl: 1rem;        /* 16px */
+  --radio-sm: 0.5rem;      /* 8px */
+  --radio-md: 0.75rem;     /* 12px */
+  --radio-lg: 1rem;        /* 16px */
+  --radio-xl: 1.25rem;     /* 20px */
   --radio-2xl: 1.5rem;     /* 24px */
   --radio-full: 9999px;
 
   /* --- Sombras --- */
-  --sombra-xs: 0 1px 2px hsla(220, 25%, 12%, 0.05);
-  --sombra-sm: 0 1px 3px hsla(220, 25%, 12%, 0.08), 0 1px 2px hsla(220, 25%, 12%, 0.04);
-  --sombra-md: 0 4px 6px hsla(220, 25%, 12%, 0.07), 0 2px 4px hsla(220, 25%, 12%, 0.04);
-  --sombra-lg: 0 10px 15px hsla(220, 25%, 12%, 0.07), 0 4px 6px hsla(220, 25%, 12%, 0.04);
-  --sombra-xl: 0 20px 25px hsla(220, 25%, 12%, 0.08), 0 8px 10px hsla(220, 25%, 12%, 0.04);
+  --sombra-xs: 0 1px 2px rgba(81, 34, 167, 0.04);
+  --sombra-sm: 0 2px 8px rgba(81, 34, 167, 0.06);
+  --sombra-md: 0 4px 16px rgba(81, 34, 167, 0.08);
+  --sombra-lg: 0 12px 32px rgba(81, 34, 167, 0.10);
+  --sombra-xl: 0 24px 48px rgba(81, 34, 167, 0.12);
+  
+  /* --- Sombras de color (Color Glow) --- */
+  --sombra-primario: 0 8px 24px rgba(249, 149, 26, 0.25);
+  --sombra-secundario: 0 8px 24px rgba(81, 34, 167, 0.25);
+  --sombra-acento: 0 8px 24px rgba(213, 22, 92, 0.25);
 
   /* --- Transiciones --- */
-  --transicion-rapida: 150ms ease;
-  --transicion-normal: 250ms ease;
-  --transicion-lenta: 400ms ease;
+  --transicion-rapida: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transicion-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transicion-lenta: 400ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* --- Layout --- */
   --ancho-maximo: 1280px;
   --sidebar-ancho: 260px;
-  --header-alto: 64px;
+  --header-alto: 72px;
 }
 
 /* =============================================================================
- * DARK MODE — Atardecer en el Pacífico
+ * DARK MODE — Noche Lúdica
  * ============================================================================= */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-primario: #4A9EC4;          /* Azul Pacífico claro */
-    --color-primario-hover: #62B0D4;
-    --color-primario-light: #1A3A4F;
-    --color-secundario: #E5A826;         /* Dorado intenso */
-    --color-acento: #D4725A;             /* Terracota cálido */
+    --color-primario: #f9951a;          
+    --color-primario-hover: #ffb347;
+    --color-primario-light: hsla(33, 95%, 54%, 0.15);
+    --color-secundario: #8e4fb0;         
+    --color-secundario-hover: #a56cc9;
+    --color-acento: #d5165c;             
+    --color-acento-hover: #e83a75;
 
-    --color-fondo: #151820;             /* Azul noche profundo */
-    --color-superficie: #1E2530;        /* Gris azulado oscuro */
-    --color-superficie-elevada: #262D38;
-    --color-borde: #323B49;
+    --color-fondo: #1A1025;             /* Violeta noche profundo */
+    --color-superficie: #241836;        /* Violeta oscuro */
+    --color-superficie-elevada: #2E1E42;
+    --color-borde: rgba(255, 255, 255, 0.08);
 
-    --color-texto: #F0EDE6;             /* Blanco arena */
-    --color-texto-secundario: #A8A29E;
-    --color-texto-terciario: #706B65;
+    --color-texto: #F5F0FF;             
+    --color-texto-secundario: #B8A9C9;
+    --color-texto-terciario: #7A6B8A;
 
-    --sombra-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-    --sombra-md: 0 4px 6px rgba(0, 0, 0, 0.35);
-    --sombra-lg: 0 10px 15px rgba(0, 0, 0, 0.4);
-    --sombra-xl: 0 20px 25px rgba(0, 0, 0, 0.45);
+    --sombra-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --sombra-md: 0 4px 16px rgba(0, 0, 0, 0.35);
+    --sombra-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+    --sombra-xl: 0 24px 48px rgba(0, 0, 0, 0.45);
+    
+    --sombra-primario: 0 8px 24px rgba(249, 149, 26, 0.2);
+    --sombra-secundario: 0 8px 24px rgba(142, 79, 176, 0.25);
+    --sombra-acento: 0 8px 24px rgba(213, 22, 92, 0.25);
   }
 }
 
@@ -196,7 +208,7 @@ input, textarea, select, button {
 .tarjeta {
   background: var(--color-superficie);
   border: 1px solid var(--color-borde);
-  border-radius: var(--radio-lg);
+  border-radius: var(--radio-xl);
   padding: var(--espacio-6);
   box-shadow: var(--sombra-sm);
   transition: box-shadow var(--transicion-normal), transform var(--transicion-normal);
@@ -204,20 +216,37 @@ input, textarea, select, button {
 
 .tarjeta:hover {
   box-shadow: var(--sombra-md);
+  transform: translateY(-2px);
 }
 
-/* --- Glassmorphism (luz del Pacífico) --- */
+/* --- Glassmorphism (Lúdico) --- */
 .cristal {
-  background: rgba(255, 253, 248, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(229, 221, 211, 0.5);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 32px 0 rgba(81, 34, 167, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
   .cristal {
-    background: rgba(30, 37, 48, 0.8);
-    border: 1px solid rgba(50, 59, 73, 0.5);
+    background: rgba(36, 24, 54, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+  }
+}
+
+/* --- Fondo Degradado Lúdico --- */
+.fondoLudico {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #FFF8F0 0%, #F3E8FF 50%, #FFE8F0 100%);
+  min-height: 100dvh;
+}
+
+@media (prefers-color-scheme: dark) {
+  .fondoLudico {
+    background: linear-gradient(135deg, #1A1025 0%, #2E1E42 50%, #1A1025 100%);
   }
 }
 
@@ -244,16 +273,16 @@ input, textarea, select, button {
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px) scale(0.98);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
 .animar-entrada {
-  animation: fadeInUp 0.4s ease-out forwards;
+  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 /* --- Focus visible (accesibilidad) --- */
@@ -283,21 +312,43 @@ input, textarea, select, button {
 }
 
 .etiqueta--exito {
-  background: hsla(142, 71%, 45%, 0.12);
+  background: hsla(142, 71%, 35%, 0.12);
   color: var(--color-exito);
 }
 
 .etiqueta--error {
-  background: hsla(0, 72%, 51%, 0.12);
+  background: hsla(17, 92%, 50%, 0.12);
   color: var(--color-error);
 }
 
 .etiqueta--advertencia {
-  background: hsla(38, 92%, 50%, 0.12);
+  background: hsla(33, 95%, 54%, 0.12);
   color: var(--color-advertencia);
 }
 
 .etiqueta--info {
-  background: hsla(210, 92%, 54%, 0.12);
+  background: hsla(279, 38%, 50%, 0.12);
   color: var(--color-info);
+}
+
+/* --- Blob decorativo (círculo difuso) --- */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.blob--primario {
+  background: var(--color-primario);
+}
+
+.blob--secundario {
+  background: var(--color-secundario);
+}
+
+.blob--acento {
+  background: var(--color-acento);
 }

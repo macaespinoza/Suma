@@ -6,6 +6,25 @@
 import { consultar } from '../config/database.js';
 
 /**
+ * Lista las unidades vecinales de un condominio.
+ * @param {string} condominioId - UUID del condominio.
+ * @returns {Promise<Array>} Lista de unidades activas.
+ */
+export const listarPorCondominio = async (condominioId) => {
+  const { rows } = await consultar(
+    `SELECT uv.id, uv.condominio_id, uv.bloque_edificio, uv.numero, uv.alicuota,
+            uv.activo, uv.created_at, uv.updated_at,
+            c.nombre AS condominio_nombre
+     FROM Unidades_Vecinales uv
+     JOIN Condominios c ON c.id = uv.condominio_id
+     WHERE uv.condominio_id = $1 AND uv.activo = TRUE
+     ORDER BY uv.bloque_edificio ASC, uv.numero ASC`,
+    [condominioId]
+  );
+  return rows;
+};
+
+/**
  * Obtiene una unidad vecinal por su ID.
  * @param {string} id - UUID de la unidad.
  * @returns {Promise<object|null>} Unidad encontrada o null.

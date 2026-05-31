@@ -7,6 +7,15 @@ import * as repositorio from '../repositorios/unidades.repositorio.js';
 import { ErrorApp } from '../middlewares/errores.js';
 
 /**
+ * Lista las unidades vecinales activas de un condominio.
+ * @param {string} condominioId - UUID del condominio.
+ * @returns {Promise<Array>}
+ */
+export const listarPorCondominio = async (condominioId) => {
+  return await repositorio.listarPorCondominio(condominioId);
+};
+
+/**
  * Obtiene una unidad vecinal por ID.
  * @param {string} id - UUID de la unidad.
  * @returns {Promise<object>}

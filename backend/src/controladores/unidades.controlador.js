@@ -7,6 +7,19 @@ import * as servicio from '../servicios/unidades.servicio.js';
 import { respuestaExitosa, respuestaCreado, respuestaSinContenido } from '../utilidades/respuesta.js';
 
 /**
+ * GET /api/v1/condominios/:condominioId/unidades
+ * Lista todas las unidades activas de un condominio.
+ */
+export const listarPorCondominio = async (req, res, next) => {
+  try {
+    const unidades = await servicio.listarPorCondominio(req.params.condominioId);
+    return respuestaExitosa(res, unidades);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * GET /api/v1/unidades/:id
  * Obtiene una unidad vecinal por ID.
  */

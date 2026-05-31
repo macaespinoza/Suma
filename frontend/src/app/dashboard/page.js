@@ -67,7 +67,7 @@ export default function PaginaDashboard() {
       <div className={styles.metricasGrid}>
         <div className={`${styles.metricaCard} ${styles.metricaPrimario}`}>
           <div className={styles.metricaIcono}>🏘️</div>
-          <div className={styles.metricaInfo}>
+          <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '...' : metricas.condominios}
             </span>
@@ -76,7 +76,7 @@ export default function PaginaDashboard() {
         </div>
         <div className={`${styles.metricaCard} ${styles.metricaExito}`}>
           <div className={styles.metricaIcono}>🏠</div>
-          <div className={styles.metricaInfo}>
+          <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '...' : metricas.unidades}
             </span>
@@ -85,7 +85,7 @@ export default function PaginaDashboard() {
         </div>
         <div className={`${styles.metricaCard} ${styles.metricaAdvertencia}`}>
           <div className={styles.metricaIcono}>👥</div>
-          <div className={styles.metricaInfo}>
+          <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '...' : metricas.usuarios}
             </span>
@@ -94,7 +94,7 @@ export default function PaginaDashboard() {
         </div>
         <div className={`${styles.metricaCard} ${styles.metricaInfo}`}>
           <div className={styles.metricaIcono}>📊</div>
-          <div className={styles.metricaInfo}>
+          <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '...' : metricas.condominios}
             </span>

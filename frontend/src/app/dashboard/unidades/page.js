@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import api from '../../../lib/api.js';
@@ -42,6 +42,14 @@ const columnas = [
  * Página de listado de unidades vecinales.
  */
 export default function PaginaUnidades() {
+  return (
+    <Suspense fallback={<div className={styles.pagina}><p>Cargando...</p></div>}>
+      <ContenidoUnidades />
+    </Suspense>
+  );
+}
+
+function ContenidoUnidades() {
   const searchParams = useSearchParams();
   const condominioIdParam = searchParams.get('condominio_id');
 

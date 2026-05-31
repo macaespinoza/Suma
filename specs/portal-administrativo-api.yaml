@@ -1,0 +1,1550 @@
+openapi: 3.0.3
+info:
+  title: SUMA - Portal Administrativo API
+  description: |
+    API REST para el Portal Administrativo de SUMA - Plataforma PropTech de Gestión 
+    y Cohesión Comunitaria. Gestiona gastos comunes, cobranza, egresos operativos 
+    y pagos en línea para condominios en Arica, Chile.
+  version: 1.0.0
+  contact:
+    name: ComunidApp - Soporte
+    email: soporte@comunidapp.cl
+  license:
+    name: Proprietary
+    url: https://comunidapp.cl/terminos
+
+servers:
+  - url: http://localhost:3001/api/v1
+    description: Servidor de desarrollo local
+  - url: https://api.comunidapp.cl/api/v1
+    description: Servidor de producción (Cloud Run)
+
+tags:
+  - name: Gastos Comunes
+    description: Endpoints para gestionar el período mensual de gastos comunes
+  - name: Egresos Operativos
+    description: Endpoints para gestionar los ítems de egreso de un gasto común
+  - name: Cobros
+    description: Endpoints para gestionar los cobros por unidad
+  - name: Pagos
+    description: Endpoints para gestionar pagos manuales y en línea
+  - name: Transacciones
+    description: Endpoints para gestionar transacciones con pasarelas de pago
+  - name: Pasarelas
+    description: Endpoints para configurar credenciales de pasarelas de pago
+  - name: Dashboard
+    description: Endpoint para obtener resumen financiero del condominio
+  - name: Webhooks
+    description: Endpoints para recibir notificaciones de pasarelas externas
+
+paths:
+  /condominios/{condominioId}/gastos:
+    get:
+      tags:
+        - Gastos Comunes
+      summary: Listar gastos por condominio
+      description: Retorna todos los gastos comunes de un condominio ordenados por mes descendente
+      operationId: listarGastosPorCondominio
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/pagina'
+        - $ref: '#/components/parameters/porPagina'
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [borrador, publicado]
+          description: Filtrar por estado del gasto
+      responses:
+        '200':
+          description: Lista de gastos retrieved successfully
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GastoResumen'
+                      meta:
+                        $ref: '#/components/schemas/MetaPaginacion'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/CondominioNoEncontrado'
+    post:
+      tags:
+        - Gastos Comunes
+      summary: Crear gasto común (borrador)
+      description: Crea un nuevo período de gastos comunes en estado borrador. Solo admin puede ejecutar.
+      operationId: crearGastoComun
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GastoComunCreate'
+      responses:
+        '201':
+          description: Gasto común creado exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/GastoComunDetalle'
+        '400':
+          $ref: '#/components/responses/ValidacionFallida'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '409':
+          $ref: '#/components/responses/GastoMesDuplicado'
+
+  /condominios/{condominioId}/gastos/{gastoId}:
+    get:
+      tags:
+        - Gastos Comunes
+      summary: Obtener detalle de gasto común
+      description: Retorna el detalle completo incluyendo egresos operativos y resumen de cobranza
+      operationId: obtenerDetalleGastoComun
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      responses:
+        '200':
+          description: Detalle del gasto común
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/GastoComunCompleto'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+    patch:
+      tags:
+        - Gastos Comunes
+      summary: Actualizar gasto común (borrador only)
+      description: Actualiza el total de gastos de un período en estado borrador
+      operationId: actualizarGastoComun
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GastoComunUpdate'
+      responses:
+        '200':
+          description: Gasto común actualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/GastoComunActualizado'
+        '400':
+          $ref: '#/components/responses/GastoYaPublicado'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+    delete:
+      tags:
+        - Gastos Comunes
+      summary: Eliminar gasto común (borrador only)
+      description: Elimina un gasto común en estado borrador y todos sus egresos asociados
+      operationId: eliminarGastoComun
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      responses:
+        '204':
+          description: Gasto común eliminado exitosamente
+        '400':
+          $ref: '#/components/responses/GastoYaPublicado'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+
+  /condominios/{condominioId}/gastos/{gastoId}/publicar:
+    post:
+      tags:
+        - Gastos Comunes
+      summary: Publicar gasto y generar cobros
+      description: |
+        Publica un gasto común cambiando su estado a publicado y genera 
+        automáticamente los cobros por unidad según prorrateo por alícuota.
+      operationId: publicarGastoComun
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      responses:
+        '200':
+          description: Gasto publicado y cobros generados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/GastoPublicadoResponse'
+        '400':
+          $ref: '#/components/responses/GastoYaPublicado'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+
+  /condominios/{condominioId}/gastos/{gastoId}/egresos:
+    get:
+      tags:
+        - Egresos Operativos
+      summary: Listar egresos por gasto
+      description: Retorna todos los egresos operativos de un gasto común
+      operationId: listarEgresosPorGasto
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      responses:
+        '200':
+          description: Lista de egresos operativos
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EgresoOperativo'
+                      meta:
+                        type: object
+                        properties:
+                          total_egresos:
+                            type: integer
+                          suma_egresos:
+                            type: number
+                            format: decimal
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+    post:
+      tags:
+        - Egresos Operativos
+      summary: Agregar egreso operativo
+      description: Agrega un ítem de egreso operativo a un gasto común
+      operationId: agregarEgresoOperativo
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EgresoOperativoCreate'
+      responses:
+        '201':
+          description: Egreso operativo creado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/EgresoOperativo'
+        '400':
+          $ref: '#/components/responses/ValidacionFallida'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+
+  /condominios/{condominioId}/gastos/{gastoId}/cobros:
+    get:
+      tags:
+        - Cobros
+      summary: Listar cobros por gasto común
+      description: Retorna todos los cobros generados para un gasto común con info de unidad y residente
+      operationId: listarCobrosPorGasto
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/gastoId'
+        - $ref: '#/components/parameters/pagina'
+        - $ref: '#/components/parameters/porPagina'
+        - name: estado
+          in: query
+          schema:
+            type: string
+            enum: [pendiente, pagado, moroso]
+        - name: bloque
+          in: query
+          schema:
+            type: string
+          description: Filtrar por nombre de bloque/edificio
+      responses:
+        '200':
+          description: Lista de cobros por unidad
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CobroUnidadResumen'
+                      meta:
+                        allOf:
+                          - $ref: '#/components/schemas/MetaPaginacion'
+                          - type: object
+                            properties:
+                              resumen:
+                                $ref: '#/components/schemas/ResumenCobros'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/GastoNoEncontrado'
+
+  /condominios/{condominioId}/cobros/{cobroId}:
+    get:
+      tags:
+        - Cobros
+      summary: Obtener detalle de cobro por unidad
+      description: Retorna el detalle completo incluyendo historial de pagos e información del residente
+      operationId: obtenerDetalleCobro
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/cobroId'
+      responses:
+        '200':
+          description: Detalle del cobro por unidad
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/CobroUnidadDetalle'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/CobroNoEncontrado'
+
+  /condominios/{condominioId}/cobros/{cobroId}/estado:
+    patch:
+      tags:
+        - Cobros
+      summary: Actualizar estado de pago (manual)
+      description: Permite a un admin cambiar manualmente el estado de un cobro
+      operationId: actualizarEstadoCobro
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/cobroId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CobroEstadoUpdate'
+      responses:
+        '200':
+          description: Estado de cobro actualizado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            format: uuid
+                          estado_pago:
+                            type: string
+                            enum: [pendiente, pagado, moroso]
+                          updated_at:
+                            type: string
+                            format: date-time
+        '400':
+          $ref: '#/components/responses/EstadoInvalido'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/CobroNoEncontrado'
+
+  /condominios/{condominioId}/cobros/{cobroId}/pagos:
+    post:
+      tags:
+        - Pagos
+      summary: Registrar pago manual
+      description: Registra un pago realizado manualmente por el admin (efectivo, transferencia)
+      operationId: registrarPagoManual
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/cobroId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PagoManualCreate'
+      responses:
+        '201':
+          description: Pago manual registrado
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: object
+                        properties:
+                          pago:
+                            $ref: '#/components/schemas/PagoRegistrado'
+                          cobro_actualizado:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              estado_pago:
+                                type: string
+                              total_a_pagar:
+                                type: number
+                                format: decimal
+        '400':
+          $ref: '#/components/responses/ValidacionFallida'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/CobroNoEncontrado'
+
+  /condominios/{condominioId}/pagos:
+    get:
+      tags:
+        - Pagos
+      summary: Listar pagos por condominio y período
+      description: Retorna todos los pagos registrados con filtros por período
+      operationId: listarPagosPorCondominio
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/pagina'
+        - $ref: '#/components/parameters/porPagina'
+        - name: mes_anio
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Filtrar por mes (formato YYYY-MM-DD)
+        - name: unidad_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filtrar por unidad específica
+      responses:
+        '200':
+          description: Lista de pagos registrados
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PagoRegistradoResumen'
+                      meta:
+                        allOf:
+                          - $ref: '#/components/schemas/MetaPaginacion'
+                          - type: object
+                            properties:
+                              total_monto_pagado:
+                                type: number
+                                format: decimal
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+
+  /condominios/{condominioId}/cobros/{cobroId}/transacciones:
+    post:
+      tags:
+        - Transacciones
+      summary: Iniciar transacción de pago online
+      description: Inicia el proceso de pago online a través de una pasarela configurada
+      operationId: iniciarTransaccionPago
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/cobroId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransaccionCreate'
+      responses:
+        '201':
+          description: Transacción iniciada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: object
+                        properties:
+                          transaccion:
+                            $ref: '#/components/schemas/TransaccionPasarela'
+                          url_pasarela:
+                            type: string
+                            format: uri
+                          expires_at:
+                            type: string
+                            format: date-time
+        '400':
+          $ref: '#/components/responses/ValidacionFallida'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/CobroNoEncontrado'
+
+  /condominios/{condominioId}/transacciones/{transaccionId}:
+    get:
+      tags:
+        - Transacciones
+      summary: Consultar estado de transacción
+      description: Consulta el estado actual de una transacción con la pasarela
+      operationId: consultarEstadoTransaccion
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/transaccionId'
+      responses:
+        '200':
+          description: Estado de la transacción
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/TransaccionPasarelaDetalle'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/TransaccionNoEncontrada'
+
+  /condominios/{condominioId}/transacciones/{transaccionId}/url:
+    get:
+      tags:
+        - Transacciones
+      summary: Obtener URL de pago
+      description: Retorna la URL de pago activa para continuar con el proceso
+      operationId: obtenerUrlPago
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - $ref: '#/components/parameters/transaccionId'
+      responses:
+        '200':
+          description: URL de pago
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: object
+                        properties:
+                          url_pasarela:
+                            type: string
+                            format: uri
+                          expires_at:
+                            type: string
+                            format: date-time
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '404':
+          $ref: '#/components/responses/TransaccionNoEncontrada'
+
+  /condominios/{condominioId}/pasarelas:
+    get:
+      tags:
+        - Pasarelas
+      summary: Listar pasarelas configuradas
+      description: Retorna las pasarelas de pago configuradas para el condominio
+      operationId: listarPasarelas
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+      responses:
+        '200':
+          description: Lista de pasarelas configuradas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/PasarelaConfigurada'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+    post:
+      tags:
+        - Pasarelas
+      summary: Guardar credenciales de pasarela
+      description: Almacena credenciales de API encriptadas con AES-256
+      operationId: guardarCredencialesPasarela
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasarelaCredencialesCreate'
+      responses:
+        '201':
+          description: Credenciales almacenadas
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/PasarelaConfigurada'
+        '400':
+          $ref: '#/components/responses/PasarelaDuplicada'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+
+  /condominios/{condominioId}/pasarelas/{pasarelaId}:
+    patch:
+      tags:
+        - Pasarelas
+      summary: Activar/desactivar pasarela
+      description: Activa o desactiva una pasarela de pago configurada
+      operationId: togglePasarela
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+        - name: pasarelaId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - activo
+              properties:
+                activo:
+                  type: boolean
+      responses:
+        '200':
+          description: Pasarela actualizada
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/PasarelaConfigurada'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+        '404':
+          $ref: '#/components/responses/PasarelaNoEncontrada'
+
+  /condominios/{condominioId}/dashboard/financiero:
+    get:
+      tags:
+        - Dashboard
+      summary: Resumen financiero del condominio
+      description: Retorna un resumen ejecutivo de la situación financiera
+      operationId: obtenerDashboardFinanciero
+      parameters:
+        - $ref: '#/components/parameters/condominioId'
+      responses:
+        '200':
+          description: Resumen financiero
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        $ref: '#/components/schemas/DashboardFinanciero'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+
+  /webhooks/pagos/{pasarela}:
+    post:
+      tags:
+        - Webhooks
+      summary: Webhook de confirmación de pago
+      description: Recibe notificaciones de pago desde pasarelas externas
+      operationId: webhookPagoPasarela
+      parameters:
+        - name: pasarela
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [flow, fintoc, mercado_pago]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                status:
+                  type: integer
+                  description: "1=iniciada, 2=exitosa, 3=fallida, 4=reembolsada"
+                amount:
+                  type: number
+                currency:
+                  type: string
+                order:
+                  type: string
+                  description: ID del cobro_unidad
+                environment:
+                  type: string
+                  enum: [production, integration]
+      responses:
+        '200':
+          description: Webhook procesado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  mensaje:
+                    type: string
+        '400':
+          description: Firma de webhook inválida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorRespuesta'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Firebase ID Token
+
+  parameters:
+    condominioId:
+      name: condominioId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID único del condominio
+
+    gastoId:
+      name: gastoId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID único del gasto común
+
+    cobroId:
+      name: cobroId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID único del cobro por unidad
+
+    transaccionId:
+      name: transaccionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: ID único de la transacción
+
+    pagina:
+      name: pagina
+      in: query
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+      description: Número de página
+
+    porPagina:
+      name: por_pagina
+      in: query
+      schema:
+        type: integer
+        default: 20
+        minimum: 1
+        maximum: 50
+      description: Elementos por página
+
+  responses:
+    NoAutorizado:
+      description: Token JWT inválido o expirado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    RolInsuficiente:
+      description: Usuario no tiene permisos para esta acción
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    CondominioNoEncontrado:
+      description: El condominio no existe
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    GastoNoEncontrado:
+      description: El gasto común no existe
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    CobroNoEncontrado:
+      description: El cobro por unidad no existe
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    TransaccionNoEncontrada:
+      description: La transacción no existe
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    PasarelaNoEncontrada:
+      description: La pasarela no existe
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    ValidacionFallida:
+      description: Error de validación de campos
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    GastoYaPublicado:
+      description: No se puede modificar un gasto ya publicado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    GastoMesDuplicado:
+      description: Ya existe un gasto para ese mes en este condominio
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    EstadoInvalido:
+      description: La transición de estado no está permitida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+    PasarelaDuplicada:
+      description: Ya existe credencial para esta pasarela
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorRespuesta'
+
+  schemas:
+    RespuestaEstandar:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        datos:
+          type: object
+        meta:
+          type: object
+
+    ErrorRespuesta:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            codigo:
+              type: string
+              example: GASTO_NO_ENCONTRADO
+            mensaje:
+              type: string
+            detalle:
+              type: object
+
+    MetaPaginacion:
+      type: object
+      properties:
+        pagina:
+          type: integer
+        por_pagina:
+          type: integer
+        total:
+          type: integer
+
+    GastoComunCreate:
+      type: object
+      required:
+        - mes_anio
+        - total_gastos
+      properties:
+        mes_anio:
+          type: string
+          format: date
+          example: "2026-06-01"
+          description: Primer día del mes (formato ISO YYYY-MM-DD)
+        total_gastos:
+          type: number
+          format: decimal
+          minimum: 0
+          exclusiveMinimum: true
+          example: 450000.00
+          description: Total de gastos del mes
+
+    GastoComunUpdate:
+      type: object
+      required:
+        - total_gastos
+      properties:
+        total_gastos:
+          type: number
+          format: decimal
+          minimum: 0
+          exclusiveMinimum: true
+
+    GastoResumen:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mes_anio:
+          type: string
+          format: date
+        total_gastos:
+          type: number
+          format: decimal
+        estado:
+          type: string
+          enum: [borrador, publicado]
+        total_cobrado:
+          type: number
+          format: decimal
+        total_pagado:
+          type: number
+          format: decimal
+        total_pendiente:
+          type: number
+          format: decimal
+
+    GastoComunDetalle:
+      allOf:
+        - $ref: '#/components/schemas/GastoResumen'
+        - type: object
+          properties:
+            condominio_id:
+              type: string
+              format: uuid
+            egresos:
+              type: array
+              items:
+                $ref: '#/components/schemas/EgresoOperativo'
+            created_at:
+              type: string
+              format: date-time
+
+    GastoComunCompleto:
+      allOf:
+        - $ref: '#/components/schemas/GastoComunDetalle'
+        - type: object
+          properties:
+            resumen_unidades:
+              type: object
+              properties:
+                total_unidades:
+                  type: integer
+                unidades_cobradas:
+                  type: integer
+                total_cobrado:
+                  type: number
+                  format: decimal
+                total_pagado:
+                  type: number
+                  format: decimal
+                total_pendiente:
+                  type: number
+                  format: decimal
+            updated_at:
+              type: string
+              format: date-time
+
+    GastoComunActualizado:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        total_gastos:
+          type: number
+          format: decimal
+        estado:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+
+    GastoPublicadoResponse:
+      type: object
+      properties:
+        gasto:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            estado:
+              type: string
+            total_gastos:
+              type: number
+              format: decimal
+        cobros_generados:
+          type: integer
+        detalle_cobros:
+          type: array
+          items:
+            type: object
+            properties:
+              unidad_id:
+                type: string
+                format: uuid
+              numero:
+                type: string
+              bloque_edificio:
+                type: string
+              alicuota:
+                type: number
+                format: decimal
+              monto_cobrado:
+                type: number
+                format: decimal
+              saldo_anterior:
+                type: number
+                format: decimal
+              total_a_pagar:
+                type: number
+                format: decimal
+              estado_pago:
+                type: string
+
+    EgresoOperativoCreate:
+      type: object
+      required:
+        - categoria
+        - monto
+      properties:
+        categoria:
+          type: string
+          maxLength: 100
+          enum: [Agua, Electricidad, Gas, Portería, Mantención, Aseo, Seguridad, Administración, Seguros, Otro]
+        descripcion:
+          type: string
+          maxLength: 500
+        monto:
+          type: number
+          format: decimal
+          minimum: 0
+          exclusiveMinimum: true
+
+    EgresoOperativo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        gasto_comun_mes_id:
+          type: string
+          format: uuid
+        categoria:
+          type: string
+        descripcion:
+          type: string
+        monto:
+          type: number
+          format: decimal
+        archivo_respaldo_url:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+
+    CobroUnidadResumen:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        unidad_id:
+          type: string
+          format: uuid
+        numero:
+          type: string
+        bloque_edificio:
+          type: string
+        alicuota:
+          type: number
+          format: decimal
+        monto_cobrado:
+          type: number
+          format: decimal
+        saldo_anterior:
+          type: number
+          format: decimal
+        total_a_pagar:
+          type: number
+          format: decimal
+        estado_pago:
+          type: string
+          enum: [pendiente, pagado, moroso]
+        residente_principal:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            nombre:
+              type: string
+            telefono:
+              type: string
+        ultimo_pago:
+          type: object
+          nullable: true
+          properties:
+            fecha:
+              type: string
+              format: date-time
+            monto:
+              type: number
+              format: decimal
+
+    ResumenCobros:
+      type: object
+      properties:
+        total_cobrado:
+          type: number
+          format: decimal
+        total_pagado:
+          type: number
+          format: decimal
+        total_pendiente:
+          type: number
+          format: decimal
+        unidades_pagadas:
+          type: integer
+        unidades_pendientes:
+          type: integer
+        unidades_morosas:
+          type: integer
+
+    CobroUnidadDetalle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        unidad:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            numero:
+              type: string
+            bloque_edificio:
+              type: string
+            alicuota:
+              type: number
+              format: decimal
+            propietario:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                nombre:
+                  type: string
+                email:
+                  type: string
+            residentes:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  nombre:
+                    type: string
+                  telefono:
+                    type: string
+                  es_residente:
+                    type: boolean
+        gasto_comun:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            mes_anio:
+              type: string
+              format: date
+            total_gastos:
+              type: number
+              format: decimal
+        monto_cobrado:
+          type: number
+          format: decimal
+        saldo_anterior:
+          type: number
+          format: decimal
+        total_a_pagar:
+          type: number
+          format: decimal
+        estado_pago:
+          type: string
+          enum: [pendiente, pagado, moroso]
+        historial_pagos:
+          type: array
+          items:
+            $ref: '#/components/schemas/PagoRegistrado'
+
+    CobroEstadoUpdate:
+      type: object
+      required:
+        - estado_pago
+      properties:
+        estado_pago:
+          type: string
+          enum: [pendiente, pagado, moroso]
+        nota:
+          type: string
+
+    PagoManualCreate:
+      type: object
+      required:
+        - monto_pagado
+        - fecha_pago
+      properties:
+        monto_pagado:
+          type: number
+          format: decimal
+          minimum: 0
+        fecha_pago:
+          type: string
+          format: date-time
+        comprobante_url:
+          type: string
+          format: uri
+
+    PagoRegistrado:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cobro_unidad_id:
+          type: string
+          format: uuid
+        monto_pagado:
+          type: number
+          format: decimal
+        fecha_pago:
+          type: string
+          format: date-time
+        transaccion_id:
+          type: string
+          format: uuid
+          nullable: true
+        comprobante_url:
+          type: string
+          nullable: true
+
+    PagoRegistradoResumen:
+      allOf:
+        - $ref: '#/components/schemas/PagoRegistrado'
+        - type: object
+          properties:
+            unidad:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                numero:
+                  type: string
+                bloque_edificio:
+                  type: string
+            pasarela:
+              type: string
+              nullable: true
+
+    TransaccionCreate:
+      type: object
+      required:
+        - pasarela
+        - url_retorno
+        - url_cancelar
+      properties:
+        pasarela:
+          type: string
+          enum: [flow, fintoc, mercado_pago]
+        url_retorno:
+          type: string
+          format: uri
+        url_cancelar:
+          type: string
+          format: uri
+
+    TransaccionPasarela:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        cobro_unidad_id:
+          type: string
+          format: uuid
+        pasarela:
+          type: string
+        token_transaccion:
+          type: string
+        monto_transaccion:
+          type: number
+          format: decimal
+        estado_transaccion:
+          type: string
+          enum: [iniciada, exitosa, fallida, reembolsada]
+
+    TransaccionPasarelaDetalle:
+      allOf:
+        - $ref: '#/components/schemas/TransaccionPasarela'
+        - type: object
+          properties:
+            flow_status_detail:
+              type: integer
+            flow_fecha_pago:
+              type: string
+              format: date-time
+              nullable: true
+
+    PasarelaCredencialesCreate:
+      type: object
+      required:
+        - pasarela
+        - api_key
+        - secret_key
+      properties:
+        pasarela:
+          type: string
+          enum: [flow, fintoc, mercado_pago]
+        api_key:
+          type: string
+        secret_key:
+          type: string
+
+    PasarelaConfigurada:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        condominio_id:
+          type: string
+          format: uuid
+        pasarela:
+          type: string
+        activo:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    DashboardFinanciero:
+      type: object
+      properties:
+        periodo_actual:
+          type: object
+          properties:
+            mes_anio:
+              type: string
+              format: date
+            total_gastos:
+              type: number
+              format: decimal
+            total_cobrado:
+              type: number
+              format: decimal
+            total_pagado:
+              type: number
+              format: decimal
+            total_pendiente:
+              type: number
+              format: decimal
+            tasa_recaudacion:
+              type: number
+              format: float
+              description: Porcentaje de recaudación
+        estado_cuenta:
+          type: object
+          properties:
+            unidades_activas:
+              type: integer
+            pagadas:
+              type: integer
+            pendientes:
+              type: integer
+            morosas:
+              type: integer
+        deuda_historica:
+          type: object
+          properties:
+            total_deuda_anterior:
+              type: number
+              format: decimal
+            total_pagado_mes_anterior:
+              type: number
+              format: decimal
+            deuda_reciente:
+              type: number
+              format: decimal
+        egresos_mes:
+          type: object
+          properties:
+            total:
+              type: number
+              format: decimal
+            por_categoria:
+              type: object
+              additionalProperties:
+                type: number
+                format: decimal
+        pasarelas_activas:
+          type: array
+          items:
+            type: string

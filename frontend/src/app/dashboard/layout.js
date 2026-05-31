@@ -30,6 +30,11 @@ export default function LayoutDashboard({ children }) {
 
   return (
     <div className={styles.layoutDashboard}>
+      {/* --- Blobs decorativos de fondo --- */}
+      <div className={`blob blob--primario ${styles.blobDecorativo1}`} />
+      <div className={`blob blob--secundario ${styles.blobDecorativo2}`} />
+      <div className={`blob blob--acento ${styles.blobDecorativo3}`} />
+
       {/* --- Sidebar --- */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>

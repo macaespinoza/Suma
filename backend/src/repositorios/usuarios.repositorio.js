@@ -64,7 +64,7 @@ export const obtenerPorFirebaseUid = async (firebaseUid) => {
 export const crear = async ({ firebase_uid, rut, nombre_completo, email, telefono, rol }) => {
   const { rows } = await consultar(
     `INSERT INTO Usuarios (firebase_uid, rut, nombre_completo, email, telefono, rol)
-     VALUES ($1, $2, $3, $4, $5, COALESCE($6, 'arrendatario'))
+     VALUES ($1, $2, $3, $4, $5, COALESCE($6::tipo_rol_usuario, 'arrendatario'::tipo_rol_usuario))
      RETURNING id, firebase_uid, rut, nombre_completo, email, telefono, rol, created_at`,
     [firebase_uid, rut, nombre_completo, email, telefono, rol]
   );
@@ -83,7 +83,7 @@ export const actualizar = async (id, { nombre_completo, email, telefono, rol }) 
      SET nombre_completo = COALESCE($2, nombre_completo),
          email = COALESCE($3, email),
          telefono = COALESCE($4, telefono),
-         rol = COALESCE($5, rol)
+         rol = COALESCE($5::tipo_rol_usuario, rol)
      WHERE id = $1 AND deleted_at IS NULL
      RETURNING id, firebase_uid, rut, nombre_completo, email, telefono, rol, updated_at`,
     [id, nombre_completo, email, telefono, rol]

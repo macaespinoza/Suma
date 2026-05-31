@@ -5,7 +5,7 @@
 
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import api from '../../../../lib/api.js';
 import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
@@ -19,6 +19,14 @@ import styles from './nueva.module.css';
  * Página de creación de unidad vecinal.
  */
 export default function PaginaNuevaUnidad() {
+  return (
+    <Suspense fallback={<div className={styles.pagina}><p>Cargando...</p></div>}>
+      <ContenidoNuevaUnidad />
+    </Suspense>
+  );
+}
+
+function ContenidoNuevaUnidad() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const condominioIdParam = searchParams.get('condominio_id') || '';

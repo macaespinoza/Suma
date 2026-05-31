@@ -69,6 +69,10 @@ export const manejarError = (error, req, res, _next) => {
         mensaje = 'Referencia a un registro que no existe.';
         detalles = { restriccion: error.constraint };
         break;
+      case '22P02': // invalid_text_representation (UUID malformado en parámetro)
+        codigoHttp = 400;
+        mensaje = 'El identificador proporcionado no tiene un formato válido.';
+        break;
       case '23514': // check_violation (incluye validación de RUT)
         codigoHttp = 400;
         mensaje = 'Los datos no cumplen las restricciones de validación.';
