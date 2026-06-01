@@ -14,6 +14,7 @@ import Boton from '../../../../../../componentes/ui/Boton.jsx';
 import Input from '../../../../../../componentes/ui/Input.jsx';
 import Select from '../../../../../../componentes/ui/Select.jsx';
 import Modal from '../../../../../../componentes/ui/Modal.jsx';
+import ImportadorExcel from '../../../../../../componentes/ui/ImportadorExcel.jsx';
 import styles from './detalle.module.css';
 
 const formatoMoneda = (valor) =>
@@ -81,6 +82,7 @@ export default function PaginaDetalleGasto() {
   const [error, setError] = useState(null);
 
   const [modalEgreso, setModalEgreso] = useState(false);
+  const [modalImportar, setModalImportar] = useState(false);
   const [egresoForm, setEgresoForm] = useState({ categoria: '', descripcion: '', monto: '' });
   const [guardandoEgreso, setGuardandoEgreso] = useState(false);
 
@@ -153,6 +155,12 @@ export default function PaginaDetalleGasto() {
     } finally {
       setPublicando(false);
     }
+  };
+
+  const handleImportado = async () => {
+    const res = await api.get(`/condominios/${condominioId}/gastos/${gastoId}`);
+    setGasto(res.datos);
+    setModalImportar(false);
   };
 
   const totalEgresos = gasto?.egresos_operativos?.reduce((sum, e) => sum + parseFloat(e.monto), 0) || 0;
@@ -246,9 +254,14 @@ export default function PaginaDetalleGasto() {
         <div className={styles.seccionHeader}>
           <h2 className={styles.seccionTitulo}>📑 Egresos por Categoría</h2>
           {gasto.estado === 'borrador' && (
-            <Boton variante="outline" tamano="sm" onClick={() => setModalEgreso(true)}>
-              + Agregar Egreso
-            </Boton>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              <Boton variante="fantasma" tamano="sm" onClick={() => setModalImportar(true)}>
+                📥 Importar Excel
+              </Boton>
+              <Boton variante="outline" tamano="sm" onClick={() => setModalEgreso(true)}>
+                + Agregar Egreso
+              </Boton>
+            </div>
           )}
         </div>
 
@@ -363,6 +376,26 @@ export default function PaginaDetalleGasto() {
               placeholder="0"
             />
           </form>
+        </Modal>
+      )}
+
+      {/* Modal Importar Excel */}
+      {modalImportar && (
+        <Modal
+          titulo="Importar Egresos desde Excel"
+          onCerrar={() => setModalImportar(false)}
+          tamano="lg"
+          acciones={
+            <></>
+          }
+        >
+          <ImportadorExcel
+            condominioId={condominioId}
+            gastoId={gastoId}
+            gastoMesAnio={gasto?.mes_anio}
+            onCerrar={() => setModalImportar(false)}
+            onImportado={handleImportado}
+          />
         </Modal>
       )}
     </div>

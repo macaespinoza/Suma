@@ -121,12 +121,19 @@ export default function PaginaDashboard() {
               <span className={styles.accesoIcono}>👥</span>
               <span className={styles.accesoTexto}>Gestionar Usuarios</span>
             </a>
+            <a href="/dashboard/finanzas" className={styles.accesoRapido}>
+              <span className={styles.accesoIcono}>💰</span>
+              <span className={styles.accesoTexto}>Dashboard Financiero</span>
+            </a>
           </div>
         </div>
         <div className={styles.seccion}>
-          <h3 className={styles.seccionTitulo}>Módulos Próximamente</h3>
-          <div className={styles.placeholder}>
-            <p>Gastos comunes, cobros y pagos — en desarrollo.</p>
+          <h3 className={styles.seccionTitulo}>Administración</h3>
+          <div className={styles.accesosRapidos}>
+            <a href="/dashboard/finanzas" className={styles.accesoRapido}>
+              <span className={styles.accesoIcono}>💰</span>
+              <span className={styles.accesoTexto}>Dashboard Financiero</span>
+            </a>
           </div>
         </div>
       </div>

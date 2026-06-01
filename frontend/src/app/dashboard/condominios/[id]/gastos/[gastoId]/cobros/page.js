@@ -8,10 +8,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import api from '../../../../../../lib/api.js';
-import TarjetaFormulario from '../../../../../../componentes/ui/TarjetaFormulario.jsx';
-import Boton from '../../../../../../componentes/ui/Boton.jsx';
-import Input from '../../../../../../componentes/ui/Input.jsx';
+import api from '../../../../../../../lib/api.js';
+import TarjetaFormulario from '../../../../../../../componentes/ui/TarjetaFormulario.jsx';
+import Boton from '../../../../../../../componentes/ui/Boton.jsx';
+import Input from '../../../../../../../componentes/ui/Input.jsx';
 import styles from './cobros.module.css';
 
 const formatoMoneda = (valor) =>

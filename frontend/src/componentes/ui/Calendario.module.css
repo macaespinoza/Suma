@@ -1,0 +1,289 @@
+/* =============================================================================
+ * SUMA — Calendario UI (Estilos)
+ * ============================================================================= */
+
+.calendarioContenedor {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radio-2xl);
+  box-shadow: var(--sombra-sm);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (prefers-color-scheme: dark) {
+  .calendarioContenedor {
+    background: rgba(36, 24, 54, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+/* Cabecera del Calendario */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--espacio-4) var(--espacio-6);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tituloMes {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.navegacion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.botonNav {
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto-secundario);
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radio-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transicion-rapida);
+}
+
+.botonNav:hover {
+  background: var(--color-primario-light);
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.botonHoy {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  padding: 0 var(--espacio-3);
+  width: auto;
+}
+
+/* Días de la semana */
+.diasSemana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.diaSemana {
+  padding: var(--espacio-3);
+  text-align: center;
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto-terciario);
+  text-transform: uppercase;
+}
+
+/* Cuadrícula del mes */
+.cuadricula {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* Aseguramos que haya un borde para toda la grilla */
+  border-left: 1px solid transparent; 
+}
+
+.celdaDia {
+  min-height: 100px;
+  padding: var(--espacio-2);
+  border-bottom: 1px solid var(--color-borde);
+  border-right: 1px solid var(--color-borde);
+  background: transparent;
+  transition: background var(--transicion-rapida);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+}
+
+/* Quitar borde derecho a la última columna */
+.celdaDia:nth-child(7n) {
+  border-right: none;
+}
+
+.celdaDia:hover {
+  background: rgba(0, 0, 0, 0.01);
+}
+
+@media (prefers-color-scheme: dark) {
+  .celdaDia:hover {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
+
+.celdaVacia {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+@media (prefers-color-scheme: dark) {
+  .celdaVacia {
+    background: rgba(0, 0, 0, 0.2);
+  }
+}
+
+/* Número del día */
+.numeroDia {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto-secundario);
+  margin-bottom: var(--espacio-1);
+}
+
+.diaActual .numeroDia {
+  background: var(--color-primario);
+  color: white;
+  font-weight: var(--peso-bold);
+  box-shadow: var(--sombra-xs);
+}
+
+/* Eventos / Píldoras */
+.listaEventos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+/* Estilizar scrollbar interno en días con muchos eventos */
+.listaEventos::-webkit-scrollbar {
+  width: 4px;
+}
+.listaEventos::-webkit-scrollbar-thumb {
+  background: var(--color-borde);
+  border-radius: 4px;
+}
+
+.evento {
+  font-size: 0.65rem;
+  padding: 2px 4px;
+  border-radius: var(--radio-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+  transition: transform var(--transicion-rapida);
+}
+
+.evento:hover {
+  transform: scale(1.02);
+}
+
+/* Variantes de colores para los eventos */
+.evento_ingreso {
+  background: hsla(142, 71%, 35%, 0.15);
+  color: var(--color-exito);
+  border-left: 2px solid var(--color-exito);
+}
+
+.evento_egreso {
+  background: hsla(17, 92%, 50%, 0.15);
+  color: var(--color-error);
+  border-left: 2px solid var(--color-error);
+}
+
+.evento_recordatorio {
+  background: hsla(210, 100%, 50%, 0.15);
+  color: #3b82f6; /* Azul */
+  border-left: 2px solid #3b82f6;
+}
+
+.evento_admin {
+  background: hsla(270, 70%, 50%, 0.15);
+  color: #8b5cf6; /* Morado */
+  border-left: 2px solid #8b5cf6;
+}
+
+/* Modal y Celdas Clickeables */
+.celdaClickeable {
+  cursor: pointer;
+}
+
+.celdaClickeable:active {
+  transform: scale(0.98);
+}
+
+.modalContenido {
+  padding: var(--espacio-2) 0;
+}
+
+.listaModal {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.itemModal {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+  border-radius: var(--radio-lg);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
+  transition: all var(--transicion-rapida);
+}
+
+.itemModal:hover {
+  box-shadow: var(--sombra-sm);
+  transform: translateX(4px);
+}
+
+.indicadorModal {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.detalleModal {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detalleModal strong {
+  font-size: var(--texto-base);
+  color: var(--color-texto);
+}
+
+.tipoModal {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  text-transform: capitalize;
+}
+
+.vacioModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-8);
+  color: var(--color-texto-secundario);
+  text-align: center;
+}
+
+.vacioIcono {
+  font-size: 2.5rem;
+  opacity: 0.8;
+}

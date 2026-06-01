@@ -14,6 +14,7 @@ import Boton from '../../../../componentes/ui/Boton.jsx';
 import Tabla from '../../../../componentes/ui/Tabla.jsx';
 import Modal from '../../../../componentes/ui/Modal.jsx';
 import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
+import PaginaDashboardFinanciero from './dashboard/page.js';
 import styles from './[id].module.css';
 
 /**
@@ -51,6 +52,7 @@ export default function PaginaDetalleCondominio() {
   const [modalEditarUnidad, setModalEditarUnidad] = useState(null);
   const [modalEliminarUnidad, setModalEliminarUnidad] = useState(null);
   const [formularioUnidad, setFormularioUnidad] = useState({});
+  const [mostrarFormularioEdicion, setMostrarFormularioEdicion] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -170,94 +172,16 @@ export default function PaginaDetalleCondominio() {
 
   return (
     <div className={styles.pagina}>
-      {/* Formulario de edición */}
-      <TarjetaFormulario
-        titulo={`Editar: ${condominio?.nombre}`}
-        subtitulo="Modifica los datos del condominio."
-        acciones={
-          <>
-            <Boton
-              variante="outline"
-              onClick={() => router.push(`/dashboard/condominios/${id}/dashboard`)}
-            >
-              📊 Dashboard Financiero
-            </Boton>
-            <Boton
-              variante="fantasma"
-              onClick={() => router.push('/dashboard/condominios')}
-            >
-              Volver
-            </Boton>
-            <Boton
-              variante="primario"
-              tipo="submit"
-              form="form-editar-condominio"
-              cargando={guardando}
-            >
-              Guardar Cambios
-            </Boton>
-          </>
-        }
-      >
-        <form id="form-editar-condominio" onSubmit={handleSubmit} className={styles.formulario}>
-          <Input
-            nombre="nombre"
-            etiqueta="Nombre del Condominio"
-            valor={formulario.nombre}
-            onChange={handleChange}
-            error={errores.nombre}
-            requerido
-          />
+      {/* 1. Dashboard Financiero (Resumen principal) */}
+      <div className={styles.seccionPrincipal}>
+        <PaginaDashboardFinanciero embebido={true} />
+      </div>
 
-          <Input
-            nombre="direccion"
-            etiqueta="Dirección"
-            valor={formulario.direccion}
-            onChange={handleChange}
-            error={errores.direccion}
-            requerido
-          />
-
-          <div className={styles.fila}>
-            <Input
-              nombre="rut_comunidad"
-              etiqueta="RUT de la Comunidad"
-              valor={formulario.rut_comunidad}
-              onChange={handleChange}
-              error={errores.rut_comunidad}
-            />
-
-            <Input
-              nombre="cantidad_unidades"
-              etiqueta="Cantidad de Unidades"
-              tipo="number"
-              valor={formulario.cantidad_unidades}
-              onChange={handleChange}
-              error={errores.cantidad_unidades}
-            />
-          </div>
-        </form>
-      </TarjetaFormulario>
-
-      {/* Tabla de unidades del condominio */}
-      <div className={styles.seccionUnidades}>
+      {/* 2. Tabla de unidades del condominio */}
+      <div className={styles.seccionUnidades} style={{ marginTop: '2rem' }}>
         <div className={styles.seccionCabecera}>
           <h3 className={styles.seccionTitulo}>Unidades Vecinales</h3>
           <div className={styles.seccionAcciones}>
-            <Boton
-              variante="outline"
-              tamano="sm"
-              onClick={() => router.push(`/dashboard/condominios/${id}/gastos`)}
-            >
-              💰 Gastos Comunes
-            </Boton>
-            <Boton
-              variante="outline"
-              tamano="sm"
-              onClick={() => router.push(`/dashboard/condominios/${id}/dashboard`)}
-            >
-              📊 Dashboard
-            </Boton>
             <Boton
               variante="primario"
               tamano="sm"
@@ -285,6 +209,7 @@ export default function PaginaDetalleCondominio() {
           ]}
         />
       </div>
+
       {/* Formularios para unidades faltantes */}
       {faltantes > 0 && (
         <div className={styles.listaFormulariosInline}>
@@ -300,6 +225,77 @@ export default function PaginaDetalleCondominio() {
           ))}
         </div>
       )}
+
+      {/* 3. Formulario de edición (Al final de la página) */}
+      <div className={styles.seccionEdicion} style={{ marginTop: '3rem', paddingBottom: '2rem' }}>
+        {!mostrarFormularioEdicion ? (
+          <Boton variante="outline" onClick={() => setMostrarFormularioEdicion(true)}>
+            ✏️ Editar datos del Condominio
+          </Boton>
+        ) : (
+          <TarjetaFormulario
+            titulo={`Editar: ${condominio?.nombre}`}
+            subtitulo="Modifica los datos generales del condominio."
+            acciones={
+              <>
+                <Boton
+                  variante="fantasma"
+                  onClick={() => setMostrarFormularioEdicion(false)}
+                >
+                  Cancelar
+                </Boton>
+                <Boton
+                  variante="primario"
+                  tipo="submit"
+                  form="form-editar-condominio"
+                  cargando={guardando}
+                >
+                  Guardar Cambios
+                </Boton>
+              </>
+            }
+          >
+            <form id="form-editar-condominio" onSubmit={handleSubmit} className={styles.formulario}>
+              <Input
+                nombre="nombre"
+                etiqueta="Nombre del Condominio"
+                valor={formulario.nombre}
+                onChange={handleChange}
+                error={errores.nombre}
+                requerido
+              />
+
+              <Input
+                nombre="direccion"
+                etiqueta="Dirección"
+                valor={formulario.direccion}
+                onChange={handleChange}
+                error={errores.direccion}
+                requerido
+              />
+
+              <div className={styles.fila}>
+                <Input
+                  nombre="rut_comunidad"
+                  etiqueta="RUT de la Comunidad"
+                  valor={formulario.rut_comunidad}
+                  onChange={handleChange}
+                  error={errores.rut_comunidad}
+                />
+
+                <Input
+                  nombre="cantidad_unidades"
+                  etiqueta="Cantidad de Unidades"
+                  tipo="number"
+                  valor={formulario.cantidad_unidades}
+                  onChange={handleChange}
+                  error={errores.cantidad_unidades}
+                />
+              </div>
+            </form>
+          </TarjetaFormulario>
+        )}
+      </div>
 
       {/* Modal Editar Unidad */}
       <Modal

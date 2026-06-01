@@ -5,6 +5,8 @@
 
 import { Router } from 'express';
 import * as controlador from '../controladores/gastos.controlador.js';
+import * as importacionControlador from '../controladores/importacionExcel.controlador.js';
+import upload from '../middlewares/upload.js';
 import { validar } from '../middlewares/validacion.js';
 import {
   esquemaCrearGasto,
@@ -28,6 +30,15 @@ router.patch('/:condominioId/gastos/:gastoId', validar(esquemaActualizarGasto, '
 router.delete('/:condominioId/gastos/:gastoId', controlador.eliminar);
 
 router.post('/:condominioId/gastos/:gastoId/publicar', controlador.publicar);
+
+router.post('/:condominioId/gastos/:gastoId/egresos/importar',
+  upload.single('archivo'),
+  importacionControlador.parsearYPreview
+);
+
+router.post('/:condominioId/gastos/:gastoId/egresos/importar/confirmar',
+  importacionControlador.confirmarImportacion
+);
 
 router.get('/:condominioId/gastos/:gastoId/egresos', controlador.listarEgresos);
 

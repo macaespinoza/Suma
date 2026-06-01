@@ -11,6 +11,7 @@ import Link from 'next/link';
 import api from '../../../../../lib/api.js';
 import TarjetaFormulario from '../../../../../componentes/ui/TarjetaFormulario.jsx';
 import Boton from '../../../../../componentes/ui/Boton.jsx';
+import Calendario from '../../../../../componentes/ui/Calendario.jsx';
 import styles from './dashboard.module.css';
 
 const formatoMoneda = (valor) =>
@@ -32,10 +33,11 @@ const formatearMes = (fecha) => {
   });
 };
 
-export default function PaginaDashboardFinanciero() {
+export default function PaginaDashboardFinanciero(props) {
   const router = useRouter();
   const params = useParams();
   const condominioId = params.id;
+  const embebido = props.embebido || false;
 
   const [datos, setDatos] = useState(null);
   const [condominio, setCondominio] = useState(null);
@@ -87,32 +89,68 @@ export default function PaginaDashboardFinanciero() {
 
   const { periodo_actual, estado_cuenta, deuda_historica, egresos_mes, pasarelas_activas } = datos;
 
-  const categoriasEgresos = Object.entries(egresos_mes.por_categoria || {});
+  const categoriasEgresos = Object.entries(egresos_mes?.por_categoria || {});
   const maxEgreso = Math.max(...categoriasEgresos.map(([, v]) => v), 1);
+
+  // Datos simulados temporales para el calendario
+  const hoy = new Date();
+  const anio = hoy.getFullYear();
+  const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+  const eventosMock = [
+    { id: 1, fecha: `${anio}-${mes}-03`, titulo: 'Pago GC - Depto 101', tipo: 'ingreso' },
+    { id: 2, fecha: `${anio}-${mes}-03`, titulo: 'Pago GC - Casa 5', tipo: 'ingreso' },
+    { id: 3, fecha: `${anio}-${mes}-05`, titulo: 'Pago de Luz (Enel)', tipo: 'egreso' },
+    { id: 4, fecha: `${anio}-${mes}-10`, titulo: 'Mantenimiento Ascensores', tipo: 'egreso' },
+    { id: 5, fecha: `${anio}-${mes}-12`, titulo: 'Cobro Automático', tipo: 'admin' },
+    { id: 6, fecha: `${anio}-${mes}-15`, titulo: 'Cierre de Quincena', tipo: 'recordatorio' },
+    { id: 7, fecha: `${anio}-${mes}-25`, titulo: 'Pago de Agua', tipo: 'egreso' },
+    { id: 8, fecha: `${anio}-${mes}-28`, titulo: 'Sueldos y Honorarios', tipo: 'egreso' },
+  ];
 
   return (
     <div className={styles.dashboard}>
       {/* Cabecera */}
-      <div className={styles.cabecera}>
-        <div className={styles.cabeceraNavegacion}>
-          <Link href="/dashboard/condominios" className={styles.vinculoBreadcrumb}>
-            Condominios
-          </Link>
-          <span className={styles.separadorBreadcrumb}>/</span>
-          <span className={styles.textoBreadcrumb}>{condominio?.nombre}</span>
-          <span className={styles.separadorBreadcrumb}>/</span>
-          <span className={styles.paginaActual}>Dashboard Financiero</span>
+      {!embebido && (
+        <div className={styles.cabecera}>
+          <div className={styles.cabeceraNavegacion}>
+            <Link href="/dashboard/condominios" className={styles.vinculoBreadcrumb}>
+              Condominios
+            </Link>
+            <span className={styles.separadorBreadcrumb}>/</span>
+            <span className={styles.textoBreadcrumb}>{condominio?.nombre}</span>
+            <span className={styles.separadorBreadcrumb}>/</span>
+            <span className={styles.paginaActual}>Dashboard Financiero</span>
+          </div>
+          <div className={styles.cabeceraAcciones}>
+            <Boton
+              variante="outline"
+              tamano="sm"
+              onClick={() => router.push(`/dashboard/condominios/${condominioId}`)}
+            >
+              ✏️ Editar Condominio
+            </Boton>
+            <Boton
+              variante="primario"
+              tamano="sm"
+              onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos`)}
+            >
+              💰 Administrar Gastos
+            </Boton>
+          </div>
         </div>
-        <div className={styles.cabeceraAcciones}>
-          <Boton
-            variante="outline"
-            tamano="sm"
-            onClick={() => router.push(`/dashboard/condominios/${condominioId}`)}
-          >
-            ✏️ Editar Condominio
-          </Boton>
+      )}
+      {embebido && (
+        <div className={styles.cabecera}>
+          <div className={styles.cabeceraAcciones} style={{ marginLeft: 'auto' }}>
+            <Boton
+              variante="primario"
+              onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos`)}
+            >
+              💰 Administrar Gastos
+            </Boton>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Título */}
       <div className={styles.tituloSeccion}>
@@ -270,8 +308,20 @@ export default function PaginaDashboardFinanciero() {
         </div>
       </div>
 
-      {/* Egresos por Categoría */}
-      <div className={styles.card}>
+      {/* Calendario de Actividades (Nuevo) */}
+      <div className={styles.card} style={{ gridColumn: '1 / -1' }}>
+        <div className={styles.cardHeader}>
+          <h3 className={styles.cardTitulo}>📅 Calendario de Actividades</h3>
+        </div>
+        <div className={styles.cardBody} style={{ padding: 0 }}>
+          <Calendario eventos={eventosMock} />
+        </div>
+      </div>
+
+      {/* Egresos por Categoría y Pasarelas */}
+      <div className={styles.gridSecundario}>
+        {/* Egresos por Categoría */}
+        <div className={styles.card}>
         <div className={styles.cardHeader}>
           <h3 className={styles.cardTitulo}>📑 Egresos del Mes</h3>
           <span className={styles.cardTotal}>{formatoMoneda(egresos_mes?.total || 0)}</span>
@@ -336,6 +386,7 @@ export default function PaginaDashboardFinanciero() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );
