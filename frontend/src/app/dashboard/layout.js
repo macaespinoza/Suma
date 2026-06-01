@@ -60,9 +60,14 @@ export default function LayoutDashboard({ children }) {
             ))}
 
             <li className={styles.navSeparador}>Administración</li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>💰</span>
-              <span>Gastos Comunes</span>
+            <li>
+              <Link
+                href="/dashboard/condominios"
+                className={styles.navItem}
+              >
+                <span className={styles.navIcono}>💰</span>
+                <span>Gastos Comunes</span>
+              </Link>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
               <span className={styles.navIcono}>📄</span>

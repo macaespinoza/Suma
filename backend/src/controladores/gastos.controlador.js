@@ -4,7 +4,9 @@
 // =============================================================================
 
 import * as servicio from '../servicios/gastos.servicio.js';
+import * as condominiosRepo from '../repositorios/condominios.repositorio.js';
 import { respuestaExitosa, respuestaCreado, respuestaSinContenido } from '../utilidades/respuesta.js';
+import { generarLiquidacionPDF } from '../utilidades/liquidacionPdf.js';
 
 export const listar = async (req, res, next) => {
   try {
@@ -134,6 +136,46 @@ export const actualizarEstadoCobro = async (req, res, next) => {
 
     const resultado = await servicio.actualizarEstadoCobro(cobroId, { estado_pago, nota });
     return respuestaExitosa(res, resultado);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const generarLiquidacionPdf = async (req, res, next) => {
+  try {
+    const { gastoId } = req.params;
+
+    const gasto = await servicio.obtenerDetalleGasto(gastoId);
+
+    const condominio = await condominiosRepo.obtenerPorId(gasto.condominio_id);
+    if (!condominio) {
+      return res.status(404).json({
+        exito: false,
+        error: { codigo: 404, mensaje: 'Condominio no encontrado.' }
+      });
+    }
+
+    const cobrosResumen = {
+      total_cobrado: gasto.resumen_unidades.total_cobrado,
+      total_pagado: gasto.resumen_unidades.total_pagado,
+      total_pendiente: gasto.resumen_unidades.total_pendiente,
+      unidades_activas: gasto.resumen_unidades.total_unidades,
+    };
+
+    const pdfBuffer = await generarLiquidacionPDF({
+      condominio,
+      gasto,
+      egresos: gasto.egresos_operativos,
+      cobrosResumen,
+    });
+
+    const nombreArchivo = `liquidacion-gasto-comun-${condominio.nombre.replace(/\s+/g, '-').toLowerCase()}-${new Date(gasto.mes_anio).toISOString().slice(0, 7)}.pdf`;
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `inline; filename="${nombreArchivo}"`);
+    res.setHeader('Content-Length', pdfBuffer.length);
+
+    return res.status(200).send(pdfBuffer);
   } catch (error) {
     next(error);
   }

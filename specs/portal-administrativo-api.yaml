@@ -811,6 +811,40 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorRespuesta'
 
+  /unidades/lote:
+    post:
+      tags:
+        - Unidades
+      summary: Crear unidades vecinales en lote
+      description: Registra múltiples unidades vecinales para un condominio en una sola transacción.
+      operationId: crearUnidadesLote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnidadesLoteCreate'
+      responses:
+        '201':
+          description: Unidades creadas exitosamente
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/RespuestaEstandar'
+                  - type: object
+                    properties:
+                      datos:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UnidadLoteDetalle'
+        '400':
+          $ref: '#/components/responses/ValidacionFallida'
+        '401':
+          $ref: '#/components/responses/NoAutorizado'
+        '403':
+          $ref: '#/components/responses/RolInsuficiente'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -1548,3 +1582,63 @@ components:
           type: array
           items:
             type: string
+
+    UnidadesLoteCreate:
+      type: object
+      required:
+        - condominio_id
+        - unidades
+      properties:
+        condominio_id:
+          type: string
+          format: uuid
+          description: ID del condominio
+        unidades:
+          type: array
+          items:
+            type: object
+            required:
+              - numero
+              - alicuota
+            properties:
+              bloque_edificio:
+                type: string
+                maxLength: 100
+                nullable: true
+                description: Bloque o torre (ej. Torre A)
+              numero:
+                type: string
+                maxLength: 20
+                description: Número de departamento o casa (ej. 101)
+              alicuota:
+                type: number
+                format: decimal
+                minimum: 0
+                maximum: 1
+                description: Porcentaje de participación (ej. 0.0833)
+
+    UnidadLoteDetalle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        condominio_id:
+          type: string
+          format: uuid
+        bloque_edificio:
+          type: string
+          nullable: true
+        numero:
+          type: string
+        alicuota:
+          type: number
+          format: decimal
+        activo:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

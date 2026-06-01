@@ -55,6 +55,23 @@ export function useUnidades() {
   }, []);
 
   /**
+   * Crea unidades vecinales en lote.
+   */
+  const crearLote = useCallback(async (datos) => {
+    setCargando(true);
+    setError(null);
+    try {
+      const respuesta = await api.post('/unidades/lote', datos);
+      return respuesta.datos;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setCargando(false);
+    }
+  }, []);
+
+  /**
    * Actualiza una unidad vecinal.
    */
   const actualizar = useCallback(async (id, datos) => {
@@ -94,6 +111,7 @@ export function useUnidades() {
     error,
     obtenerPorId,
     crear,
+    crearLote,
     actualizar,
     desactivar,
   };

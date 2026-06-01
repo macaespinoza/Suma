@@ -51,6 +51,8 @@
   animation: fadeInUp 0.5s ease-out backwards;
   position: relative;
   overflow: hidden;
+  text-decoration: none;
+  color: inherit;
 }
 
 @media (prefers-color-scheme: dark) {

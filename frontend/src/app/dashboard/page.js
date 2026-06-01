@@ -6,6 +6,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import api from '../../lib/api.js';
 import styles from './page.module.css';
 
@@ -65,7 +66,7 @@ export default function PaginaDashboard() {
 
       {/* --- Grid de Métricas --- */}
       <div className={styles.metricasGrid}>
-        <div className={`${styles.metricaCard} ${styles.metricaPrimario}`}>
+        <Link href="/dashboard/condominios" className={`${styles.metricaCard} ${styles.metricaPrimario}`}>
           <div className={styles.metricaIcono}>🏘️</div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
@@ -73,8 +74,8 @@ export default function PaginaDashboard() {
             </span>
             <span className={styles.metricaEtiqueta}>Condominios</span>
           </div>
-        </div>
-        <div className={`${styles.metricaCard} ${styles.metricaExito}`}>
+        </Link>
+        <Link href="/dashboard/unidades" className={`${styles.metricaCard} ${styles.metricaExito}`}>
           <div className={styles.metricaIcono}>🏠</div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
@@ -82,8 +83,8 @@ export default function PaginaDashboard() {
             </span>
             <span className={styles.metricaEtiqueta}>Unidades</span>
           </div>
-        </div>
-        <div className={`${styles.metricaCard} ${styles.metricaAdvertencia}`}>
+        </Link>
+        <Link href="/dashboard/usuarios" className={`${styles.metricaCard} ${styles.metricaAdvertencia}`}>
           <div className={styles.metricaIcono}>👥</div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
@@ -91,8 +92,8 @@ export default function PaginaDashboard() {
             </span>
             <span className={styles.metricaEtiqueta}>Usuarios</span>
           </div>
-        </div>
-        <div className={`${styles.metricaCard} ${styles.metricaInfo}`}>
+        </Link>
+        <Link href="/dashboard/condominios" className={`${styles.metricaCard} ${styles.metricaInfo}`}>
           <div className={styles.metricaIcono}>📊</div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
@@ -100,7 +101,7 @@ export default function PaginaDashboard() {
             </span>
             <span className={styles.metricaEtiqueta}>Activos</span>
           </div>
-        </div>
+        </Link>
       </div>
 
       {/* --- Secciones de contenido --- */}

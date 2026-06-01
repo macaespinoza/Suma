@@ -70,3 +70,18 @@ export const desactivar = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * POST /api/v1/unidades/lote
+ * Crea múltiples unidades vecinales en lote.
+ */
+export const crearLote = async (req, res, next) => {
+  try {
+    const { condominio_id, unidades } = req.body;
+    const creadas = await servicio.crearLote(condominio_id, unidades);
+    return respuestaCreado(res, creadas);
+  } catch (error) {
+    next(error);
+  }
+};
+

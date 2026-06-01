@@ -909,7 +909,76 @@ Retorna un resumen ejecutivo de la situación financiera del condominio.
 
 ---
 
-## 8. Modelos de Datos (Referencias)
+## 8. Endpoints: Unidades Vecinales
+
+### 8.1 Crear Unidades Vecinales en Lote
+
+**POST** `/unidades/lote`
+
+Crea múltiples unidades vecinales para un condominio en una sola transacción. Se valida que la suma total de las alícuotas del condominio no supere 1.0000.
+
+**Headers Requeridos:**
+```
+Authorization: Bearer <firebase_id_token>
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+  "condominio_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "unidades": [
+    {
+      "bloque_edificio": "Torre A",
+      "numero": "101",
+      "alicuota": 0.0833
+    },
+    {
+      "bloque_edificio": "Torre A",
+      "numero": "102",
+      "alicuota": 0.0833
+    }
+  ]
+}
+```
+
+**Respuesta Exitosa (201 Created):**
+```json
+{
+  "ok": true,
+  "datos": [
+    {
+      "id": "u1111111-1111-1111-1111-111111111111",
+      "condominio_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "bloque_edificio": "Torre A",
+      "numero": "101",
+      "alicuota": 0.0833,
+      "activo": true,
+      "created_at": "2026-05-31T20:00:00Z",
+      "updated_at": "2026-05-31T20:00:00Z"
+    },
+    {
+      "id": "u2222222-2222-2222-2222-222222222222",
+      "condominio_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "bloque_edificio": "Torre A",
+      "numero": "102",
+      "alicuota": 0.0833,
+      "activo": true,
+      "created_at": "2026-05-31T20:00:00Z",
+      "updated_at": "2026-05-31T20:00:00Z"
+    }
+  ]
+}
+```
+
+**Errores:**
+- `400 VALIDACION_FALLIDA` — Datos inválidos o faltantes.
+- `400 SUMA_ALICUOTAS_EXCEDIDA` — La suma de las alícuotas del condominio supera el 100% (1.0000).
+- `404 CONDOMINIO_NO_ENCONTRADO` — El condominio no existe.
+
+---
+
+## 9. Modelos de Datos (Referencias)
 
 ### 8.1 Gastos_Comunes_Mes
 ```typescript
@@ -983,7 +1052,7 @@ interface PagosRegistrados {
 
 ---
 
-## 9. Reglas de Autorización por Rol
+## 10. Reglas de Autorización por Rol
 
 | Endpoint | admin | propietario | arrendatario | conserje |
 |----------|-------|-------------|--------------|----------|
@@ -1002,7 +1071,7 @@ interface PagosRegistrados {
 
 ---
 
-## 10. Anexos
+## 11. Anexos
 
 ### 10.1 Códigos de Error Completos
 

@@ -1,0 +1,347 @@
+/* =============================================================================
+ * SUMA — Estilos Lista de Gastos Comunes
+ * ============================================================================= */
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* --- Cabecera --- */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--espacio-4);
+}
+
+.cabeceraNavegacion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-size: var(--texto-sm);
+}
+
+.vinculoBreadcrumb {
+  color: var(--color-texto-secundario);
+  text-decoration: none;
+  transition: color var(--transicion-rapida);
+}
+
+.vinculoBreadcrumb:hover {
+  color: var(--color-primario);
+}
+
+.separadorBreadcrumb {
+  color: var(--color-texto-terciario);
+}
+
+.textoBreadcrumb {
+  color: var(--color-texto-secundario);
+}
+
+.paginaActual {
+  color: var(--color-texto);
+  font-weight: var(--peso-semibold);
+}
+
+.cabeceraAcciones {
+  display: flex;
+  gap: var(--espacio-3);
+}
+
+/* --- Título --- */
+.tituloSeccion {
+  margin-bottom: var(--espacio-2);
+}
+
+.titulo {
+  font-size: var(--texto-3xl);
+  font-weight: var(--peso-extrabold);
+  background: linear-gradient(135deg, var(--color-texto), var(--color-secundario));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: var(--interlineado-tight);
+  margin-bottom: var(--espacio-1);
+}
+
+.subtitulo {
+  font-size: var(--texto-base);
+  color: var(--color-texto-secundario);
+  font-weight: var(--peso-medium);
+}
+
+/* --- Filtros --- */
+.filtros {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.filtroGrupo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+}
+
+.filtroLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto-secundario);
+}
+
+.filtroSelect {
+  height: 40px;
+  padding: 0 var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+  cursor: pointer;
+  transition: border-color var(--transicion-rapida);
+}
+
+.filtroSelect:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+/* --- Error Banner --- */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-4);
+  background: hsla(17, 92%, 50%, 0.1);
+  border: 1px solid hsla(17, 92%, 50%, 0.3);
+  border-radius: var(--radio-lg);
+  color: var(--color-error);
+  font-size: var(--texto-sm);
+}
+
+.errorBanner button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  opacity: 0.7;
+}
+
+/* --- Vacío --- */
+.vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-16);
+  text-align: center;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radio-2xl);
+}
+
+@media (prefers-color-scheme: dark) {
+  .vacio {
+    background: rgba(36, 24, 54, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.vacioIcono {
+  font-size: 3rem;
+  opacity: 0.5;
+}
+
+.vacio h3 {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+}
+
+.vacio p {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+}
+
+/* --- Lista de Gastos --- */
+.listaGastos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.gastoCard {
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radio-2xl);
+  padding: var(--espacio-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+  transition: all var(--transicion-normal);
+  animation: fadeInUp 0.4s ease-out backwards;
+}
+
+.gastoCard:hover {
+  box-shadow: var(--sombra-md);
+  transform: translateY(-2px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .gastoCard {
+    background: rgba(36, 24, 54, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+.gastoCardMain {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--espacio-6);
+  flex-wrap: wrap;
+}
+
+.gastoCardInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.gastoCardHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.gastoCardTitulo {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+  text-transform: capitalize;
+}
+
+.gastoCardMeta {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+}
+
+.gastoCardFecha {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* --- Estados --- */
+.estadoBadge {
+  font-size: var(--texto-xs);
+  padding: var(--espacio-1) var(--espacio-3);
+  border-radius: var(--radio-full);
+  font-weight: var(--peso-semibold);
+  text-transform: capitalize;
+}
+
+.estadoBorrador {
+  background: hsla(33, 95%, 54%, 0.12);
+  color: var(--color-advertencia);
+}
+
+.estadoPublicado {
+  background: hsla(142, 71%, 35%, 0.12);
+  color: var(--color-exito);
+}
+
+/* --- Métricas --- */
+.gastoCardMetricas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--espacio-4);
+}
+
+.metricaItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espacio-1);
+  padding: var(--espacio-4);
+  background: var(--color-fondo);
+  border-radius: var(--radio-xl);
+  border: 1px solid var(--color-borde);
+  text-align: center;
+}
+
+.metricaItemExito .metricaItemValor {
+  color: var(--color-exito);
+}
+
+.metricaItemAdvertencia .metricaItemValor {
+  color: var(--color-advertencia);
+}
+
+.metricaItemLabel {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  font-weight: var(--peso-medium);
+}
+
+.metricaItemValor {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+}
+
+/* --- Acciones --- */
+.gastoCardAcciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding-top: var(--espacio-4);
+  border-top: 1px solid var(--color-borde);
+}
+
+/* --- Cargando --- */
+.cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-16);
+  color: var(--color-texto-secundario);
+}
+
+.cargandoSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--color-borde);
+  border-top-color: var(--color-primario);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .gastoCardMetricas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gastoCardMain {
+    flex-direction: column;
+  }
+
+  .cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

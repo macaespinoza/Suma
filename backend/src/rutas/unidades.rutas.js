@@ -7,7 +7,7 @@ import { Router } from 'express';
 import * as controlador from '../controladores/unidades.controlador.js';
 // import { verificarAutenticacion } from '../middlewares/autenticacion.js';
 import { validar } from '../middlewares/validacion.js';
-import { esquemaCrearUnidad, esquemaActualizarUnidad } from '../validaciones/unidades.validacion.js';
+import { esquemaCrearUnidad, esquemaActualizarUnidad, esquemaCrearUnidadesLote } from '../validaciones/unidades.validacion.js';
 
 const router = Router();
 
@@ -16,6 +16,12 @@ const router = Router();
  * Obtiene una unidad vecinal por su ID.
  */
 router.get('/:id', controlador.obtenerPorId);
+
+/**
+ * POST /api/v1/unidades/lote
+ * Crea múltiples unidades vecinales en lote.
+ */
+router.post('/lote', validar(esquemaCrearUnidadesLote, 'body'), controlador.crearLote);
 
 /**
  * POST /api/v1/unidades

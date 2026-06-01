@@ -3,7 +3,7 @@
 // Capa de acceso a datos: consultas SQL preparadas contra PostgreSQL.
 // =============================================================================
 
-import { consultar } from '../config/database.js';
+import { consultar, obtenerCliente } from '../config/database.js';
 
 /**
  * Lista las unidades vecinales de un condominio.
@@ -109,4 +109,39 @@ export const obtenerResidentes = async (unidadId) => {
     [unidadId]
   );
   return rows;
+};
+
+/**
+ * Crea múltiples unidades vecinales en lote usando una transacción.
+ * @param {string} condominioId - UUID del condominio.
+ * @param {Array} unidades - Lista de unidades a crear.
+ * @returns {Promise<Array>} Lista de unidades creadas.
+ */
+export const crearLote = async (condominioId, unidades) => {
+  const cliente = await obtenerCliente();
+  try {
+    await cliente.query('BEGIN');
+    const creadas = [];
+    for (const unidad of unidades) {
+      const { rows } = await cliente.query(
+        `INSERT INTO Unidades_Vecinales (condominio_id, bloque_edificio, numero, alicuota)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *`,
+        [
+          condominioId,
+          unidad.bloque_edificio ? unidad.bloque_edificio.trim() : null,
+          unidad.numero.trim(),
+          unidad.alicuota
+        ]
+      );
+      creadas.push(rows[0]);
+    }
+    await cliente.query('COMMIT');
+    return creadas;
+  } catch (error) {
+    await cliente.query('ROLLBACK');
+    throw error;
+  } finally {
+    cliente.release();
+  }
 };

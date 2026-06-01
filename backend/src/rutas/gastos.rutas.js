@@ -19,6 +19,8 @@ router.get('/:id/gastos', controlador.listar);
 
 router.post('/:id/gastos', validar(esquemaCrearGasto, 'body'), controlador.crear);
 
+router.get('/:condominioId/gastos/:gastoId/liquidacion', controlador.generarLiquidacionPdf);
+
 router.get('/:condominioId/gastos/:gastoId', controlador.obtenerDetalle);
 
 router.patch('/:condominioId/gastos/:gastoId', validar(esquemaActualizarGasto, 'body'), controlador.actualizar);

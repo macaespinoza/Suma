@@ -49,9 +49,7 @@ export default function PaginaNuevoCondominio() {
       nuevosErrores.direccion = 'La dirección es obligatoria.';
     }
 
-    if (!formulario.rut_comunidad.trim()) {
-      nuevosErrores.rut_comunidad = 'El RUT es obligatorio.';
-    } else if (!/^[0-9]{7,8}-[0-9Kk]$/.test(formulario.rut_comunidad)) {
+    if (formulario.rut_comunidad.trim() && !/^[0-9]{7,8}-[0-9Kk]$/.test(formulario.rut_comunidad)) {
       nuevosErrores.rut_comunidad = 'Formato inválido. Ejemplo: 76123456-0';
     }
 
@@ -70,11 +68,11 @@ export default function PaginaNuevoCondominio() {
     if (!validar()) return;
 
     try {
-      await crear({
+      const nuevoCondominio = await crear({
         ...formulario,
         cantidad_unidades: parseInt(formulario.cantidad_unidades, 10),
       });
-      router.push('/dashboard/condominios');
+      router.push(`/dashboard/condominios/${nuevoCondominio.id}/unidades/inicializar`);
     } catch {
       // El error ya se maneja en el hook.
     }
@@ -137,8 +135,7 @@ export default function PaginaNuevoCondominio() {
               valor={formulario.rut_comunidad}
               onChange={handleChange}
               error={errores.rut_comunidad}
-              ayuda="RUT sin puntos, con guión y dígito verificador."
-              requerido
+              ayuda="Opcional. RUT sin puntos, con guión y dígito verificador."
             />
 
             <Input

@@ -36,13 +36,16 @@ export const obtenerPorId = async (id) => {
  * @returns {Promise<object>} Condominio creado.
  */
 export const crear = async (datos) => {
-  // Validar RUT con Módulo 11 antes de enviar a la BD.
-  if (!validarRut(datos.rut_comunidad)) {
-    throw new ErrorApp('El RUT de la comunidad no es válido (Módulo 11).', 400);
+  // Validar RUT con Módulo 11 solo si se proporciona.
+  if (datos.rut_comunidad) {
+    if (!validarRut(datos.rut_comunidad)) {
+      throw new ErrorApp('El RUT de la comunidad no es válido (Módulo 11).', 400);
+    }
+    // Normalizar RUT al formato canónico.
+    datos.rut_comunidad = formatearRut(datos.rut_comunidad);
+  } else {
+    datos.rut_comunidad = null;
   }
-
-  // Normalizar RUT al formato canónico (sin puntos, con guión, DV mayúscula).
-  datos.rut_comunidad = formatearRut(datos.rut_comunidad);
 
   return await repositorio.crear(datos);
 };
@@ -61,6 +64,8 @@ export const actualizar = async (id, datos) => {
       throw new ErrorApp('El RUT de la comunidad no es válido (Módulo 11).', 400);
     }
     datos.rut_comunidad = formatearRut(datos.rut_comunidad);
+  } else if (datos.rut_comunidad === '') {
+    datos.rut_comunidad = null;
   }
 
   const condominio = await repositorio.actualizar(id, datos);

@@ -168,7 +168,7 @@ CREATE TABLE Condominios (
     id               UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
     nombre           VARCHAR(200) NOT NULL,
     direccion        VARCHAR(300) NOT NULL,
-    rut_comunidad    dominio_rut  NOT NULL UNIQUE,  -- RUT validado con Módulo 11.
+    rut_comunidad    dominio_rut  UNIQUE,  -- Opcional. RUT validado con Módulo 11 si existe.
     cantidad_unidades INTEGER     NOT NULL DEFAULT 0,
     activo           BOOLEAN     NOT NULL DEFAULT TRUE,
     created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
