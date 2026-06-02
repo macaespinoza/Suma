@@ -211,8 +211,8 @@
 
 .error {
   padding: var(--espacio-4);
-  background: hsla(17, 92%, 50%, 0.08);
-  border: 1px solid hsla(17, 92%, 50%, 0.2);
+  background: hsla(8, 100%, 69%, 0.08);
+  border: 1px solid hsla(8, 100%, 69%, 0.2);
   border-radius: var(--radio-md);
   color: var(--color-error);
   font-size: var(--texto-sm);
@@ -228,4 +228,135 @@
   .cabecera {
     flex-direction: column;
   }
+  
+  .selectorResponsable {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .gridForm {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Responsable del Pago */
+.descripcionSeccion {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin-bottom: var(--espacio-4);
+}
+
+.selectorResponsable {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-4);
+  margin-bottom: var(--espacio-6);
+}
+
+.opcionResponsable {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--espacio-4);
+  border-radius: var(--radio-lg);
+  border: 2px solid var(--color-borde);
+  background: var(--color-superficie);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.opcionResponsable:hover:not(.opcionDeshabilitada) {
+  border-color: var(--color-primario-light);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-sm);
+}
+
+.opcionActiva {
+  border-color: var(--color-primario);
+  background: hsla(262, 100%, 72%, 0.04);
+}
+
+.opcionDeshabilitada {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--color-fondo);
+}
+
+.radioOculto {
+  position: absolute;
+  top: var(--espacio-3);
+  right: var(--espacio-3);
+  accent-color: var(--color-primario);
+}
+
+.radioLabel {
+  font-weight: var(--peso-semibold);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+}
+
+.radioSubLabel {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+  font-weight: var(--peso-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.radioSubLabelError {
+  font-size: var(--texto-xs);
+  color: var(--color-error);
+  font-style: italic;
+}
+
+.radioSubLabelInfo {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  font-style: italic;
+}
+
+/* Formulario Tercero */
+.formTercero {
+  border-top: 1px solid var(--color-borde);
+  padding-top: var(--espacio-5);
+  margin-bottom: var(--espacio-6);
+}
+
+.formTerceroTitulo {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+  margin-bottom: var(--espacio-4);
+}
+
+.gridForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-4);
+}
+
+.accionesResponsable {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.exitoMsg {
+  padding: var(--espacio-3) var(--espacio-4);
+  background: hsla(152, 52%, 58%, 0.08);
+  border: 1px solid hsla(152, 52%, 58%, 0.2);
+  border-radius: var(--radio-md);
+  color: var(--color-exito);
+  font-size: var(--texto-sm);
+  margin-bottom: var(--espacio-4);
+}
+
+.errorMsg {
+  padding: var(--espacio-3) var(--espacio-4);
+  background: hsla(8, 100%, 69%, 0.08);
+  border: 1px solid hsla(8, 100%, 69%, 0.2);
+  border-radius: var(--radio-md);
+  color: var(--color-error);
+  font-size: var(--texto-sm);
+  margin-bottom: var(--espacio-4);
 }

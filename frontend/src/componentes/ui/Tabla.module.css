@@ -1,11 +1,11 @@
 /* =============================================================================
- * SUMA — Estilos del Componente Tabla
+ * SUMA — Estilos del Componente Tabla (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .contenedor {
   background: var(--color-superficie);
   border: 1px solid var(--color-borde);
-  border-radius: var(--radio-lg);
+  border-radius: var(--radio-xl);
   overflow: hidden;
 }
 
@@ -27,11 +27,11 @@
 }
 
 .tr {
-  transition: background var(--transicion-rapida);
+  border-bottom: 1px solid var(--color-borde);
 }
 
-.tr:not(:last-child) {
-  border-bottom: 1px solid var(--color-borde);
+.tr:last-child {
+  border-bottom: none;
 }
 
 .trClickable {
@@ -39,7 +39,7 @@
 }
 
 .trClickable:hover {
-  background: var(--color-fondo);
+  background: var(--color-superficie-elevada);
 }
 
 .td {
@@ -62,7 +62,6 @@
   font-size: var(--texto-xs);
   font-weight: var(--peso-medium);
   cursor: pointer;
-  transition: all var(--transicion-rapida);
 }
 
 .accion--fantasma {
@@ -80,10 +79,10 @@
 }
 
 .accion--peligro:hover {
-  background: hsla(0, 72%, 51%, 0.08);
+  background: hsla(8, 100%, 69%, 0.08);
 }
 
-/* --- Estado vacío --- */
+/* --- Estado vacio --- */
 .vacio {
   padding: var(--espacio-12) var(--espacio-4);
   text-align: center;

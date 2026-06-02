@@ -1,6 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos del Toggle (Switch)
- * Inspirado en el diseño lúdico naranja SUMA.
+ * SUMA — Estilos del Toggle (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .contenedor {
@@ -11,11 +10,10 @@
   user-select: none;
   font-size: var(--texto-sm);
   color: var(--color-texto);
-  transition: opacity var(--transicion-rapida);
 }
 
 .contenedor--deshabilitado {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
@@ -41,7 +39,6 @@
   height: 24px;
   border-radius: var(--radio-full);
   background: var(--color-texto-terciario);
-  transition: background var(--transicion-rapida);
   position: relative;
   cursor: pointer;
 }
@@ -62,7 +59,7 @@
   background: var(--color-error);
 }
 
-/* Thumb (círculo) del toggle */
+/* Thumb (circulo) del toggle */
 .thumb {
   position: absolute;
   left: 3px;
@@ -70,8 +67,6 @@
   height: 18px;
   border-radius: 50%;
   background: var(--color-superficie);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  transition: transform var(--transicion-rapida);
   transform: translateX(0);
 }
 

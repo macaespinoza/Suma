@@ -98,7 +98,7 @@
 
 .progreso--exito {
   background: linear-gradient(90deg, var(--color-primario) 0%, var(--color-exito) 100%);
-  box-shadow: 0 0 8px rgba(45, 134, 89, 0.4);
+  box-shadow: 0 0 8px rgba(92, 203, 158, 0.4);
 }
 
 .progreso--advertencia {
@@ -107,7 +107,7 @@
 
 .progreso--error {
   background: var(--color-error);
-  box-shadow: 0 0 8px rgba(245, 77, 11, 0.4);
+  box-shadow: 0 0 8px rgba(255, 122, 96, 0.4);
 }
 
 .alertaAlicuota {
@@ -214,7 +214,7 @@
 
 /* --- Acciones y Error Global --- */
 .errorGlobal {
-  background: hsla(17, 92%, 50%, 0.08);
+  background: hsla(8, 100%, 69%, 0.08);
   border: 1px solid var(--color-error);
   color: var(--color-error);
   padding: var(--espacio-4);

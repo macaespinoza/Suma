@@ -1,5 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos del Componente Input
+ * SUMA — Estilos del Componente Input (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .campo {
@@ -9,9 +9,11 @@
 }
 
 .etiqueta {
-  font-size: var(--texto-sm);
-  font-weight: var(--peso-medium);
-  color: var(--color-texto);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .requerido {
@@ -26,7 +28,6 @@
   font-size: var(--texto-sm);
   color: var(--color-texto);
   background: var(--color-superficie);
-  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
   outline: none;
 }
 
@@ -36,7 +37,7 @@
 
 .input:focus {
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px var(--color-primario-light);
+  box-shadow: 0 0 0 2px var(--color-primario-light);
 }
 
 .input:disabled {
@@ -50,7 +51,7 @@
 }
 
 .inputError:focus {
-  box-shadow: 0 0 0 3px hsla(0, 72%, 51%, 0.12);
+  box-shadow: 0 0 0 2px hsla(8, 100%, 69%, 0.12);
 }
 
 .ayuda {

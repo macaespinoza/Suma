@@ -1,12 +1,11 @@
 /* =============================================================================
- * SUMA — Estilos del Componente Modal
+ * SUMA — Estilos del Componente Modal (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .overlay {
   position: fixed;
   inset: 0;
-  background: hsla(220, 25%, 12%, 0.5);
-  backdrop-filter: blur(4px);
+  background: hsla(220, 25%, 6%, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,8 +21,8 @@
 
 .modal {
   background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
   border-radius: var(--radio-xl);
-  box-shadow: var(--sombra-xl);
   display: flex;
   flex-direction: column;
   max-height: 90vh;
@@ -41,7 +40,7 @@
   }
 }
 
-/* --- Tamaños --- */
+/* --- Tamanos --- */
 .modal--sm {
   width: 100%;
   max-width: 400px;
@@ -84,11 +83,10 @@
   color: var(--color-texto-terciario);
   cursor: pointer;
   border-radius: var(--radio-md);
-  transition: all var(--transicion-rapida);
 }
 
 .cerrarBtn:hover {
-  background: var(--color-fondo);
+  background: var(--color-superficie-elevada);
   color: var(--color-texto);
 }
 

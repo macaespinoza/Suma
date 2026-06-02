@@ -3,9 +3,9 @@
  * ============================================================================= */
 
 .calendarioContenedor {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(24, 25, 30, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(24, 25, 30, 0.5);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   overflow: hidden;
@@ -13,12 +13,7 @@
   flex-direction: column;
 }
 
-@media (prefers-color-scheme: dark) {
-  .calendarioContenedor {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
+
 
 /* Cabecera del Calendario */
 .cabecera {
@@ -74,7 +69,7 @@
 .diasSemana {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.02);
   border-bottom: 1px solid var(--color-borde);
 }
 
@@ -116,21 +111,13 @@
   background: rgba(0, 0, 0, 0.01);
 }
 
-@media (prefers-color-scheme: dark) {
-  .celdaDia:hover {
-    background: rgba(255, 255, 255, 0.02);
-  }
-}
+
 
 .celdaVacia {
-  background: rgba(0, 0, 0, 0.02);
+  background: rgba(255, 255, 255, 0.02);
 }
 
-@media (prefers-color-scheme: dark) {
-  .celdaVacia {
-    background: rgba(0, 0, 0, 0.2);
-  }
-}
+
 
 /* Número del día */
 .numeroDia {
@@ -188,19 +175,19 @@
 
 /* Variantes de colores para los eventos */
 .evento_ingreso {
-  background: hsla(142, 71%, 35%, 0.15);
+  background: hsla(152, 52%, 58%, 0.15);
   color: var(--color-exito);
   border-left: 2px solid var(--color-exito);
 }
 
 .evento_egreso {
-  background: hsla(17, 92%, 50%, 0.15);
+  background: hsla(8, 100%, 69%, 0.15);
   color: var(--color-error);
   border-left: 2px solid var(--color-error);
 }
 
 .evento_recordatorio {
-  background: hsla(210, 100%, 50%, 0.15);
+  background: hsla(262, 100%, 72%, 0.15);
   color: #3b82f6; /* Azul */
   border-left: 2px solid #3b82f6;
 }

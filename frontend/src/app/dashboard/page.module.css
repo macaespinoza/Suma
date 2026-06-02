@@ -1,5 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos de la Página Dashboard (Lúdico)
+ * SUMA — Dashboard Principal (Bento Grid — Neo-Brutalismo Oscuro Premium)
  * ============================================================================= */
 
 .dashboard {
@@ -8,184 +8,229 @@
   gap: var(--espacio-8);
 }
 
-/* --- Saludo --- */
+/* --- Saludo / Header de pagina --- */
 .saludo {
-  animation: fadeInUp 0.4s ease-out;
+  margin-bottom: var(--espacio-2);
 }
 
 .saludoTitulo {
   font-size: var(--texto-3xl);
-  font-weight: var(--peso-extrabold);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+  letter-spacing: -0.02em;
   margin-bottom: var(--espacio-2);
-  background: linear-gradient(135deg, var(--color-texto), var(--color-primario));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: var(--interlineado-tight);
 }
 
 .saludoSubtitulo {
   font-size: var(--texto-base);
   color: var(--color-texto-secundario);
-  font-weight: var(--peso-medium);
 }
 
-/* --- Grid de Métricas --- */
-.metricasGrid {
+/* =============================================================================
+ * BENTO GRID PRINCIPAL
+ * ============================================================================= */
+.bentoGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--espacio-6);
 }
 
+/* --- Tarjetas de metricas (Bento Blocks) --- */
 .metricaCard {
   display: flex;
   align-items: center;
   gap: var(--espacio-5);
   padding: var(--espacio-6);
-  border-radius: var(--radio-2xl);
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: var(--sombra-sm);
-  transition: all var(--transicion-normal);
-  animation: fadeInUp 0.5s ease-out backwards;
-  position: relative;
-  overflow: hidden;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
   text-decoration: none;
-  color: inherit;
 }
-
-@media (prefers-color-scheme: dark) {
-  .metricaCard {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
-
-.metricaCard:nth-child(1) { animation-delay: 0.05s; }
-.metricaCard:nth-child(2) { animation-delay: 0.1s; }
-.metricaCard:nth-child(3) { animation-delay: 0.15s; }
-.metricaCard:nth-child(4) { animation-delay: 0.2s; }
 
 .metricaCard:hover {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: var(--sombra-lg);
-  border-color: rgba(249, 149, 26, 0.3);
+  border-color: var(--color-borde-subtle);
 }
-
-/* Decoración circular sutil detrás */
-.metricaCard::before {
-  content: '';
-  position: absolute;
-  top: -20px;
-  right: -20px;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  opacity: 0.1;
-  z-index: 0;
-}
-
-.metricaPrimario::before { background: var(--color-primario); }
-.metricaExito::before { background: var(--color-exito); }
-.metricaAdvertencia::before { background: var(--color-advertencia); }
-.metricaInfo::before { background: var(--color-info); }
 
 .metricaIcono {
-  font-size: 1.75rem;
-  width: 64px;
-  height: 64px;
-  min-width: 64px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radio-xl);
-  position: relative;
-  z-index: 1;
-  box-shadow: var(--sombra-sm);
-}
-
-.metricaPrimario .metricaIcono { 
-  background: linear-gradient(135deg, var(--color-primario), #f54d0b); 
-  color: white;
-}
-.metricaExito .metricaIcono { 
-  background: linear-gradient(135deg, var(--color-exito), #4ade80); 
-  color: white;
-}
-.metricaAdvertencia .metricaIcono { 
-  background: linear-gradient(135deg, var(--color-advertencia), #fbbf24); 
-  color: white;
-}
-.metricaInfo .metricaIcono { 
-  background: linear-gradient(135deg, var(--color-info), #c084fc); 
-  color: white;
+  border-radius: var(--radio-lg);
+  font-size: 1.5rem;
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
 }
 
 .metricaDetalle {
   display: flex;
   flex-direction: column;
-  position: relative;
-  z-index: 1;
+  gap: var(--espacio-1);
 }
 
 .metricaValor {
-  font-size: var(--texto-3xl);
-  font-weight: var(--peso-extrabold);
-  line-height: var(--interlineado-tight);
+  font-size: var(--texto-2xl);
+  font-weight: var(--peso-bold);
   color: var(--color-texto);
+  line-height: 1;
 }
 
 .metricaEtiqueta {
-  font-size: var(--texto-sm);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
   color: var(--color-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- Variantes de acento para metricas --- */
+.metricaPrimario .metricaIcono {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.metricaExito .metricaIcono {
+  color: var(--color-exito);
+  border-color: var(--color-exito);
+}
+
+.metricaAdvertencia .metricaIcono {
+  color: var(--color-advertencia);
+  border-color: var(--color-advertencia);
+}
+
+.metricaInfo .metricaIcono {
+  color: var(--color-info);
+  border-color: var(--color-info);
+}
+
+/* =============================================================================
+ * MODULOS BENTO (Placeholders para funcionalidades futuras)
+ * ============================================================================= */
+.moduloBento {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.moduloBento:hover {
+  border-color: var(--color-borde-subtle);
+}
+
+.moduloHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.moduloTitulo {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.moduloBadge {
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--espacio-1) var(--espacio-3);
+  border-radius: var(--radio-full);
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
+  color: var(--color-texto-terciario);
+}
+
+.moduloContenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.moduloPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-8) var(--espacio-4);
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio-lg);
+  color: var(--color-texto-terciario);
+  text-align: center;
+}
+
+.moduloPlaceholderIcono {
+  font-size: 2rem;
+  opacity: 0.5;
+}
+
+.moduloPlaceholderTexto {
+  font-size: var(--texto-sm);
   font-weight: var(--peso-medium);
 }
 
-/* --- Grid de Contenido --- */
+/* --- Modulo Comunidad Civica (Votaciones) — placeholder --- */
+.moduloCivico {
+  grid-column: span 2;
+}
+
+.moduloCivico .moduloBadge {
+  color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+/* --- Modulo Economia Circular — placeholder --- */
+.moduloEconomia {
+  grid-column: span 1;
+}
+
+.moduloEconomia .moduloBadge {
+  color: var(--color-exito);
+  border-color: var(--color-exito);
+}
+
+/* --- Modulo Infraestructura / Propiedad — placeholder --- */
+.moduloInfraestructura {
+  grid-column: span 1;
+}
+
+.moduloInfraestructura .moduloBadge {
+  color: var(--color-acento);
+  border-color: var(--color-acento);
+}
+
+/* =============================================================================
+ * SECCIONES DE CONTENIDO ADICIONALES
+ * ============================================================================= */
 .contenidoGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: var(--espacio-6);
 }
 
 .seccion {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radio-2xl);
-  padding: var(--espacio-8);
-  box-shadow: var(--sombra-sm);
-  animation: fadeInUp 0.6s ease-out backwards;
-  animation-delay: 0.25s;
-  transition: all var(--transicion-normal);
-}
-
-@media (prefers-color-scheme: dark) {
-  .seccion {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
-
-.seccion:hover {
-  box-shadow: var(--sombra-md);
-  transform: translateY(-2px);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-6);
 }
 
 .seccionTitulo {
   font-size: var(--texto-lg);
-  font-weight: var(--peso-bold);
-  margin-bottom: var(--espacio-6);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+  margin-bottom: var(--espacio-5);
   padding-bottom: var(--espacio-4);
   border-bottom: 1px solid var(--color-borde);
-  color: var(--color-texto);
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-2);
 }
 
-/* --- Accesos Rápidos --- */
 .accesosRapidos {
   display: flex;
   flex-direction: column;
@@ -196,85 +241,65 @@
   display: flex;
   align-items: center;
   gap: var(--espacio-4);
-  padding: var(--espacio-4) var(--espacio-5);
-  border-radius: var(--radio-xl);
-  background: rgba(249, 149, 26, 0.06);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-lg);
+  background: var(--color-fondo);
+  border: 1px solid var(--color-borde);
   text-decoration: none;
   color: var(--color-texto);
-  transition: all var(--transicion-normal);
-  border: 1px solid transparent;
-  font-weight: var(--peso-medium);
 }
 
 .accesoRapido:hover {
-  background: rgba(249, 149, 26, 0.12);
-  color: var(--color-primario);
-  border-color: rgba(249, 149, 26, 0.2);
-  transform: translateX(6px);
-  box-shadow: var(--sombra-primario);
+  border-color: var(--color-primario);
+  background: var(--color-superficie-elevada);
 }
 
 .accesoIcono {
-  font-size: 1.5rem;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-xs);
-}
-
-@media (prefers-color-scheme: dark) {
-  .accesoIcono {
-    background: rgba(255, 255, 255, 0.1);
-  }
+  border-radius: var(--radio-md);
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
+  font-size: 1.25rem;
 }
 
 .accesoTexto {
   font-size: var(--texto-sm);
-  font-weight: var(--peso-semibold);
-}
-
-/* --- Placeholder --- */
-.placeholder {
-  padding: var(--espacio-8) var(--espacio-4);
-  text-align: center;
-  color: var(--color-texto-terciario);
-  font-size: var(--texto-sm);
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: var(--radio-xl);
-  border: 1px dashed var(--color-borde);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--espacio-3);
-}
-
-.placeholder::before {
-  content: '🚀';
-  font-size: 2rem;
-  opacity: 0.5;
+  font-weight: var(--peso-medium);
 }
 
 /* --- Responsive --- */
 @media (max-width: 1024px) {
-  .metricasGrid {
+  .bentoGrid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
 
-@media (max-width: 768px) {
-  .metricasGrid {
-    grid-template-columns: 1fr;
+  .moduloCivico,
+  .moduloEconomia,
+  .moduloInfraestructura {
+    grid-column: span 2;
   }
 
   .contenidoGrid {
     grid-template-columns: 1fr;
   }
-  
-  .saludoTitulo {
-    font-size: var(--texto-2xl);
+}
+
+@media (max-width: 640px) {
+  .bentoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .moduloCivico,
+  .moduloEconomia,
+  .moduloInfraestructura {
+    grid-column: span 1;
+  }
+
+  .metricaCard {
+    padding: var(--espacio-4);
   }
 }

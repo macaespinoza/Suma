@@ -92,12 +92,12 @@
 }
 
 .estadoBorrador {
-  background: hsla(33, 95%, 54%, 0.12);
+  background: hsla(262, 100%, 72%, 0.12);
   color: var(--color-advertencia);
 }
 
 .estadoPublicado {
-  background: hsla(142, 71%, 35%, 0.12);
+  background: hsla(152, 52%, 58%, 0.12);
   color: var(--color-exito);
 }
 
@@ -114,9 +114,9 @@
   align-items: center;
   gap: var(--espacio-2);
   padding: var(--espacio-6);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(24, 25, 30, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(24, 25, 30, 0.6);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   text-align: center;
@@ -128,12 +128,7 @@
   box-shadow: var(--sombra-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  .resumenCard {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
+
 
 .resumenCardExito .resumenValor {
   color: var(--color-exito);
@@ -157,20 +152,15 @@
 
 /* --- Sección --- */
 .seccion {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(24, 25, 30, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(24, 25, 30, 0.5);
   border-radius: var(--radio-2xl);
   padding: var(--espacio-6);
   box-shadow: var(--sombra-sm);
 }
 
-@media (prefers-color-scheme: dark) {
-  .seccion {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
+
 
 .seccionHeader {
   display: flex;
@@ -343,17 +333,17 @@
 
 /* --- Estados Cobro --- */
 .estadoPendiente {
-  background: hsla(33, 95%, 54%, 0.12);
+  background: hsla(262, 100%, 72%, 0.12);
   color: var(--color-advertencia);
 }
 
 .estadoPagado {
-  background: hsla(142, 71%, 35%, 0.12);
+  background: hsla(152, 52%, 58%, 0.12);
   color: var(--color-exito);
 }
 
 .estadoMoroso {
-  background: hsla(17, 92%, 50%, 0.12);
+  background: hsla(8, 100%, 69%, 0.12);
   color: var(--color-error);
 }
 
@@ -479,14 +469,10 @@
   transform: translateY(-4px);
   box-shadow: var(--sombra-md);
   border-color: var(--color-primario);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.5));
+  background: linear-gradient(135deg, rgba(24, 25, 30, 0.9), rgba(240, 248, 255, 0.5));
 }
 
-@media (prefers-color-scheme: dark) {
-  .tarjetaRapida:hover {
-    background: linear-gradient(135deg, rgba(36, 24, 54, 0.8), rgba(20, 10, 30, 0.9));
-  }
-}
+
 
 .tarjetaRapidaIcono {
   font-size: 1.8rem;
@@ -543,7 +529,7 @@
   align-items: center;
   gap: var(--espacio-2);
   padding: var(--espacio-2) var(--espacio-3);
-  background: hsla(142, 71%, 35%, 0.1);
+  background: hsla(152, 52%, 58%, 0.1);
   color: var(--color-exito);
   border-radius: var(--radio-md);
   font-size: var(--texto-xs);
@@ -593,7 +579,7 @@
 }
 
 .enlaceRespaldo:hover {
-  background: hsla(210, 100%, 50%, 0.1);
+  background: hsla(262, 100%, 72%, 0.1);
 }
 
 /* --- Monto Gigante --- */
@@ -627,7 +613,7 @@
 .montoGiganteInput:focus {
   outline: none;
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 4px hsla(210, 100%, 50%, 0.1);
+  box-shadow: 0 0 0 4px hsla(262, 100%, 72%, 0.1);
 }
 
 .montoGiganteInput::placeholder {

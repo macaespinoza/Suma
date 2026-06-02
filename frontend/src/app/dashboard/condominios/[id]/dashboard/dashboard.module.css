@@ -92,9 +92,9 @@
 .metricaCard {
   padding: var(--espacio-6);
   border-radius: var(--radio-2xl);
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(24, 25, 30, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(24, 25, 30, 0.6);
   box-shadow: var(--sombra-sm);
   transition: all var(--transicion-normal);
   animation: fadeInUp 0.5s ease-out backwards;
@@ -112,12 +112,7 @@
   box-shadow: var(--sombra-md);
 }
 
-@media (prefers-color-scheme: dark) {
-  .metricaCard {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
+
 
 .metricaHeader {
   display: flex;
@@ -144,10 +139,10 @@
   background: linear-gradient(135deg, #5122a7, #8e4fb0);
 }
 .metricaRecaudado .metricaIcono {
-  background: linear-gradient(135deg, #2D8659, #4ade80);
+  background: linear-gradient(135deg, #2D8659, var(--color-exito));
 }
 .metricaPendiente .metricaIcono {
-  background: linear-gradient(135deg, #f9951a, #fbbf24);
+  background: linear-gradient(135deg, #f9951a, var(--color-advertencia));
 }
 
 .metricaEtiqueta {
@@ -187,9 +182,9 @@
  * CARDS GENÉRICAS
  * ============================================================================= */
 .card {
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(24, 25, 30, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(24, 25, 30, 0.5);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   transition: all var(--transicion-normal);
@@ -202,12 +197,7 @@
   transform: translateY(-2px);
 }
 
-@media (prefers-color-scheme: dark) {
-  .card {
-    background: rgba(36, 24, 54, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-  }
-}
+
 
 .cardHeader {
   display: flex;
@@ -256,13 +246,13 @@
 }
 
 .estadoItemExito {
-  background: hsla(142, 71%, 35%, 0.1);
+  background: hsla(152, 52%, 58%, 0.1);
 }
 .estadoItemAdvertencia {
-  background: hsla(33, 95%, 54%, 0.1);
+  background: hsla(262, 100%, 72%, 0.1);
 }
 .estadoItemError {
-  background: hsla(17, 92%, 50%, 0.1);
+  background: hsla(8, 100%, 69%, 0.1);
 }
 .estadoItemTotal {
   background: var(--color-primario-light);
@@ -439,7 +429,7 @@
 }
 
 .pasarelaBadgeActiva {
-  background: hsla(142, 71%, 35%, 0.12);
+  background: hsla(152, 52%, 58%, 0.12);
   color: var(--color-exito);
 }
 

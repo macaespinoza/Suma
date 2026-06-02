@@ -1,5 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos del Componente Botón
+ * SUMA — Estilos del Componente Boton (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .boton {
@@ -11,18 +11,17 @@
   border-radius: var(--radio-md);
   font-weight: var(--peso-semibold);
   cursor: pointer;
-  transition: all var(--transicion-rapida);
   position: relative;
   white-space: nowrap;
   user-select: none;
 }
 
 .boton:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* --- Tamaños --- */
+/* --- Tamanos --- */
 .boton--sm {
   padding: var(--espacio-2) var(--espacio-3);
   font-size: var(--texto-sm);
@@ -53,12 +52,6 @@
 
 .boton--primario:hover:not(:disabled) {
   background: var(--color-primario-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--sombra-md);
-}
-
-.boton--primario:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .boton--secundario {
@@ -68,8 +61,6 @@
 
 .boton--secundario:hover:not(:disabled) {
   background: var(--color-secundario-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--sombra-md);
 }
 
 .boton--outline {
@@ -88,7 +79,7 @@
 }
 
 .boton--fantasma:hover:not(:disabled) {
-  background: var(--color-fondo);
+  background: var(--color-superficie-elevada);
   color: var(--color-texto);
 }
 
@@ -99,8 +90,6 @@
 
 .boton--peligro:hover:not(:disabled) {
   background: var(--color-error-hover);
-  transform: translateY(-1px);
-  box-shadow: var(--sombra-md);
 }
 
 /* --- Estado de carga --- */

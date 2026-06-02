@@ -1,12 +1,11 @@
 /* =============================================================================
- * SUMA — Estilos del Componente TarjetaFormulario
+ * SUMA — Estilos del Componente TarjetaFormulario (Neo-Brutalismo Oscuro)
  * ============================================================================= */
 
 .tarjeta {
   background: var(--color-superficie);
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-xl);
-  box-shadow: var(--sombra-sm);
   overflow: hidden;
   animation: fadeInUp 0.3s ease-out;
 }

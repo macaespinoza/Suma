@@ -1,47 +1,47 @@
 /* =============================================================================
- * SUMA — Sistema de Diseño Global (Design Tokens)
- * Tokens CSS para colores, tipografía, espaciado, sombras y animaciones.
- * Dark mode integrado via prefers-color-scheme.
+ * SUMA — Sistema de Diseño Global (Neo-Brutalismo Oscuro Premium)
+ * Tokens CSS para colores, tipografia, espaciado y geometria.
+ * Forzado a dark mode exclusivo.
  * ============================================================================= */
 
-/* --- Google Fonts: Plus Jakarta Sans (caráacter cálido, no genérico) --- */
+/* --- Google Fonts: Plus Jakarta Sans --- */
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 
 /* =============================================================================
- * VARIABLES GLOBALES (LIGHT MODE)
- * Inspiración: Paleta Lúdica SUMA — Naranjo vibrante como protagonista
+ * VARIABLES GLOBALES (DARK MODE EXCLUSIVO — Neo-Brutalismo Oscuro Premium)
  * ============================================================================= */
 :root {
-  /* --- Paleta de Colores: Lúdica y Amigable --- */
-  --color-primario: #f9951a;          /* Naranjo Carrot — Protagonista */
-  --color-primario-hover: #e08516;
-  --color-primario-light: hsla(33, 95%, 54%, 0.12);
-  --color-secundario: #5122a7;         /* Índigo profundo */
-  --color-secundario-hover: #421c8a;
-  --color-acento: #d5165c;             /* Berry Lipstick */
-  --color-acento-hover: #b0124d;
+  /* --- Paleta de Acentos (Usados con extrema moderacion) --- */
+  --color-primario: #A370FF;          /* Lilac / Vibrant Violet */
+  --color-primario-hover: #B88CFF;
+  --color-primario-light: hsla(262, 100%, 72%, 0.12);
+  --color-secundario: #5CCB9E;         /* Mint / Sage Green */
+  --color-secundario-hover: #7AD9B4;
+  --color-acento: #FF7A60;             /* Terracota / Soft Coral */
+  --color-acento-hover: #FF9985;
 
-  /* --- Semánticos --- */
-  --color-exito: #2D8659;
-  --color-advertencia: #f9951a;
-  --color-error: #f54d0b;             /* Crimson Carrot */
-  --color-error-hover: #d93d08;
-  --color-info: #8e4fb0;              /* Amethyst */
+  /* --- Semanticos --- */
+  --color-exito: #5CCB9E;
+  --color-advertencia: #FF7A60;
+  --color-error: #FF7A60;
+  --color-error-hover: #FF9985;
+  --color-info: #A370FF;
 
-  /* --- Neutros --- */
-  --color-fondo: #FFF8F0;              /* Blanco cálido naranja */
-  --color-superficie: #FFFFFF;        
-  --color-superficie-elevada: #FFFFFF;
-  --color-borde: rgba(0, 0, 0, 0.06);
-  --color-borde-focus: var(--color-primario);
+  /* --- Neutros (Estructurales) --- */
+  --color-fondo: #0E0F12;             /* Antracita profundo — PROHIBIDO #000 */
+  --color-superficie: #18191E;         /* Carbon mineral */
+  --color-superficie-elevada: #1D1F25; /* Grafito oscuro */
+  --color-borde: #2D3039;              /* Gris metalizado atenuado */
+  --color-borde-subtle: #343846;       /* Separacion quirurgica */
+  --color-borde-focus: #A370FF;
 
   /* --- Texto --- */
-  --color-texto: #2C2C2C;
-  --color-texto-secundario: #6B6B6B;
-  --color-texto-terciario: #9E9E9E;
-  --color-texto-invertido: #FFFFFF;
+  --color-texto: #F1F2F4;              /* Blanco lino / Off-white templado */
+  --color-texto-secundario: #8A8F9E;  /* Gris ceniza / Platino */
+  --color-texto-terciario: #5E6270;    /* Gris profundo para metadatos */
+  --color-texto-invertido: #0E0F12;
 
-  /* --- Tipografía --- */
+  /* --- Tipografia --- */
   --fuente-principal: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --fuente-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
@@ -64,7 +64,7 @@
   --interlineado: 1.6;
   --interlineado-tight: 1.25;
 
-  /* --- Espaciado --- */
+  /* --- Espaciado (layouts amplios, aire generoso) --- */
   --espacio-1: 0.25rem;    /* 4px */
   --espacio-2: 0.5rem;     /* 8px */
   --espacio-3: 0.75rem;    /* 12px */
@@ -76,68 +76,30 @@
   --espacio-12: 3rem;      /* 48px */
   --espacio-16: 4rem;      /* 64px */
 
-  /* --- Bordes --- */
+  /* --- Geometria (Neo-Brutalismo suavizado) --- */
   --radio-sm: 0.5rem;      /* 8px */
-  --radio-md: 0.75rem;     /* 12px */
-  --radio-lg: 1rem;        /* 16px */
-  --radio-xl: 1.25rem;     /* 20px */
-  --radio-2xl: 1.5rem;     /* 24px */
+  --radio-md: 0.625rem;    /* 10px */
+  --radio-lg: 0.75rem;     /* 12px */
+  --radio-xl: 0.875rem;    /* 14px */
+  --radio-2xl: 1rem;       /* 16px */
   --radio-full: 9999px;
 
-  /* --- Sombras --- */
-  --sombra-xs: 0 1px 2px rgba(81, 34, 167, 0.04);
-  --sombra-sm: 0 2px 8px rgba(81, 34, 167, 0.06);
-  --sombra-md: 0 4px 16px rgba(81, 34, 167, 0.08);
-  --sombra-lg: 0 12px 32px rgba(81, 34, 167, 0.10);
-  --sombra-xl: 0 24px 48px rgba(81, 34, 167, 0.12);
-  
-  /* --- Sombras de color (Color Glow) --- */
-  --sombra-primario: 0 8px 24px rgba(249, 149, 26, 0.25);
-  --sombra-secundario: 0 8px 24px rgba(81, 34, 167, 0.25);
-  --sombra-acento: 0 8px 24px rgba(213, 22, 92, 0.25);
+  /* --- Sombras: Hard shadow ultra-delgado o ninguna --- */
+  --sombra-xs: 2px 2px 0 #000000;
+  --sombra-sm: 2px 2px 0 #000000;
+  --sombra-md: 2px 2px 0 #000000;
+  --sombra-lg: none;
+  --sombra-xl: none;
 
-  /* --- Transiciones --- */
-  --transicion-rapida: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transicion-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transicion-lenta: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  /* --- Transiciones: NINGUNA (regla sagrada del brutalismo) --- */
+  --transicion-rapida: 0ms;
+  --transicion-normal: 0ms;
+  --transicion-lenta: 0ms;
 
   /* --- Layout --- */
   --ancho-maximo: 1280px;
   --sidebar-ancho: 260px;
-  --header-alto: 72px;
-}
-
-/* =============================================================================
- * DARK MODE — Noche Lúdica
- * ============================================================================= */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primario: #f9951a;          
-    --color-primario-hover: #ffb347;
-    --color-primario-light: hsla(33, 95%, 54%, 0.15);
-    --color-secundario: #8e4fb0;         
-    --color-secundario-hover: #a56cc9;
-    --color-acento: #d5165c;             
-    --color-acento-hover: #e83a75;
-
-    --color-fondo: #1A1025;             /* Violeta noche profundo */
-    --color-superficie: #241836;        /* Violeta oscuro */
-    --color-superficie-elevada: #2E1E42;
-    --color-borde: rgba(255, 255, 255, 0.08);
-
-    --color-texto: #F5F0FF;             
-    --color-texto-secundario: #B8A9C9;
-    --color-texto-terciario: #7A6B8A;
-
-    --sombra-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-    --sombra-md: 0 4px 16px rgba(0, 0, 0, 0.35);
-    --sombra-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
-    --sombra-xl: 0 24px 48px rgba(0, 0, 0, 0.45);
-    
-    --sombra-primario: 0 8px 24px rgba(249, 149, 26, 0.2);
-    --sombra-secundario: 0 8px 24px rgba(142, 79, 176, 0.25);
-    --sombra-acento: 0 8px 24px rgba(213, 22, 92, 0.25);
-  }
+  --header-alto: 64px;
 }
 
 /* =============================================================================
@@ -172,14 +134,13 @@ body {
 a {
   color: var(--color-primario);
   text-decoration: none;
-  transition: color var(--transicion-rapida);
 }
 
 a:hover {
   color: var(--color-primario-hover);
 }
 
-/* --- Imágenes --- */
+/* --- Imagenes --- */
 img, video {
   max-width: 100%;
   height: auto;
@@ -210,44 +171,10 @@ input, textarea, select, button {
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-xl);
   padding: var(--espacio-6);
-  box-shadow: var(--sombra-sm);
-  transition: box-shadow var(--transicion-normal), transform var(--transicion-normal);
 }
 
 .tarjeta:hover {
-  box-shadow: var(--sombra-md);
-  transform: translateY(-2px);
-}
-
-/* --- Glassmorphism (Lúdico) --- */
-.cristal {
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: 0 8px 32px 0 rgba(81, 34, 167, 0.08);
-}
-
-@media (prefers-color-scheme: dark) {
-  .cristal {
-    background: rgba(36, 24, 54, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
-  }
-}
-
-/* --- Fondo Degradado Lúdico --- */
-.fondoLudico {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #FFF8F0 0%, #F3E8FF 50%, #FFE8F0 100%);
-  min-height: 100dvh;
-}
-
-@media (prefers-color-scheme: dark) {
-  .fondoLudico {
-    background: linear-gradient(135deg, #1A1025 0%, #2E1E42 50%, #1A1025 100%);
-  }
+  border-color: var(--color-borde-subtle);
 }
 
 /* --- Scrollbar personalizado --- */
@@ -269,7 +196,7 @@ input, textarea, select, button {
   background: var(--color-texto-terciario);
 }
 
-/* --- Animación de entrada (fade-in-up) --- */
+/* --- Animacion de entrada (fade-in-up) --- */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -299,7 +226,7 @@ input, textarea, select, button {
   white-space: nowrap;
 }
 
-/* --- Badge / Etiqueta --- */
+/* --- Badge / Etiqueta (estilo etiqueta tecnica de planos) --- */
 .etiqueta {
   display: inline-flex;
   align-items: center;
@@ -307,48 +234,33 @@ input, textarea, select, button {
   border-radius: var(--radio-full);
   font-size: var(--texto-xs);
   font-weight: var(--peso-semibold);
-  letter-spacing: 0.025em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .etiqueta--exito {
-  background: hsla(142, 71%, 35%, 0.12);
+  background: hsla(152, 52%, 58%, 0.12);
   color: var(--color-exito);
 }
 
 .etiqueta--error {
-  background: hsla(17, 92%, 50%, 0.12);
+  background: hsla(8, 100%, 69%, 0.12);
   color: var(--color-error);
 }
 
 .etiqueta--advertencia {
-  background: hsla(33, 95%, 54%, 0.12);
+  background: hsla(8, 100%, 69%, 0.12);
   color: var(--color-advertencia);
 }
 
 .etiqueta--info {
-  background: hsla(279, 38%, 50%, 0.12);
+  background: hsla(262, 100%, 72%, 0.12);
   color: var(--color-info);
 }
 
-/* --- Blob decorativo (círculo difuso) --- */
-.blob {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.45;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.blob--primario {
-  background: var(--color-primario);
-}
-
-.blob--secundario {
-  background: var(--color-secundario);
-}
-
-.blob--acento {
-  background: var(--color-acento);
+/* --- Separador de linea fina quirurgica --- */
+.linea-fina {
+  height: 1px;
+  background: var(--color-borde);
+  width: 100%;
 }

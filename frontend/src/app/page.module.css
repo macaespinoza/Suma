@@ -1,6 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos Landing Page
- * Inspiración: Atardecer en el Pacífico, desierto de Atacama, identidad aricena
+ * SUMA — Estilos Landing Page (Neo-Brutalismo Oscuro Premium)
  * ============================================================================= */
 
 .principal {
@@ -10,19 +9,15 @@
   background: var(--color-fondo);
 }
 
-/* --- Panel Izquierdo: Branding Evocador --- */
+/* --- Panel Izquierdo: Branding Estructural --- */
 .panelBranding {
   flex: 1;
   display: none;
   flex-direction: column;
   justify-content: center;
   padding: var(--espacio-12);
-  background: linear-gradient(
-    145deg,
-    #1B4B6E 0%,
-    #163E57 40%,
-    #0F2D42 100%
-  );
+  background: var(--color-superficie);
+  border-right: 1px solid var(--color-borde);
   position: relative;
   overflow: hidden;
 }
@@ -30,22 +25,22 @@
 .panelBranding::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -30%;
-  width: 80%;
-  height: 200%;
-  background: radial-gradient(ellipse, rgba(212, 146, 10, 0.15) 0%, transparent 70%);
+  top: -20%;
+  right: -10%;
+  width: 60%;
+  height: 140%;
+  background: radial-gradient(ellipse, rgba(163, 112, 255, 0.08) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .panelBranding::after {
   content: '';
   position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 60%;
-  height: 150%;
-  background: radial-gradient(ellipse, rgba(200, 90, 56, 0.1) 0%, transparent 65%);
+  bottom: -10%;
+  left: -5%;
+  width: 50%;
+  height: 120%;
+  background: radial-gradient(ellipse, rgba(92, 203, 158, 0.05) 0%, transparent 65%);
   pointer-events: none;
 }
 
@@ -65,8 +60,8 @@
 .brandingIcono {
   width: 64px;
   height: 64px;
-  background: rgba(212, 146, 10, 0.2);
-  border: 2px solid rgba(212, 146, 10, 0.4);
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
   border-radius: var(--radio-xl);
   display: flex;
   align-items: center;
@@ -77,21 +72,22 @@
 .brandingNombre {
   font-size: var(--texto-3xl);
   font-weight: var(--peso-extrabold);
-  color: var(--color-texto-invertido);
+  color: var(--color-texto);
   letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .brandingTitulo {
   font-size: var(--texto-2xl);
   font-weight: var(--peso-bold);
-  color: var(--color-texto-invertido);
+  color: var(--color-texto);
   margin-bottom: var(--espacio-4);
   opacity: 0.95;
 }
 
 .brandingDescripcion {
   font-size: var(--texto-base);
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-texto-secundario);
   line-height: var(--interlineado);
   max-width: 420px;
   margin-bottom: var(--espacio-10);
@@ -107,14 +103,15 @@
   display: flex;
   align-items: center;
   gap: var(--espacio-3);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--color-texto-secundario);
   font-size: var(--texto-sm);
 }
 
 .brandingFeatureIcono {
   width: 32px;
   height: 32px;
-  background: rgba(212, 146, 10, 0.25);
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
   border-radius: var(--radio-md);
   display: flex;
   align-items: center;
@@ -126,7 +123,7 @@
   margin-top: auto;
   padding-top: var(--espacio-12);
   font-size: var(--texto-xs);
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--color-texto-terciario);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -185,20 +182,22 @@
 }
 
 .etiquetaCampo {
-  font-size: var(--texto-sm);
-  font-weight: var(--peso-medium);
-  color: var(--color-texto);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .entradaCampo {
   height: 48px;
   padding: 0 var(--espacio-4);
   background: var(--color-superficie);
-  border: 1.5px solid var(--color-borde);
+  border: 1px solid var(--color-borde);
   border-radius: var(--radio-lg);
   font-size: var(--texto-base);
   color: var(--color-texto);
-  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+  outline: none;
 }
 
 .entradaCampo::placeholder {
@@ -206,13 +205,12 @@
 }
 
 .entradaCampo:focus {
-  outline: none;
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(27, 75, 110, 0.1);
+  box-shadow: 0 0 0 2px var(--color-primario-light);
 }
 
 .entradaCampo:hover:not(:focus) {
-  border-color: var(--color-texto-terciario);
+  border-color: var(--color-borde-subtle);
 }
 
 .errorCampo {
@@ -232,7 +230,6 @@
   border: none;
   border-radius: var(--radio-lg);
   cursor: pointer;
-  transition: background var(--transicion-rapida), transform var(--transicion-rapida);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -242,15 +239,10 @@
 
 .botonAccion:hover:not(:disabled) {
   background: var(--color-primario-hover);
-  transform: translateY(-1px);
-}
-
-.botonAccion:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .botonAccion:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -279,17 +271,16 @@
   background: var(--color-borde);
 }
 
-/* --- Botón Google --- */
+/* --- Boton Google --- */
 .botonGoogle {
   height: 52px;
   background: var(--color-superficie);
-  border: 1.5px solid var(--color-borde);
+  border: 1px solid var(--color-borde);
   border-radius: var(--radio-lg);
   font-size: var(--texto-base);
   font-weight: var(--peso-medium);
   color: var(--color-texto);
   cursor: pointer;
-  transition: all var(--transicion-rapida);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,12 +288,12 @@
 }
 
 .botonGoogle:hover:not(:disabled) {
-  border-color: var(--color-texto-terciario);
-  background: var(--color-fondo);
+  border-color: var(--color-borde-subtle);
+  background: var(--color-superficie-elevada);
 }
 
 .botonGoogle:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
@@ -323,7 +314,6 @@
   font-size: var(--texto-sm);
   color: var(--color-primario);
   text-decoration: none;
-  transition: color var(--transicion-rapida);
 }
 
 .enlaceRecuperar:hover {
@@ -331,7 +321,7 @@
   text-decoration: underline;
 }
 
-/* --- Grid de Módulos --- */
+/* --- Grid de Modulos --- */
 .modulosSeccion {
   margin-top: var(--espacio-10);
 }
@@ -359,16 +349,13 @@
   gap: var(--espacio-2);
   padding: var(--espacio-4) var(--espacio-2);
   border-radius: var(--radio-lg);
-  background: var(--color-fondo);
+  background: var(--color-superficie);
   border: 1px solid var(--color-borde);
-  transition: all var(--transicion-normal);
   cursor: default;
 }
 
 .moduloItem:hover {
   border-color: var(--color-primario);
-  box-shadow: var(--sombra-sm);
-  transform: translateY(-2px);
 }
 
 .moduloIcono {
@@ -378,7 +365,7 @@
 .moduloNombre {
   font-size: var(--texto-xs);
   font-weight: var(--peso-semibold);
-  color: var(--color-texto);
+  color: var(--color-texto-secundario);
   text-align: center;
 }
 
@@ -388,8 +375,8 @@
   align-items: center;
   gap: var(--espacio-2);
   padding: var(--espacio-3) var(--espacio-4);
-  background: hsla(0, 72%, 51%, 0.08);
-  border: 1px solid hsla(0, 72%, 51%, 0.2);
+  background: hsla(8, 100%, 69%, 0.08);
+  border: 1px solid hsla(8, 100%, 69%, 0.2);
   border-radius: var(--radio-md);
   font-size: var(--texto-sm);
   color: var(--color-error);
@@ -399,8 +386,8 @@
 .credencialesDemo {
   margin: var(--espacio-4) 0;
   padding: var(--espacio-4);
-  background: hsla(212, 146, 10, 0.08);
-  border: 1px dashed rgba(212, 146, 10, 0.4);
+  background: var(--color-superficie-elevada);
+  border: 1px dashed var(--color-borde);
   border-radius: var(--radio-md);
   text-align: center;
 }
@@ -414,8 +401,8 @@
 .credencialCodigo {
   font-family: var(--fuente-mono);
   font-size: var(--texto-sm);
-  color: var(--color-secundario);
-  background: hsla(212, 146, 10, 0.12);
+  color: var(--color-primario);
+  background: var(--color-fondo);
   padding: var(--espacio-1) var(--espacio-3);
   border-radius: var(--radio-sm);
 }

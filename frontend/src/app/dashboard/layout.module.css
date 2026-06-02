@@ -1,5 +1,5 @@
 /* =============================================================================
- * SUMA — Estilos del Layout Dashboard (Lúdico)
+ * SUMA — Estilos del Layout Dashboard (Neo-Brutalismo Oscuro Premium)
  * CSS Modules para el sidebar, header y contenido principal.
  * ============================================================================= */
 
@@ -7,43 +7,11 @@
   display: flex;
   min-height: 100dvh;
   position: relative;
-  /* Fondo degradado lúdico */
-  background: linear-gradient(135deg, #FFF8F0 0%, #F3E8FF 50%, #FFE8F0 100%);
-}
-
-@media (prefers-color-scheme: dark) {
-  .layoutDashboard {
-    background: linear-gradient(135deg, #1A1025 0%, #2E1E42 50%, #1A1025 100%);
-  }
+  background: var(--color-fondo);
 }
 
 /* =============================================================================
- * BLOBS DECORATIVOS
- * ============================================================================= */
-.blobDecorativo1 {
-  width: 500px;
-  height: 500px;
-  top: -150px;
-  right: -100px;
-}
-
-.blobDecorativo2 {
-  width: 400px;
-  height: 400px;
-  bottom: -100px;
-  left: 15%;
-}
-
-.blobDecorativo3 {
-  width: 350px;
-  height: 350px;
-  top: 35%;
-  right: 10%;
-  opacity: 0.3;
-}
-
-/* =============================================================================
- * SIDEBAR (Flotante y Cristal)
+ * SIDEBAR (Estructural, plano, sin glassmorphism)
  * ============================================================================= */
 .sidebar {
   width: var(--sidebar-ancho);
@@ -55,22 +23,9 @@
   bottom: 16px;
   z-index: 100;
   overflow-y: auto;
-  border-radius: var(--radio-2xl);
-  
-  /* Glassmorphism */
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: var(--sombra-lg);
-}
-
-@media (prefers-color-scheme: dark) {
-  .sidebar {
-    background: rgba(36, 24, 54, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-  }
+  border-radius: var(--radio-xl);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
 }
 
 .sidebarHeader {
@@ -83,19 +38,17 @@
 
 .sidebarLogo {
   font-size: 1.75rem;
-  filter: drop-shadow(0 2px 4px rgba(249, 149, 26, 0.3));
 }
 
 .sidebarTitulo {
   font-size: var(--texto-2xl);
   font-weight: var(--peso-extrabold);
-  background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-texto);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-/* --- Navegación --- */
+/* --- Navegacion --- */
 .sidebarNav {
   flex: 1;
   padding: var(--espacio-4);
@@ -119,31 +72,28 @@
   font-weight: var(--peso-medium);
   color: var(--color-texto-secundario);
   cursor: pointer;
-  transition: all var(--transicion-normal);
   position: relative;
   overflow: hidden;
 }
 
 .navItem:hover {
-  background: var(--color-primario-light);
-  color: var(--color-primario);
-  transform: translateX(4px);
+  background: var(--color-superficie-elevada);
+  color: var(--color-texto);
 }
 
 .navItemActivo {
-  background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+  background: var(--color-primario);
   color: var(--color-texto-invertido);
   font-weight: var(--peso-semibold);
-  box-shadow: var(--sombra-primario);
 }
 
 .navItemActivo:hover {
   color: var(--color-texto-invertido);
-  background: linear-gradient(135deg, var(--color-primario-hover), var(--color-acento-hover));
+  background: var(--color-primario-hover);
 }
 
 .navItemDeshabilitado {
-  opacity: 0.4;
+  opacity: 0.35;
   cursor: not-allowed;
   pointer-events: none;
 }
@@ -176,9 +126,9 @@
   padding: var(--espacio-4);
   margin: var(--espacio-4);
   margin-top: auto;
-  border-radius: var(--radio-xl);
-  background: linear-gradient(135deg, var(--color-primario-light), hsla(279, 38%, 50%, 0.08));
-  border: 1px solid rgba(249, 149, 26, 0.15);
+  border-radius: var(--radio-lg);
+  background: var(--color-superficie-elevada);
+  border: 1px solid var(--color-borde);
 }
 
 .usuarioInfo {
@@ -191,13 +141,12 @@
   width: 40px;
   height: 40px;
   border-radius: var(--radio-full);
-  background: linear-gradient(135deg, var(--color-primario), var(--color-acento));
+  background: var(--color-primario);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.25rem;
-  color: white;
-  box-shadow: var(--sombra-primario);
+  color: var(--color-texto-invertido);
 }
 
 .usuarioNombre {
@@ -225,36 +174,24 @@
   z-index: 10;
 }
 
-/* --- Header (Flotante y Cristal) --- */
+/* --- Header (Estructural, plano) --- */
 .header {
   height: var(--header-alto);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--espacio-8);
-  border-radius: var(--radio-2xl);
+  border-radius: var(--radio-xl);
   margin-bottom: var(--espacio-4);
-  
-  /* Glassmorphism */
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px) saturate(160%);
-  -webkit-backdrop-filter: blur(24px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow: var(--sombra-md);
-}
-
-@media (prefers-color-scheme: dark) {
-  .header {
-    background: rgba(36, 24, 54, 0.65);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-  }
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
 }
 
 .headerTitulo {
-  font-size: var(--texto-xl);
-  font-weight: var(--peso-bold);
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-semibold);
   color: var(--color-texto);
+  letter-spacing: 0.02em;
 }
 
 .headerDerecha {
@@ -268,17 +205,15 @@
   cursor: pointer;
   padding: var(--espacio-2);
   border-radius: var(--radio-md);
-  transition: all var(--transicion-rapida);
   position: relative;
 }
 
 .headerIcono:hover {
-  background: var(--color-primario-light);
+  background: var(--color-superficie-elevada);
   color: var(--color-primario);
-  transform: scale(1.1);
 }
 
-/* Notificación badge (simulado) */
+/* Notificacion badge */
 .headerIcono::after {
   content: '';
   position: absolute;
@@ -291,7 +226,7 @@
   border: 2px solid var(--color-superficie);
 }
 
-/* --- Área de Contenido --- */
+/* --- Area de Contenido --- */
 .main {
   flex: 1;
   padding: var(--espacio-4) var(--espacio-8) var(--espacio-8) var(--espacio-8);
@@ -302,7 +237,6 @@
 @media (max-width: 768px) {
   .sidebar {
     transform: translateX(-120%);
-    transition: transform var(--transicion-normal);
     top: 0;
     left: 0;
     bottom: 0;
@@ -320,9 +254,9 @@
     margin-left: 0;
     padding: var(--espacio-4);
   }
-  
+
   .header {
-    border-radius: var(--radio-xl);
+    border-radius: var(--radio-lg);
     padding: 0 var(--espacio-4);
   }
 
