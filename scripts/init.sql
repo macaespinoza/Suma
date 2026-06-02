@@ -23,6 +23,12 @@ CREATE TYPE tipo_rol_usuario AS ENUM (
     'conserje'
 );
 
+-- Tipos de titulares administrativos de una unidad.
+CREATE TYPE tipo_titular_unidad AS ENUM (
+    'propietario',
+    'arrendatario'
+);
+
 -- Estado del período de gastos comunes.
 CREATE TYPE tipo_estado_gasto_mes AS ENUM (
     'borrador',
@@ -170,6 +176,7 @@ CREATE TABLE Condominios (
     direccion        VARCHAR(300) NOT NULL,
     rut_comunidad    dominio_rut  UNIQUE,  -- Opcional. RUT validado con Módulo 11 si existe.
     cantidad_unidades INTEGER     NOT NULL DEFAULT 0,
+    saldo_fondo_reserva DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     activo           BOOLEAN     NOT NULL DEFAULT TRUE,
     created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -188,6 +195,10 @@ CREATE TABLE Unidades_Vecinales (
     bloque_edificio  VARCHAR(100),   -- Crucial para agrupar torres/bloques en Arica.
     numero           VARCHAR(20)    NOT NULL,
     alicuota         DECIMAL(5, 4)  NOT NULL DEFAULT 0.0000, -- Porcentaje de participación (ej: 0.0250 = 2.50%).
+    tiene_estacionamiento BOOLEAN   NOT NULL DEFAULT FALSE,
+    numero_estacionamiento VARCHAR(50),
+    tiene_bodega     BOOLEAN        NOT NULL DEFAULT FALSE,
+    numero_bodega    VARCHAR(50),
     activo           BOOLEAN        NOT NULL DEFAULT TRUE,
     created_at       TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
     updated_at       TIMESTAMPTZ    NOT NULL DEFAULT NOW(),
@@ -196,6 +207,43 @@ CREATE TABLE Unidades_Vecinales (
 
 CREATE TRIGGER trg_unidades_vecinales_updated_at
     BEFORE UPDATE ON Unidades_Vecinales
+    FOR EACH ROW EXECUTE FUNCTION fn_actualizar_updated_at();
+
+
+-- Tabla: Titulares_Unidad
+-- Ficha administrativa para los residentes de una unidad. Permite registrarlos sin que tengan cuenta de usuario.
+CREATE TABLE Titulares_Unidad (
+    id           UUID                 PRIMARY KEY DEFAULT gen_random_uuid(),
+    unidad_id    UUID                 NOT NULL REFERENCES Unidades_Vecinales(id) ON DELETE CASCADE,
+    tipo         tipo_titular_unidad  NOT NULL,
+    nombre       VARCHAR(200)         NOT NULL,
+    rut          dominio_rut,         -- Puede ser nulo si no se tiene, pero si se provee se valida.
+    email        VARCHAR(254),
+    telefono     VARCHAR(20),
+    usuario_id   UUID                 REFERENCES Usuarios(id) ON DELETE SET NULL, -- Si se registra en la plataforma.
+    created_at   TIMESTAMPTZ          NOT NULL DEFAULT NOW(),
+    updated_at   TIMESTAMPTZ          NOT NULL DEFAULT NOW(),
+    CONSTRAINT uq_titular_por_unidad_tipo UNIQUE (unidad_id, tipo) -- Solo 1 propietario y 1 arrendatario activo por unidad.
+);
+
+CREATE TRIGGER trg_titulares_unidad_updated_at
+    BEFORE UPDATE ON Titulares_Unidad
+    FOR EACH ROW EXECUTE FUNCTION fn_actualizar_updated_at();
+
+
+-- Tabla: Vehiculos
+-- Registro de vehículos vinculados a una unidad.
+CREATE TABLE Vehiculos (
+    id              UUID         PRIMARY KEY DEFAULT gen_random_uuid(),
+    unidad_id       UUID         NOT NULL REFERENCES Unidades_Vecinales(id) ON DELETE CASCADE,
+    tipo_vehiculo   VARCHAR(50)  NOT NULL, -- Ej: Auto, Moto, Camioneta
+    patente         VARCHAR(10)  NOT NULL,
+    created_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT NOW()
+);
+
+CREATE TRIGGER trg_vehiculos_updated_at
+    BEFORE UPDATE ON Vehiculos
     FOR EACH ROW EXECUTE FUNCTION fn_actualizar_updated_at();
 
 
@@ -249,6 +297,7 @@ CREATE TABLE Gastos_Comunes_Mes (
     condominio_id   UUID                    NOT NULL REFERENCES Condominios(id) ON DELETE RESTRICT,
     mes_anio        DATE                    NOT NULL, -- Se usa el primer día del mes: ej. '2025-06-01'.
     total_gastos    DECIMAL(12, 2)          NOT NULL DEFAULT 0.00,
+    monto_fondo_reserva DECIMAL(12, 2)      NOT NULL DEFAULT 0.00,
     estado          tipo_estado_gasto_mes   NOT NULL DEFAULT 'borrador',
     created_at      TIMESTAMPTZ             NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ             NOT NULL DEFAULT NOW(),

@@ -9,8 +9,9 @@ import * as unidadesRepo from '../repositorios/condominios.repositorio.js';
 import { ErrorApp } from '../middlewares/errores.js';
 
 const CATEGORIAS_VALIDAS = [
-  'Agua', 'Electricidad', 'Gas', 'Portería', 'Mantención',
-  'Aseo', 'Seguridad', 'Administración', 'Seguros', 'Otro'
+  'Agua', 'Luz', 'Aseo', 'Conserjería', 'Administración',
+  'Mantención', 'Reparación', 'Otros', 'Emergencia',
+  'Electricidad', 'Gas', 'Portería', 'Seguridad', 'Seguros', 'Otro'
 ];
 
 export const listarGastos = async (condominioId, opciones = {}) => {
@@ -38,12 +39,14 @@ export const obtenerDetalleGasto = async (gastoId) => {
     condominio_id: gasto.condominio_id,
     mes_anio: gasto.mes_anio,
     total_gastos: parseFloat(gasto.total_gastos),
+    monto_fondo_reserva: parseFloat(gasto.monto_fondo_reserva || 0),
     estado: gasto.estado,
     egresos_operativos: egresos.map(e => ({
       id: e.id,
       categoria: e.categoria,
       descripcion: e.descripcion,
-      monto: parseFloat(e.monto)
+      monto: parseFloat(e.monto),
+      archivo_respaldo_url: e.archivo_respaldo_url
     })),
     resumen_unidades: {
       total_unidades: parseInt(gasto.total_unidades),
@@ -57,7 +60,7 @@ export const obtenerDetalleGasto = async (gastoId) => {
   };
 };
 
-export const crearGasto = async (condominioId, { mes_anio, total_gastos }) => {
+export const crearGasto = async (condominioId, { mes_anio, total_gastos, monto_fondo_reserva }) => {
   // total_gastos puede ser 0 al crear un borrador sin egresos previos.
   if (total_gastos !== undefined && total_gastos < 0) {
     throw new ErrorApp('El monto total de gastos no puede ser negativo.', 400);
@@ -76,7 +79,8 @@ export const crearGasto = async (condominioId, { mes_anio, total_gastos }) => {
   const gasto = await gastosRepo.crear({
     condominioId,
     mesAnio: mes_anio,
-    totalGastos: total_gastos
+    totalGastos: total_gastos,
+    montoFondoReserva: monto_fondo_reserva || 0
   });
 
   return {
@@ -84,13 +88,14 @@ export const crearGasto = async (condominioId, { mes_anio, total_gastos }) => {
     condominio_id: gasto.condominio_id,
     mes_anio: gasto.mes_anio,
     total_gastos: parseFloat(gasto.total_gastos),
+    monto_fondo_reserva: parseFloat(gasto.monto_fondo_reserva || 0),
     estado: gasto.estado,
     egresos: [],
     created_at: gasto.created_at
   };
 };
 
-export const actualizarGasto = async (gastoId, { total_gastos }) => {
+export const actualizarGasto = async (gastoId, { total_gastos, monto_fondo_reserva }) => {
   const gasto = await gastosRepo.obtenerPorId(gastoId);
   if (!gasto) {
     throw new ErrorApp('El gasto común no existe.', 404);
@@ -104,7 +109,10 @@ export const actualizarGasto = async (gastoId, { total_gastos }) => {
     throw new ErrorApp('El monto total de gastos debe ser mayor a 0.', 400);
   }
 
-  const actualizado = await gastosRepo.actualizar(gastoId, { totalGastos: total_gastos });
+  const actualizado = await gastosRepo.actualizar(gastoId, { 
+    totalGastos: total_gastos,
+    montoFondoReserva: monto_fondo_reserva
+  });
   if (!actualizado) {
     throw new ErrorApp('No se pudo actualizar el gasto.', 404);
   }
@@ -112,12 +120,13 @@ export const actualizarGasto = async (gastoId, { total_gastos }) => {
   return {
     id: actualizado.id,
     total_gastos: parseFloat(actualizado.total_gastos),
+    monto_fondo_reserva: parseFloat(actualizado.monto_fondo_reserva || 0),
     estado: actualizado.estado,
     updated_at: actualizado.updated_at
   };
 };
 
-export const agregarEgreso = async (gastoId, { categoria, descripcion, monto }) => {
+export const agregarEgreso = async (gastoId, { categoria, descripcion, monto, archivo_respaldo_url }) => {
   const gasto = await gastosRepo.obtenerPorId(gastoId);
   if (!gasto) {
     throw new ErrorApp('El gasto común no existe.', 404);
@@ -139,7 +148,8 @@ export const agregarEgreso = async (gastoId, { categoria, descripcion, monto }) 
     gastoComunMesId: gastoId,
     categoria,
     descripcion: descripcion || null,
-    monto
+    monto,
+    archivo_respaldo_url
   });
 
   // Recalcular total_gastos automáticamente como suma de todos los egresos.
@@ -170,7 +180,8 @@ export const listarEgresos = async (gastoId) => {
       id: e.id,
       categoria: e.categoria,
       descripcion: e.descripcion,
-      monto: parseFloat(e.monto)
+      monto: parseFloat(e.monto),
+      archivo_respaldo_url: e.archivo_respaldo_url
     })),
     meta: {
       total_egresos: egresos.length,
@@ -201,7 +212,15 @@ export const publicarGasto = async (gastoId) => {
     throw new ErrorApp('No se pudo publicar el gasto.', 404);
   }
 
-  const cobros = await cobrosRepo.crearCobrosPorGasto(gastoId, unidades, parseFloat(gasto.total_gastos));
+  const cobros = await cobrosRepo.crearCobrosPorGasto(
+    gastoId, 
+    unidades, 
+    parseFloat(gasto.total_gastos), 
+    parseFloat(gasto.monto_fondo_reserva || 0)
+  );
+
+  // Actualizar el fondo de reserva del condominio
+  await unidadesRepo.actualizarFondoReserva(gasto.condominio_id, parseFloat(gasto.monto_fondo_reserva || 0));
 
   return {
     gasto: {
@@ -344,3 +363,106 @@ export const actualizarEstadoCobro = async (cobroId, { estado_pago, nota }) => {
     updated_at: actualizado.updated_at
   };
 };
+
+export const despublicarGasto = async (gastoId) => {
+  const gasto = await gastosRepo.obtenerPorId(gastoId);
+  if (!gasto) {
+    throw new ErrorApp('El gasto común no existe.', 404);
+  }
+
+  if (gasto.estado !== 'publicado') {
+    throw new ErrorApp('El gasto no está publicado, por lo que no se puede despublicar.', 400);
+  }
+
+  // Verificar si hay algún pago registrado para este período
+  const tienePagos = await cobrosRepo.tienePagosRegistrados(gastoId);
+  if (tienePagos) {
+    throw new ErrorApp('No se puede despublicar el gasto común porque ya existen pagos registrados para este período.', 400);
+  }
+
+  // Eliminar los cobros asociados
+  await cobrosRepo.eliminarCobrosPorGasto(gastoId);
+
+  // Cambiar el estado del gasto a borrador
+  const actualizado = await gastosRepo.despublicarGasto(gastoId);
+  if (!actualizado) {
+    throw new ErrorApp('No se pudo cambiar el estado del gasto a borrador.', 500);
+  }
+
+  // Restar el fondo de reserva del condominio
+  await unidadesRepo.actualizarFondoReserva(gasto.condominio_id, -parseFloat(gasto.monto_fondo_reserva || 0));
+
+  return {
+    id: actualizado.id,
+    estado: actualizado.estado
+  };
+};
+
+export const actualizarEgreso = async (gastoId, egresoId, { categoria, descripcion, monto, archivo_respaldo_url }) => {
+  const gasto = await gastosRepo.obtenerPorId(gastoId);
+  if (!gasto) {
+    throw new ErrorApp('El gasto común no existe.', 404);
+  }
+
+  if (gasto.estado !== 'borrador') {
+    throw new ErrorApp('No se pueden modificar egresos de un gasto ya publicado.', 400);
+  }
+
+  const egreso = await gastosRepo.obtenerEgresoPorId(egresoId);
+  if (!egreso || egreso.gasto_comun_mes_id !== gastoId) {
+    throw new ErrorApp('El egreso no existe o no pertenece a este período de gasto.', 404);
+  }
+
+  if (categoria && !CATEGORIAS_VALIDAS.includes(categoria)) {
+    throw new ErrorApp(`Categoría inválida. Debe ser una de: ${CATEGORIAS_VALIDAS.join(', ')}`, 400);
+  }
+
+  if (monto !== undefined && monto <= 0) {
+    throw new ErrorApp('El monto del egreso debe ser mayor a 0.', 400);
+  }
+
+  const actualizado = await gastosRepo.actualizarEgreso(egresoId, { categoria, descripcion, monto, archivo_respaldo_url });
+  if (!actualizado) {
+    throw new ErrorApp('No se pudo actualizar el egreso.', 500);
+  }
+
+  // Recalcular total_gastos automáticamente
+  await gastosRepo.actualizarTotalConSumaEgresos(gastoId);
+
+  return {
+    id: actualizado.id,
+    gasto_comun_mes_id: actualizado.gasto_comun_mes_id,
+    categoria: actualizado.categoria,
+    descripcion: actualizado.descripcion,
+    monto: parseFloat(actualizado.monto),
+    archivo_respaldo_url: actualizado.archivo_respaldo_url,
+    updated_at: actualizado.updated_at
+  };
+};
+
+export const eliminarEgreso = async (gastoId, egresoId) => {
+  const gasto = await gastosRepo.obtenerPorId(gastoId);
+  if (!gasto) {
+    throw new ErrorApp('El gasto común no existe.', 404);
+  }
+
+  if (gasto.estado !== 'borrador') {
+    throw new ErrorApp('No se pueden eliminar egresos de un gasto ya publicado.', 400);
+  }
+
+  const egreso = await gastosRepo.obtenerEgresoPorId(egresoId);
+  if (!egreso || egreso.gasto_comun_mes_id !== gastoId) {
+    throw new ErrorApp('El egreso no existe o no pertenece a este período de gasto.', 404);
+  }
+
+  const eliminado = await gastosRepo.eliminarEgreso(egresoId);
+  if (!eliminado) {
+    throw new ErrorApp('No se pudo eliminar el egreso.', 500);
+  }
+
+  // Recalcular total_gastos automáticamente
+  await gastosRepo.actualizarTotalConSumaEgresos(gastoId);
+
+  return true;
+};
+

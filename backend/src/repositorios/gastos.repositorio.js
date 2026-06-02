@@ -24,14 +24,12 @@ export const obtenerPorCondominio = async (condominioId, { pagina = 1, porPagina
   const total = parseInt(countRows[0].total, 10);
 
   const query = `
-    SELECT g.id, g.mes_anio, g.total_gastos, g.estado, g.created_at, g.updated_at,
-      COALESCE(SUM(cu.total_a_pagar), 0) as total_cobrado,
-      COALESCE(SUM(CASE WHEN cu.estado_pago = 'pagado' THEN cu.total_a_pagar ELSE 0 END), 0) as total_pagado,
-      COALESCE(SUM(CASE WHEN cu.estado_pago IN ('pendiente', 'moroso') THEN cu.total_a_pagar ELSE 0 END), 0) as total_pendiente
+    SELECT g.id, g.mes_anio, g.total_gastos, g.monto_fondo_reserva, g.estado, g.created_at, g.updated_at,
+      COALESCE((SELECT SUM(cu.total_a_pagar) FROM Cobros_Unidad cu WHERE cu.gasto_comun_mes_id = g.id), 0) as total_cobrado,
+      COALESCE((SELECT SUM(cu.total_a_pagar) FROM Cobros_Unidad cu WHERE cu.gasto_comun_mes_id = g.id AND cu.estado_pago = 'pagado'), 0) as total_pagado,
+      COALESCE((SELECT SUM(cu.total_a_pagar) FROM Cobros_Unidad cu WHERE cu.gasto_comun_mes_id = g.id AND cu.estado_pago IN ('pendiente', 'moroso')), 0) as total_pendiente
     FROM Gastos_Comunes_Mes g
-    LEFT JOIN Cobros_Unidad cu ON cu.gasto_comun_mes_id = g.id
     ${whereClause}
-    GROUP BY g.id
     ORDER BY g.mes_anio DESC
     LIMIT $${params.length + 1} OFFSET $${params.length + 2}
   `;
@@ -44,7 +42,7 @@ export const obtenerPorCondominio = async (condominioId, { pagina = 1, porPagina
 
 export const obtenerPorId = async (id) => {
   const { rows } = await consultar(
-    `SELECT id, condominio_id, mes_anio, total_gastos, estado, created_at, updated_at
+    `SELECT id, condominio_id, mes_anio, total_gastos, monto_fondo_reserva, estado, created_at, updated_at
      FROM Gastos_Comunes_Mes
      WHERE id = $1`,
     [id]
@@ -54,40 +52,38 @@ export const obtenerPorId = async (id) => {
 
 export const obtenerDetalleCompleto = async (id) => {
   const { rows } = await consultar(
-    `SELECT g.id, g.condominio_id, g.mes_anio, g.total_gastos, g.estado, g.created_at, g.updated_at,
-      COALESCE(SUM(eo.monto), 0) as suma_egresos,
-      COUNT(DISTINCT cu.id) as unidades_cobradas,
-      COALESCE(SUM(cu.total_a_pagar), 0) as total_cobrado,
-      COALESCE(SUM(CASE WHEN cu.estado_pago = 'pagado' THEN cu.total_a_pagar ELSE 0 END), 0) as total_pagado,
-      COALESCE(SUM(CASE WHEN cu.estado_pago IN ('pendiente', 'moroso') THEN cu.total_a_pagar ELSE 0 END), 0) as total_pendiente,
+    `SELECT g.id, g.condominio_id, g.mes_anio, g.total_gastos, g.monto_fondo_reserva, g.estado, g.created_at, g.updated_at,
+      COALESCE((SELECT SUM(monto) FROM Egresos_Operativos WHERE gasto_comun_mes_id = g.id), 0) as suma_egresos,
+      (SELECT COUNT(*) FROM Cobros_Unidad WHERE gasto_comun_mes_id = g.id) as unidades_cobradas,
+      COALESCE((SELECT SUM(total_a_pagar) FROM Cobros_Unidad WHERE gasto_comun_mes_id = g.id), 0) as total_cobrado,
+      COALESCE((SELECT SUM(total_a_pagar) FROM Cobros_Unidad WHERE gasto_comun_mes_id = g.id AND estado_pago = 'pagado'), 0) as total_pagado,
+      COALESCE((SELECT SUM(total_a_pagar) FROM Cobros_Unidad WHERE gasto_comun_mes_id = g.id AND estado_pago IN ('pendiente', 'moroso')), 0) as total_pendiente,
       (SELECT COUNT(*) FROM Unidades_Vecinales uv WHERE uv.condominio_id = g.condominio_id AND uv.activo = TRUE) as total_unidades
      FROM Gastos_Comunes_Mes g
-     LEFT JOIN Egresos_Operativos eo ON eo.gasto_comun_mes_id = g.id
-     LEFT JOIN Cobros_Unidad cu ON cu.gasto_comun_mes_id = g.id
-     WHERE g.id = $1
-     GROUP BY g.id`,
+     WHERE g.id = $1`,
     [id]
   );
   return rows[0] || null;
 };
 
-export const crear = async ({ condominioId, mesAnio, totalGastos }) => {
+export const crear = async ({ condominioId, mesAnio, totalGastos, montoFondoReserva = 0 }) => {
   const { rows } = await consultar(
-    `INSERT INTO Gastos_Comunes_Mes (condominio_id, mes_anio, total_gastos)
-     VALUES ($1, $2, $3)
+    `INSERT INTO Gastos_Comunes_Mes (condominio_id, mes_anio, total_gastos, monto_fondo_reserva)
+     VALUES ($1, $2, $3, $4)
      RETURNING *`,
-    [condominioId, mesAnio, totalGastos]
+    [condominioId, mesAnio, totalGastos, montoFondoReserva]
   );
   return rows[0];
 };
 
-export const actualizar = async (id, { totalGastos }) => {
+export const actualizar = async (id, { totalGastos, montoFondoReserva }) => {
   const { rows } = await consultar(
     `UPDATE Gastos_Comunes_Mes
-     SET total_gastos = COALESCE($2, total_gastos)
+     SET total_gastos = COALESCE($2, total_gastos),
+         monto_fondo_reserva = COALESCE($3, monto_fondo_reserva)
      WHERE id = $1 AND estado = 'borrador'
      RETURNING *`,
-    [id, totalGastos]
+    [id, totalGastos, montoFondoReserva]
   );
   return rows[0] || null;
 };
@@ -135,24 +131,23 @@ export const obtenerEgresosPorGasto = async (gastoId) => {
   return rows;
 };
 
-export const crearEgreso = async ({ gastoComunMesId, categoria, descripcion, monto }) => {
+export const crearEgreso = async ({ gastoComunMesId, categoria, descripcion, monto, archivo_respaldo_url }) => {
   const { rows } = await consultar(
-    `INSERT INTO Egresos_Operativos (gasto_comun_mes_id, categoria, descripcion, monto)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO Egresos_Operativos (gasto_comun_mes_id, categoria, descripcion, monto, archivo_respaldo_url)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [gastoComunMesId, categoria, descripcion, monto]
+    [gastoComunMesId, categoria, descripcion, monto, archivo_respaldo_url]
   );
   return rows[0];
 };
 
 export const actualizarTotalConSumaEgresos = async (gastoId) => {
   const { rows } = await consultar(
-    `UPDATE Gastos_Comunes_Mes
-     SET total_gastos = (
-       SELECT COALESCE(SUM(monto), 0) FROM Egresos_Operativos WHERE gasto_comun_mes_id = $1
-     )
-     WHERE id = $1
-     RETURNING total_gastos`,
+    `UPDATE Gastos_Comunes_Mes g
+     SET total_gastos = COALESCE((SELECT SUM(monto) FROM Egresos_Operativos WHERE gasto_comun_mes_id = $1), 0),
+         monto_fondo_reserva = ROUND(COALESCE((SELECT SUM(monto) FROM Egresos_Operativos WHERE gasto_comun_mes_id = $1), 0) * (SELECT porcentaje_fondo_reserva FROM Condominios WHERE id = g.condominio_id))
+     WHERE g.id = $1
+     RETURNING total_gastos, monto_fondo_reserva`,
     [gastoId]
   );
   return parseFloat(rows[0]?.total_gastos || 0);
@@ -171,3 +166,47 @@ export const obtenerSumaEgresos = async (gastoId) => {
 export const eliminarEgresosPorGasto = async (gastoId) => {
   await consultar(`DELETE FROM Egresos_Operativos WHERE gasto_comun_mes_id = $1`, [gastoId]);
 };
+
+export const despublicarGasto = async (id) => {
+  const { rows } = await consultar(
+    `UPDATE Gastos_Comunes_Mes
+     SET estado = 'borrador'
+     WHERE id = $1 AND estado = 'publicado'
+     RETURNING *`,
+    [id]
+  );
+  return rows[0] || null;
+};
+
+export const obtenerEgresoPorId = async (id) => {
+  const { rows } = await consultar(
+    `SELECT id, gasto_comun_mes_id, categoria, descripcion, monto, archivo_respaldo_url, created_at, updated_at
+     FROM Egresos_Operativos
+     WHERE id = $1`,
+    [id]
+  );
+  return rows[0] || null;
+};
+
+export const actualizarEgreso = async (id, { categoria, descripcion, monto, archivo_respaldo_url }) => {
+  const { rows } = await consultar(
+    `UPDATE Egresos_Operativos
+     SET categoria = COALESCE($2, categoria),
+         descripcion = COALESCE($3, descripcion),
+         monto = COALESCE($4, monto),
+         archivo_respaldo_url = COALESCE($5, archivo_respaldo_url)
+     WHERE id = $1
+     RETURNING *`,
+    [id, categoria, descripcion, monto, archivo_respaldo_url]
+  );
+  return rows[0] || null;
+};
+
+export const eliminarEgreso = async (id) => {
+  const { rowCount } = await consultar(
+    `DELETE FROM Egresos_Operativos WHERE id = $1`,
+    [id]
+  );
+  return rowCount > 0;
+};
+

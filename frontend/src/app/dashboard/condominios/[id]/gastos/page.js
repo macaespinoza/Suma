@@ -224,11 +224,15 @@ export default function PaginaListaGastos() {
                   <Boton
                     variante="fantasma"
                     tamano="sm"
-                    onClick={() => window.open(`/api/v1/condominios/${condominioId}/gastos/${gasto.id}/liquidacion`, '_blank')}
+                    onClick={() => {
+                      const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003/api/v1';
+                      window.open(`${apiBaseUrl}/condominios/${condominioId}/gastos/${gasto.id}/liquidacion`, '_blank');
+                    }}
                   >
                     📄 Liquidación PDF
                   </Boton>
                 )}
+
               </div>
             </div>
           ))}

@@ -1,0 +1,264 @@
+/* =============================================================================
+ * SUMA — Estilos de la Ficha Administrativa de Unidad
+ * Diseño lúdico-administrativo con tarjetas acogedoras.
+ * ============================================================================= */
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+  max-width: 860px;
+  padding-bottom: var(--espacio-16);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: var(--espacio-8);
+  right: var(--espacio-8);
+  background: var(--color-primario);
+  color: var(--color-texto-invertido);
+  padding: var(--espacio-3) var(--espacio-5);
+  border-radius: var(--radio-lg);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  box-shadow: var(--sombra-primario);
+  z-index: 100;
+  animation: toastIn 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Cabecera */
+.cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.titulo {
+  font-size: var(--texto-2xl);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+}
+
+.bloque {
+  font-weight: var(--peso-regular);
+  color: var(--color-texto-secundario);
+}
+
+.subtitulo {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
+}
+
+/* Secciones */
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.seccionTitulo {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+  padding-bottom: var(--espacio-2);
+  border-bottom: 2px solid var(--color-primario-light);
+}
+
+/* Tarjeta base */
+.tarjeta {
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  padding: var(--espacio-5);
+  box-shadow: var(--sombra-xs);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.tarjetaTitulo {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semibold);
+  color: var(--color-secundario);
+}
+
+/* Toggles en fila */
+.togglesFila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-6);
+}
+
+.toggleCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+/* Grid Titulares */
+.gridTitulares {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-5);
+}
+
+/* Titular actual */
+.titularActual {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--espacio-3) var(--espacio-4);
+  background: var(--color-primario-light);
+  border-radius: var(--radio-md);
+  border: 1px solid hsla(33, 95%, 54%, 0.2);
+}
+
+.titularNombre {
+  font-weight: var(--peso-semibold);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+}
+
+.titularInfo {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+}
+
+/* Formulario compacto */
+.formularioCompacto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-3);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-3);
+}
+
+/* Acciones en tarjeta */
+.accionesTarjeta {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding-top: var(--espacio-2);
+  border-top: 1px solid var(--color-borde);
+}
+
+/* Listas */
+.lista {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.itemLista {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--espacio-2) var(--espacio-3);
+  background: var(--color-fondo);
+  border-radius: var(--radio-md);
+  border: 1px solid var(--color-borde);
+}
+
+.itemInfo {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.itemBadge {
+  display: inline-flex;
+  padding: 2px 8px;
+  background: var(--color-secundario);
+  color: var(--color-texto-invertido);
+  border-radius: var(--radio-sm);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+}
+
+.itemEmoji {
+  font-size: var(--texto-lg);
+}
+
+.itemTexto {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-medium);
+  color: var(--color-texto);
+}
+
+.itemDetalle {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Formulario inline */
+.formInline {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+  background: var(--color-fondo);
+  border: 1px dashed var(--color-borde);
+  border-radius: var(--radio-md);
+}
+
+.formInline > div {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Vacio */
+.vacio {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+  text-align: center;
+  padding: var(--espacio-3);
+  font-style: italic;
+}
+
+/* Estados */
+.cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espacio-16);
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-lg);
+}
+
+.error {
+  padding: var(--espacio-4);
+  background: hsla(17, 92%, 50%, 0.08);
+  border: 1px solid hsla(17, 92%, 50%, 0.2);
+  border-radius: var(--radio-md);
+  color: var(--color-error);
+  font-size: var(--texto-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .togglesFila,
+  .gridTitulares {
+    grid-template-columns: 1fr;
+  }
+
+  .fila {
+    grid-template-columns: 1fr;
+  }
+
+  .formInline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

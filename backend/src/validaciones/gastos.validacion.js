@@ -6,8 +6,9 @@
 import Joi from 'joi';
 
 const CATEGORIAS_VALIDAS = [
-  'Agua', 'Electricidad', 'Gas', 'Portería', 'Mantención',
-  'Aseo', 'Seguridad', 'Administración', 'Seguros', 'Otro'
+  'Agua', 'Luz', 'Aseo', 'Conserjería', 'Administración',
+  'Mantención', 'Reparación', 'Otros', 'Emergencia',
+  'Electricidad', 'Gas', 'Portería', 'Seguridad', 'Seguros', 'Otro'
 ];
 
 export const esquemaCrearGasto = Joi.object({
@@ -70,6 +71,14 @@ export const esquemaAgregarEgreso = Joi.object({
       'number.positive': 'El monto debe ser mayor a 0.',
       'number.precision': 'El monto puede tener máximo 2 decimales.',
       'any.required': 'El monto es obligatorio.',
+    }),
+
+  archivo_respaldo_url: Joi.string()
+    .uri()
+    .allow('', null)
+    .optional()
+    .messages({
+      'string.uri': 'El archivo de respaldo debe ser una URL válida.',
     }),
 });
 

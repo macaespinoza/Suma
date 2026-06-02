@@ -32,6 +32,42 @@ const columnasUnidades = [
     etiqueta: 'Alícuota',
     render: (valor) => `${(valor * 100).toFixed(2)}%`,
   },
+  {
+    clave: 'tiene_estacionamiento',
+    etiqueta: 'Estac.',
+    render: (valor, fila) => (
+      <span style={{
+        display: 'inline-flex',
+        padding: '2px 8px',
+        borderRadius: 'var(--radio-full)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        background: valor ? 'hsla(142, 71%, 35%, 0.12)' : 'rgba(0,0,0,0.06)',
+        color: valor ? 'var(--color-exito)' : 'var(--color-texto-terciario)',
+        whiteSpace: 'nowrap',
+      }}>
+        {valor ? (fila.numero_estacionamiento ? `P ${fila.numero_estacionamiento}` : 'P') : '—'}
+      </span>
+    ),
+  },
+  {
+    clave: 'tiene_bodega',
+    etiqueta: 'Bodega',
+    render: (valor, fila) => (
+      <span style={{
+        display: 'inline-flex',
+        padding: '2px 8px',
+        borderRadius: 'var(--radio-full)',
+        fontSize: '0.75rem',
+        fontWeight: 600,
+        background: valor ? 'hsla(142, 71%, 35%, 0.12)' : 'rgba(0,0,0,0.06)',
+        color: valor ? 'var(--color-exito)' : 'var(--color-texto-terciario)',
+        whiteSpace: 'nowrap',
+      }}>
+        {valor ? (fila.numero_bodega ? `B ${fila.numero_bodega}` : 'B') : '—'}
+      </span>
+    ),
+  },
 ];
 
 /**
@@ -63,6 +99,7 @@ export default function PaginaDetalleCondominio() {
             direccion: datos.direccion,
             rut_comunidad: datos.rut_comunidad,
             cantidad_unidades: String(datos.cantidad_unidades),
+            porcentaje_fondo_reserva: datos.porcentaje_fondo_reserva ? String(parseFloat(datos.porcentaje_fondo_reserva) * 100) : '0',
           });
         }
       });
@@ -147,6 +184,7 @@ export default function PaginaDetalleCondominio() {
         direccion: formulario.direccion,
         rut_comunidad: formulario.rut_comunidad,
         cantidad_unidades: parseInt(formulario.cantidad_unidades, 10),
+        porcentaje_fondo_reserva: parseFloat(formulario.porcentaje_fondo_reserva) / 100,
       });
     } catch {
       // El error ya se maneja en el hook.
@@ -290,6 +328,16 @@ export default function PaginaDetalleCondominio() {
                   valor={formulario.cantidad_unidades}
                   onChange={handleChange}
                   error={errores.cantidad_unidades}
+                />
+
+                <Input
+                  nombre="porcentaje_fondo_reserva"
+                  etiqueta="Fondo de Reserva (%)"
+                  tipo="number"
+                  step="0.01"
+                  valor={formulario.porcentaje_fondo_reserva}
+                  onChange={handleChange}
+                  error={errores.porcentaje_fondo_reserva}
                 />
               </div>
             </form>

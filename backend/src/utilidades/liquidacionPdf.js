@@ -15,16 +15,6 @@ const formatoMonedaCLP = (valor) => {
   }).format(valor);
 };
 
-const formatearFecha = (fecha) => {
-  if (!fecha) return '—';
-  const date = new Date(fecha);
-  return date.toLocaleDateString('es-CL', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  });
-};
-
 const formatearMesAno = (fecha) => {
   if (!fecha) return '—';
   const date = new Date(fecha);
@@ -32,32 +22,6 @@ const formatearMesAno = (fecha) => {
     month: 'long',
     year: 'numeric',
   });
-};
-
-const AGRUPACIONES = {
-  'Agua': 'Servicios Básicos',
-  'Electricidad': 'Servicios Básicos',
-  'Gas': 'Servicios Básicos',
-  'Portería': 'Personal',
-  'Seguridad': 'Personal',
-  'Administración': 'Personal',
-  'Mantención': 'Operación',
-  'Aseo': 'Operación',
-  'Seguros': 'Administración',
-  'Otro': 'Varios',
-};
-
-const ICONOS_CATEGORIA = {
-  'Agua': '💧',
-  'Electricidad': '⚡',
-  'Gas': '🔥',
-  'Portería': '🛡️',
-  'Seguridad': '🔒',
-  'Administración': '📋',
-  'Mantención': '🔧',
-  'Aseo': '🧹',
-  'Seguros': '🛡️',
-  'Otro': '📦',
 };
 
 export const generarLiquidacionPDF = async (datos) => {
@@ -72,7 +36,7 @@ export const generarLiquidacionPDF = async (datos) => {
     try {
       const doc = new PDFDocument({
         size: 'A4',
-        margins: { top: 40, bottom: 40, left: 50, right: 50 },
+        margins: { top: 50, bottom: 50, left: 60, right: 60 },
         info: {
           Title: `Liquidación Gasto Común - ${formatearMesAno(gasto.mes_anio)}`,
           Author: 'SUMA - Plataforma PropTech',
@@ -80,288 +44,131 @@ export const generarLiquidacionPDF = async (datos) => {
       });
 
       const fragmentos = [];
-
       doc.on('data', (fragmento) => fragmentos.push(fragmento));
       doc.on('end', () => resolve(Buffer.concat(fragmentos)));
       doc.on('error', reject);
 
       const ANCHO = doc.page.width - doc.page.margins.left - doc.page.margins.right;
 
-      const colorPrimario = '#f9951a';
-      const colorSecundario = '#5122a7';
-      const colorTexto = '#2C2C2C';
-      const colorTextoSecundario = '#6B6B6B';
-      const colorLinea = '#E0E0E0';
+      const colorTitulos = '#1a56db'; // Azul tipo el documento de ejemplo
+      const colorTexto = '#000000';
+      const colorBorde = '#000000';
+      const colorAlerta = '#e02424'; // Rojo para total a pagar
 
+      // HEADER
       doc
-        .fillColor(colorPrimario)
-        .fontSize(8)
-        .text('COMUNIDAPP', doc.page.margins.left, 30, { continued: true })
-        .fillColor(colorTextoSecundario)
-        .text('  |  Plataforma de Gestión Comunitaria', { align: 'left' });
+        .fillColor(colorTitulos)
+        .fontSize(14)
+        .font('Helvetica-Bold')
+        .text(`COMUNIDAD ${condominio.nombre.toUpperCase()}`, { align: 'center' });
+      doc.moveDown(2);
 
-      doc.moveDown(1.5);
-
+      // SECTION 1: DETALLE GASTOS COMUNES
       doc
         .fillColor(colorTexto)
-        .fontSize(22)
-        .font('Helvetica-Bold')
-        .text('LIQUIDACIÓN DE GASTO COMÚN', { align: 'center' });
-
-      doc.moveDown(0.3);
-
-      doc
-        .fillColor(colorPrimario)
-        .fontSize(14)
-        .font('Helvetica')
-        .text(condominio.nombre.toUpperCase(), { align: 'center' });
-
-      doc.moveDown(0.2);
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(11)
-        .text(condominio.direccion, { align: 'center' });
-
-      doc.moveDown(1);
-
-      doc
-        .fillColor(colorSecundario)
         .fontSize(12)
         .font('Helvetica-Bold')
-        .text(`Período: ${formatearMesAno(gasto.mes_anio).toUpperCase()}`, { align: 'center' });
-
+        .text(`1. DETALLE GASTOS COMUNES (${formatearMesAno(gasto.mes_anio).toUpperCase()})`, doc.page.margins.left);
+      
       doc.moveDown(1);
 
-      const estadoBadge = gasto.estado === 'publicado' ? '✓ PUBLICADO' : '⏳ BORRADOR';
-      const estadoColor = gasto.estado === 'publicado' ? '#2D8659' : '#f9951a';
+      // DRAW TABLE 1
+      const tableTop = doc.y;
+      const col1X = doc.page.margins.left + 20;
+      const col2X = doc.page.margins.left + ANCHO - 120;
+      
+      // Función helper para dibujar filas de tabla
+      let currentY = tableTop;
+      const drawRow = (concepto, valor, isBold = false, isRed = false, drawTopLine = false, drawBottomLine = false) => {
+        if (drawTopLine) {
+          doc.moveTo(col1X, currentY).lineTo(col1X + ANCHO - 40, currentY).stroke(colorBorde);
+          currentY += 5;
+        }
 
-      doc
-        .fillColor(estadoColor)
-        .fontSize(10)
-        .font('Helvetica-Bold')
-        .text(`Estado: ${estadoBadge}`, doc.page.margins.left, doc.y, { align: 'right' });
+        doc.font(isBold ? 'Helvetica-Bold' : 'Helvetica')
+           .fillColor(isRed ? colorAlerta : colorTexto)
+           .fontSize(10);
+        
+        doc.text(concepto, col1X + 5, currentY + 2);
+        
+        // Simular "$    15.000" alineado
+        doc.text(valor, col2X, currentY + 2, { width: 90, align: 'right' });
+        
+        currentY += 15;
 
-      doc.moveDown(1);
+        if (drawBottomLine) {
+          currentY += 5;
+          doc.moveTo(col1X, currentY).lineTo(col1X + ANCHO - 40, currentY).stroke(colorBorde);
+        }
+      };
 
-      doc
-        .fillColor(colorTexto)
-        .fontSize(10)
-        .font('Helvetica-Bold')
-        .text('RESUMEN GENERAL', doc.page.margins.left)
-        .moveTo(doc.page.margins.left, doc.y + 5)
-        .lineTo(doc.page.margins.left + ANCHO, doc.y + 5)
-        .stroke(colorLinea);
+      // Header Tabla 1
+      drawRow('CONCEPTO', 'VALOR', true, false, true, true);
 
-      doc.moveDown(0.8);
-
-      const resumenFilaY = doc.y;
-      const colAncho = ANCHO / 2;
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica');
-
-      doc.text('Total Egresos del Mes', doc.page.margins.left, resumenFilaY);
-      doc
-        .fillColor(colorTexto)
-        .fontSize(11)
-        .font('Helvetica-Bold')
-        .text(formatoMonedaCLP(gasto.total_gastos), doc.page.margins.left + colAncho, resumenFilaY, { align: 'right' });
-
-      doc.moveDown(0.6);
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica');
-
-      doc.text('Total Cobrado a Residentes', doc.page.margins.left, doc.y);
-      doc
-        .fillColor(colorTexto)
-        .fontSize(11)
-        .font('Helvetica-Bold')
-        .text(formatoMonedaCLP(cobrosResumen?.total_cobrado || 0), doc.page.margins.left + colAncho, doc.y, { align: 'right' });
-
-      doc.moveDown(0.6);
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica');
-
-      doc.text('Total Recaudado', doc.page.margins.left, doc.y);
-      doc
-        .fillColor('#2D8659')
-        .fontSize(11)
-        .font('Helvetica-Bold')
-        .text(formatoMonedaCLP(cobrosResumen?.total_pagado || 0), doc.page.margins.left + colAncho, doc.y, { align: 'right' });
-
-      doc.moveDown(0.6);
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica');
-
-      doc.text('Total Pendiente de Cobro', doc.page.margins.left, doc.y);
-      doc
-        .fillColor('#f9951a')
-        .fontSize(11)
-        .font('Helvetica-Bold')
-        .text(formatoMonedaCLP(cobrosResumen?.total_pendiente || 0), doc.page.margins.left + colAncho, doc.y, { align: 'right' });
-
-      doc.moveDown(1.5);
-
-      doc
-        .fillColor(colorTexto)
-        .fontSize(10)
-        .font('Helvetica-Bold')
-        .text('DETALLE DE EGRESOS POR CATEGORÍA', doc.page.margins.left)
-        .moveTo(doc.page.margins.left, doc.y + 5)
-        .lineTo(doc.page.margins.left + ANCHO, doc.y + 5)
-        .stroke(colorLinea);
-
-      doc.moveDown(1);
-
+      // Egresos (Lista plana)
       if (egresos && egresos.length > 0) {
-        const agrupados = {};
-        egresos.forEach((e) => {
-          const grupo = AGRUPACIONES[e.categoria] || 'Varios';
-          if (!agrupados[grupo]) agrupados[grupo] = { total: 0, items: [] };
-          agrupados[grupo].total += parseFloat(e.monto);
-          agrupados[grupo].items.push(e);
+        egresos.forEach(e => {
+          drawRow(e.categoria.toUpperCase() + (e.descripcion ? ` - ${e.descripcion}` : ''), formatoMonedaCLP(e.monto));
         });
-
-        Object.entries(agrupados).forEach(([grupo, data]) => {
-          if (doc.y > doc.page.height - 120) {
-            doc.addPage();
-          }
-
-          doc
-            .fillColor(colorSecundario)
-            .fontSize(9)
-            .font('Helvetica-Bold')
-            .text(grupo.toUpperCase(), doc.page.margins.left);
-
-          doc.moveDown(0.4);
-
-          data.items.forEach((egreso) => {
-            doc
-              .fillColor(colorTexto)
-              .fontSize(9)
-              .font('Helvetica')
-              .text(`${ICONOS_CATEGORIA[egreso.categoria] || '📦'}  ${egreso.categoria}`, doc.page.margins.left + 10, doc.y);
-
-            if (egreso.descripcion) {
-              doc
-                .fillColor(colorTextoSecundario)
-                .fontSize(8)
-                .text(egreso.descripcion, doc.page.margins.left + 70, doc.y);
-            }
-
-            doc
-              .fillColor(colorTexto)
-              .fontSize(9)
-              .font('Helvetica-Bold')
-              .text(formatoMonedaCLP(parseFloat(egreso.monto)), doc.page.margins.left + ANCHO - 80, doc.y, { width: 80, align: 'right' });
-
-            doc.moveDown(0.5);
-          });
-
-          doc
-            .fillColor(colorTextoSecundario)
-            .fontSize(8)
-            .font('Helvetica')
-            .text(`Subtotal ${grupo}:`, doc.page.margins.left + 10, doc.y);
-
-          doc
-            .fillColor(colorPrimario)
-            .fontSize(9)
-            .font('Helvetica-Bold')
-            .text(formatoMonedaCLP(data.total), doc.page.margins.left + ANCHO - 80, doc.y, { width: 80, align: 'right' });
-
-          doc.moveDown(0.8);
-        });
-
-        doc
-          .moveTo(doc.page.margins.left, doc.y)
-          .lineTo(doc.page.margins.left + ANCHO, doc.y)
-          .stroke(colorLinea);
-
-        doc.moveDown(0.5);
-
-        doc
-          .fillColor(colorTexto)
-          .fontSize(11)
-          .font('Helvetica-Bold')
-          .text('TOTAL EGRESOS:', doc.page.margins.left, doc.y);
-
-        doc
-          .fillColor(colorPrimario)
-          .fontSize(13)
-          .text(formatoMonedaCLP(gasto.total_gastos), doc.page.margins.left + ANCHO - 100, doc.y - 2, { width: 100, align: 'right' });
-
       } else {
-        doc
-          .fillColor(colorTextoSecundario)
-          .fontSize(10)
-          .font('Helvetica')
-          .text('No hay egresos registrados para este período.', doc.page.margins.left, doc.y, { align: 'center' });
+        drawRow('SIN EGRESOS REGISTRADOS', formatoMonedaCLP(0));
       }
 
-      doc.moveDown(2);
+      currentY += 5;
+      // Total Gastos Comunidad
+      drawRow('TOTAL GASTOS COMUNIDAD', formatoMonedaCLP(gasto.total_gastos), true, false, true, true);
 
-      if (doc.y > doc.page.height - 100) {
-        doc.addPage();
-      }
+      // Cálculos Promedio por Unidad
+      const unidadesActivas = cobrosResumen?.unidades_activas > 0 ? cobrosResumen.unidades_activas : 1;
+      const subTotalUnidad = Math.round(gasto.total_gastos / unidadesActivas);
+      const fondoReservaUnidad = Math.round((gasto.monto_fondo_reserva || 0) / unidadesActivas);
+      const totalAPagarPromedio = subTotalUnidad + fondoReservaUnidad;
 
+      currentY += 5;
+      drawRow(`SUB TOTAL (Promedio 1/${unidadesActivas} unidades)`, formatoMonedaCLP(subTotalUnidad));
+      drawRow('FONDO DE RESERVA', formatoMonedaCLP(fondoReservaUnidad));
+
+      currentY += 5;
+      drawRow('TOTAL A PAGAR (Promedio por unidad)', formatoMonedaCLP(totalAPagarPromedio), true, true, true, true);
+
+      // Cuadro principal contenedor
+      doc.rect(doc.page.margins.left, tableTop - 30, ANCHO, currentY - tableTop + 40).stroke(colorBorde);
+
+      doc.y = currentY + 20;
+
+      // Nota al pie tabla 1
+      doc.font('Helvetica-Oblique').fontSize(9).fillColor(colorTexto);
+      doc.text('(*) El valor real a pagar por su unidad puede variar ligeramente según su porcentaje de alícuota legal estipulado en el reglamento de copropiedad.', doc.page.margins.left + 20);
+
+      doc.moveDown(3);
+
+      // SECTION 2: FONDO DE RESERVA
       doc
         .fillColor(colorTexto)
-        .fontSize(10)
+        .fontSize(12)
         .font('Helvetica-Bold')
-        .text('INFORMACIÓN DE LA COMUNIDAD', doc.page.margins.left)
-        .moveTo(doc.page.margins.left, doc.y + 5)
-        .lineTo(doc.page.margins.left + ANCHO, doc.y + 5)
-        .stroke(colorLinea);
-
-      doc.moveDown(0.8);
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica')
-        .text(`RUT Comunidad: ${condominio.rut_comunidad}`, doc.page.margins.left);
-
-      doc.moveDown(0.4);
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica')
-        .text(`Unidades Activas: ${cobrosResumen?.unidades_activas || 0}`, doc.page.margins.left);
-
-      doc.moveDown(0.4);
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(9)
-        .font('Helvetica')
-        .text(`Fecha de Emisión: ${formatearFecha(new Date())}`, doc.page.margins.left);
-
-      doc.moveDown(2);
-
-      doc
-        .fillColor(colorTextoSecundario)
-        .fontSize(8)
-        .font('Helvetica')
-        .text('Este documento es un comprobante informal de gastos comunes. Para pagos oficiales, conserve sus comprobantes de transferencia o boleta de pago.', doc.page.margins.left, doc.y, { align: 'center', width: ANCHO });
-
+        .text(`2. FONDO DE RESERVA DE LA COMUNIDAD (${formatearMesAno(gasto.mes_anio).toUpperCase()})`, doc.page.margins.left);
+      
       doc.moveDown(1);
 
-      doc
-        .fillColor(colorPrimario)
-        .fontSize(8)
-        .font('Helvetica-Bold')
-        .text('Generado por SUMA - Plataforma PropTech de Gestión Comunitaria', doc.page.margins.left, doc.page.height - 30, { align: 'center', width: ANCHO });
+      const table2Top = doc.y;
+      currentY = table2Top;
+
+      // Header Tabla 2
+      drawRow('CONCEPTO', 'VALOR', true, false, true, true);
+      
+      drawRow('AHORRO ESTE MES', formatoMonedaCLP(gasto.monto_fondo_reserva || 0));
+      currentY += 5;
+
+      const saldoHistorico = parseFloat(condominio.saldo_fondo_reserva || 0);
+      drawRow('TOTAL FONDO RESERVA*', formatoMonedaCLP(saldoHistorico), true, true, true, true);
+
+      // Cuadro contenedor tabla 2
+      doc.rect(col1X - 5, table2Top - 5, ANCHO - 30, currentY - table2Top + 10).stroke(colorBorde);
+
+      doc.y = currentY + 10;
+      doc.font('Helvetica').fontSize(9).fillColor(colorTexto);
+      doc.text('* El Total Fondo Reserva incluye todos los aportes cobrados y recaudados históricamente hasta la fecha de emisión de este documento.', doc.page.margins.left + 20, doc.y, { width: ANCHO - 40 });
 
       doc.end();
     } catch (error) {

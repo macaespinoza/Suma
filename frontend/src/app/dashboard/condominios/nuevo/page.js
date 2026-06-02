@@ -25,6 +25,7 @@ export default function PaginaNuevoCondominio() {
     direccion: '',
     rut_comunidad: '',
     cantidad_unidades: '',
+    porcentaje_fondo_reserva: '0',
   });
 
   const [errores, setErrores] = useState({});
@@ -71,6 +72,7 @@ export default function PaginaNuevoCondominio() {
       const nuevoCondominio = await crear({
         ...formulario,
         cantidad_unidades: parseInt(formulario.cantidad_unidades, 10),
+        porcentaje_fondo_reserva: parseFloat(formulario.porcentaje_fondo_reserva) / 100,
       });
       router.push(`/dashboard/condominios/${nuevoCondominio.id}/unidades/inicializar`);
     } catch {
@@ -147,6 +149,17 @@ export default function PaginaNuevoCondominio() {
               onChange={handleChange}
               error={errores.cantidad_unidades}
               requerido
+            />
+
+            <Input
+              nombre="porcentaje_fondo_reserva"
+              etiqueta="Fondo de Reserva (%)"
+              tipo="number"
+              step="0.01"
+              placeholder="Ej: 3"
+              valor={formulario.porcentaje_fondo_reserva}
+              onChange={handleChange}
+              error={errores.porcentaje_fondo_reserva}
             />
           </div>
         </form>

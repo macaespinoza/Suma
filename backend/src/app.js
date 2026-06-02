@@ -7,6 +7,7 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
+import path from 'path';
 import enrutadorPrincipal from './rutas/index.js';
 import { manejarError } from './middlewares/errores.js';
 
@@ -43,6 +44,11 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.get('/health', (_req, res) => {
   res.status(200).json({ estado: 'ok', servicio: 'suma-backend' });
 });
+
+// ---------------------------------------------------------------------------
+// Archivos Estáticos (Comprobantes locales)
+// ---------------------------------------------------------------------------
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 // ---------------------------------------------------------------------------
 // Montaje de Rutas

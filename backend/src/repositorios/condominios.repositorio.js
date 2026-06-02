@@ -11,7 +11,7 @@ import { consultar } from '../config/database.js';
  */
 export const obtenerTodos = async () => {
   const { rows } = await consultar(
-    `SELECT id, nombre, direccion, rut_comunidad, cantidad_unidades, activo, created_at, updated_at
+    `SELECT id, nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva, saldo_fondo_reserva, activo, created_at, updated_at
      FROM Condominios
      WHERE activo = TRUE
      ORDER BY nombre ASC`
@@ -26,7 +26,7 @@ export const obtenerTodos = async () => {
  */
 export const obtenerPorId = async (id) => {
   const { rows } = await consultar(
-    `SELECT id, nombre, direccion, rut_comunidad, cantidad_unidades, activo, created_at, updated_at
+    `SELECT id, nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva, saldo_fondo_reserva, activo, created_at, updated_at
      FROM Condominios
      WHERE id = $1`,
     [id]
@@ -43,12 +43,12 @@ export const obtenerPorId = async (id) => {
  * @param {number} datos.cantidad_unidades
  * @returns {Promise<object>} Condominio creado con su ID generado.
  */
-export const crear = async ({ nombre, direccion, rut_comunidad, cantidad_unidades }) => {
+export const crear = async ({ nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva = 0.0000 }) => {
   const { rows } = await consultar(
-    `INSERT INTO Condominios (nombre, direccion, rut_comunidad, cantidad_unidades)
-     VALUES ($1, $2, $3, $4)
+    `INSERT INTO Condominios (nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva)
+     VALUES ($1, $2, $3, $4, $5)
      RETURNING *`,
-    [nombre, direccion, rut_comunidad, cantidad_unidades]
+    [nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva]
   );
   return rows[0];
 };
@@ -59,16 +59,17 @@ export const crear = async ({ nombre, direccion, rut_comunidad, cantidad_unidade
  * @param {object} datos - Campos a actualizar.
  * @returns {Promise<object|null>} Condominio actualizado o null si no existe.
  */
-export const actualizar = async (id, { nombre, direccion, rut_comunidad, cantidad_unidades }) => {
+export const actualizar = async (id, { nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva }) => {
   const { rows } = await consultar(
     `UPDATE Condominios
      SET nombre = COALESCE($2, nombre),
          direccion = COALESCE($3, direccion),
          rut_comunidad = COALESCE($4, rut_comunidad),
-         cantidad_unidades = COALESCE($5, cantidad_unidades)
+         cantidad_unidades = COALESCE($5, cantidad_unidades),
+         porcentaje_fondo_reserva = COALESCE($6, porcentaje_fondo_reserva)
      WHERE id = $1 AND activo = TRUE
      RETURNING *`,
-    [id, nombre, direccion, rut_comunidad, cantidad_unidades]
+    [id, nombre, direccion, rut_comunidad, cantidad_unidades, porcentaje_fondo_reserva]
   );
   return rows[0] || null;
 };
@@ -100,4 +101,20 @@ export const obtenerUnidades = async (condominioId) => {
     [condominioId]
   );
   return rows;
+};
+
+/**
+ * Actualiza el saldo histórico del fondo de reserva de un condominio.
+ * @param {string} id - UUID del condominio.
+ * @param {number} montoAAgregar - Monto a sumar (puede ser negativo para restar).
+ * @returns {Promise<boolean>} true si se actualizó.
+ */
+export const actualizarFondoReserva = async (id, montoAAgregar) => {
+  const { rowCount } = await consultar(
+    `UPDATE Condominios
+     SET saldo_fondo_reserva = saldo_fondo_reserva + $2
+     WHERE id = $1`,
+    [id, montoAAgregar]
+  );
+  return rowCount > 0;
 };

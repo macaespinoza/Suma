@@ -5,9 +5,11 @@
 
 import { Router } from 'express';
 import * as controlador from '../controladores/condominios.controlador.js';
+import * as unidadesControlador from '../controladores/unidades.controlador.js';
 // import { verificarAutenticacion } from '../middlewares/autenticacion.js';
 import { validar } from '../middlewares/validacion.js';
 import { esquemaCrearCondominio, esquemaActualizarCondominio } from '../validaciones/condominios.validacion.js';
+import { esquemaActualizarDatosBase, esquemaTitular, esquemaVehiculo, esquemaMascota } from '../validaciones/unidades.validacion.js';
 
 const router = Router();
 
@@ -46,5 +48,57 @@ router.delete('/:id', controlador.desactivar);
  * Lista las unidades vecinales de un condominio específico.
  */
 router.get('/:id/unidades', controlador.listarUnidades);
+
+// =============================================================================
+// Ficha Administrativa de Unidades — Rutas Anidadas
+// =============================================================================
+
+/**
+ * GET /api/v1/condominios/:condominioId/unidades/:unidadId
+ * Obtiene el detalle completo de una unidad (datos base + titulares + vehículos + mascotas).
+ */
+router.get('/:condominioId/unidades/:unidadId', unidadesControlador.obtenerDetalleCompleto);
+
+/**
+ * PUT /api/v1/condominios/:condominioId/unidades/:unidadId
+ * Actualiza los datos base de una unidad (estacionamiento, bodega).
+ */
+router.put('/:condominioId/unidades/:unidadId', validar(esquemaActualizarDatosBase, 'body'), unidadesControlador.actualizarDatosBase);
+
+/**
+ * POST /api/v1/condominios/:condominioId/unidades/:unidadId/titulares
+ * Añade o reemplaza un titular (propietario o arrendatario).
+ */
+router.post('/:condominioId/unidades/:unidadId/titulares', validar(esquemaTitular, 'body'), unidadesControlador.agregarTitular);
+
+/**
+ * DELETE /api/v1/condominios/:condominioId/unidades/:unidadId/titulares/:titularId
+ * Elimina administrativamente a un titular de la unidad.
+ */
+router.delete('/:condominioId/unidades/:unidadId/titulares/:titularId', unidadesControlador.eliminarTitular);
+
+/**
+ * POST /api/v1/condominios/:condominioId/unidades/:unidadId/vehiculos
+ * Añade un vehículo a la unidad.
+ */
+router.post('/:condominioId/unidades/:unidadId/vehiculos', validar(esquemaVehiculo, 'body'), unidadesControlador.agregarVehiculo);
+
+/**
+ * DELETE /api/v1/condominios/:condominioId/unidades/:unidadId/vehiculos/:vehiculoId
+ * Elimina un vehículo de la unidad.
+ */
+router.delete('/:condominioId/unidades/:unidadId/vehiculos/:vehiculoId', unidadesControlador.eliminarVehiculo);
+
+/**
+ * POST /api/v1/condominios/:condominioId/unidades/:unidadId/mascotas
+ * Añade una mascota a la unidad.
+ */
+router.post('/:condominioId/unidades/:unidadId/mascotas', validar(esquemaMascota, 'body'), unidadesControlador.agregarMascota);
+
+/**
+ * DELETE /api/v1/condominios/:condominioId/unidades/:unidadId/mascotas/:mascotaId
+ * Elimina una mascota de la unidad.
+ */
+router.delete('/:condominioId/unidades/:unidadId/mascotas/:mascotaId', unidadesControlador.eliminarMascota);
 
 export default router;

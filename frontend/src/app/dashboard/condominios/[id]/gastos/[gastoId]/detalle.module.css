@@ -419,3 +419,229 @@
     gap: var(--espacio-2);
   }
 }
+
+.egresoMontoYAcciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.egresoAcciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+}
+
+.botonAccionEgreso {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--espacio-1);
+  font-size: var(--texto-base);
+  border-radius: var(--radio-md);
+  transition: background var(--transicion-rapida), transform var(--transicion-rapida);
+}
+
+.botonAccionEgreso:hover {
+  background: var(--color-fondo);
+  transform: scale(1.1);
+}
+
+.botonAccionEgreso:active {
+  transform: scale(0.95);
+}
+
+/* --- Tarjetas Rápidas --- */
+.tarjetasRapidasGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--espacio-3);
+  margin-top: var(--espacio-4);
+  margin-bottom: var(--espacio-6);
+}
+
+.tarjetaRapida {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4) var(--espacio-2);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  cursor: pointer;
+  transition: all var(--transicion-normal);
+  text-align: center;
+}
+
+.tarjetaRapida:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-md);
+  border-color: var(--color-primario);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(240, 248, 255, 0.5));
+}
+
+@media (prefers-color-scheme: dark) {
+  .tarjetaRapida:hover {
+    background: linear-gradient(135deg, rgba(36, 24, 54, 0.8), rgba(20, 10, 30, 0.9));
+  }
+}
+
+.tarjetaRapidaIcono {
+  font-size: 1.8rem;
+}
+
+.tarjetaRapidaNombre {
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+}
+
+/* --- Input Archivo Personalizado --- */
+.inputArchivoContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-2);
+}
+
+.inputArchivoLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.inputArchivoZona {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4);
+  border: 2px dashed var(--color-borde);
+  border-radius: var(--radio-lg);
+  background: var(--color-fondo);
+  cursor: pointer;
+  transition: border-color var(--transicion-rapida);
+}
+
+.inputArchivoZona:hover {
+  border-color: var(--color-primario);
+}
+
+.inputArchivo {
+  display: none;
+}
+
+.archivoTexto {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+}
+
+.archivoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  padding: var(--espacio-2) var(--espacio-3);
+  background: hsla(142, 71%, 35%, 0.1);
+  color: var(--color-exito);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+}
+
+/* --- Previsualizacion Liquidacion --- */
+.previsualizacion {
+  padding: var(--espacio-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-6);
+}
+
+.previsualizacionCabecera {
+  text-align: center;
+  border-bottom: 2px dashed var(--color-borde);
+  padding-bottom: var(--espacio-4);
+}
+
+.previsualizacionCabecera h2 {
+  font-size: var(--texto-2xl);
+  font-weight: var(--peso-extrabold);
+  margin-bottom: var(--espacio-2);
+}
+
+.previsualizacionTotal {
+  font-size: var(--texto-3xl);
+  font-weight: var(--peso-extrabold);
+  color: var(--color-primario);
+  text-align: center;
+  margin: var(--espacio-4) 0;
+}
+
+.enlaceRespaldo {
+  color: var(--color-primario);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-fondo);
+  padding: 4px 8px;
+  border-radius: var(--radio-md);
+  transition: background var(--transicion-rapida);
+  font-size: var(--texto-xs);
+  border: 1px solid var(--color-borde);
+}
+
+.enlaceRespaldo:hover {
+  background: hsla(210, 100%, 50%, 0.1);
+}
+
+/* --- Monto Gigante --- */
+.montoGiganteContainer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-1);
+  margin-bottom: var(--espacio-2);
+}
+
+.montoGiganteLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+  text-align: center;
+}
+
+.montoGiganteInput {
+  font-size: 2.5rem;
+  font-weight: var(--peso-extrabold);
+  text-align: center;
+  color: var(--color-primario);
+  background: var(--color-superficie);
+  border: 2px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-2);
+  width: 100%;
+  transition: border-color var(--transicion-rapida), box-shadow var(--transicion-rapida);
+}
+
+.montoGiganteInput:focus {
+  outline: none;
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 4px hsla(210, 100%, 50%, 0.1);
+}
+
+.montoGiganteInput::placeholder {
+  color: var(--color-texto-secundario);
+  opacity: 0.3;
+}
+
+/* Ocultar flechas del input number */
+.montoGiganteInput::-webkit-outer-spin-button,
+.montoGiganteInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.montoGiganteInput[type=number] {
+  -moz-appearance: textfield;
+}

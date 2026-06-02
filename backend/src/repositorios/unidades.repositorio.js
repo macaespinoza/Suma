@@ -13,6 +13,8 @@ import { consultar, obtenerCliente } from '../config/database.js';
 export const listarPorCondominio = async (condominioId) => {
   const { rows } = await consultar(
     `SELECT uv.id, uv.condominio_id, uv.bloque_edificio, uv.numero, uv.alicuota,
+            uv.tiene_estacionamiento, uv.numero_estacionamiento,
+            uv.tiene_bodega, uv.numero_bodega,
             uv.activo, uv.created_at, uv.updated_at,
             c.nombre AS condominio_nombre
      FROM Unidades_Vecinales uv
@@ -32,6 +34,8 @@ export const listarPorCondominio = async (condominioId) => {
 export const obtenerPorId = async (id) => {
   const { rows } = await consultar(
     `SELECT uv.id, uv.condominio_id, uv.bloque_edificio, uv.numero, uv.alicuota,
+            uv.tiene_estacionamiento, uv.numero_estacionamiento,
+            uv.tiene_bodega, uv.numero_bodega,
             uv.activo, uv.created_at, uv.updated_at,
             c.nombre AS condominio_nombre
      FROM Unidades_Vecinales uv
@@ -67,15 +71,19 @@ export const crear = async ({ condominio_id, bloque_edificio, numero, alicuota }
  * @param {object} datos - Campos a actualizar.
  * @returns {Promise<object|null>} Unidad actualizada o null.
  */
-export const actualizar = async (id, { bloque_edificio, numero, alicuota }) => {
+export const actualizar = async (id, { bloque_edificio, numero, alicuota, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega }) => {
   const { rows } = await consultar(
     `UPDATE Unidades_Vecinales
      SET bloque_edificio = COALESCE($2, bloque_edificio),
          numero = COALESCE($3, numero),
-         alicuota = COALESCE($4, alicuota)
+         alicuota = COALESCE($4, alicuota),
+         tiene_estacionamiento = COALESCE($5, tiene_estacionamiento),
+         numero_estacionamiento = COALESCE($6, numero_estacionamiento),
+         tiene_bodega = COALESCE($7, tiene_bodega),
+         numero_bodega = COALESCE($8, numero_bodega)
      WHERE id = $1 AND activo = TRUE
      RETURNING *`,
-    [id, bloque_edificio, numero, alicuota]
+    [id, bloque_edificio, numero, alicuota, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega]
   );
   return rows[0] || null;
 };
@@ -91,6 +99,78 @@ export const desactivar = async (id) => {
     [id]
   );
   return rowCount > 0;
+};
+
+/**
+ * Actualiza los datos base de una unidad (estacionamiento, bodega).
+ * Usa asignación directa para permitir valores nulos explícitos.
+ * @param {string} id - UUID de la unidad.
+ * @param {object} datos - { tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega }
+ * @returns {Promise<object|null>}
+ */
+export const actualizarDatosBase = async (id, { tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega }) => {
+  const { rows } = await consultar(
+    `UPDATE Unidades_Vecinales
+     SET tiene_estacionamiento = $2,
+         numero_estacionamiento = $3,
+         tiene_bodega = $4,
+         numero_bodega = $5
+     WHERE id = $1 AND activo = TRUE
+     RETURNING *`,
+    [id, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega]
+  );
+  return rows[0] || null;
+};
+
+/**
+ * Obtiene el detalle completo de una unidad: datos base + titulares + vehículos + mascotas.
+ * @param {string} id - UUID de la unidad.
+ * @returns {Promise<object|null>}
+ */
+export const obtenerDetalleCompleto = async (id) => {
+  const { rows: unidades } = await consultar(
+    `SELECT uv.id, uv.condominio_id, uv.bloque_edificio, uv.numero, uv.alicuota,
+            uv.tiene_estacionamiento, uv.numero_estacionamiento,
+            uv.tiene_bodega, uv.numero_bodega,
+            uv.activo, uv.created_at, uv.updated_at
+     FROM Unidades_Vecinales uv
+     WHERE uv.id = $1`,
+    [id]
+  );
+
+  const unidad = unidades[0];
+  if (!unidad) return null;
+
+  const { rows: titulares } = await consultar(
+    `SELECT id, tipo, nombre, rut, email, telefono
+     FROM Titulares_Unidad
+     WHERE unidad_id = $1
+     ORDER BY tipo ASC`,
+    [id]
+  );
+
+  const { rows: vehiculos } = await consultar(
+    `SELECT id, tipo_vehiculo, patente
+     FROM Vehiculos
+     WHERE unidad_id = $1
+     ORDER BY created_at ASC`,
+    [id]
+  );
+
+  const { rows: mascotas } = await consultar(
+    `SELECT id, nombre, especie, raza, foto_url
+     FROM Mascotas
+     WHERE unidad_id = $1 AND activo = TRUE
+     ORDER BY nombre ASC`,
+    [id]
+  );
+
+  return {
+    ...unidad,
+    titulares,
+    vehiculos,
+    mascotas,
+  };
 };
 
 /**

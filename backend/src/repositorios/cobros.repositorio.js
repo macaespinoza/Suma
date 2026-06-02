@@ -5,14 +5,35 @@
 
 import { consultar, obtenerCliente } from '../config/database.js';
 
-export const crearCobrosPorGasto = async (gastoId, unidades, totalGastos) => {
+export const crearCobrosPorGasto = async (gastoId, unidades, totalGastos, montoFondoReserva = 0) => {
   const cliente = await obtenerCliente();
   try {
     await cliente.query('BEGIN');
 
     const cobros = [];
-    for (const unidad of unidades) {
-      const montoCobrado = parseFloat((totalGastos * unidad.alicuota).toFixed(2));
+    let sumaCobradaGastos = 0;
+    let sumaCobradaReserva = 0;
+
+    for (let i = 0; i < unidades.length; i++) {
+      const unidad = unidades[i];
+      
+      // En Chile (CLP) no hay decimales, redondeamos al entero más cercano
+      let montoGastos = Math.round(totalGastos * parseFloat(unidad.alicuota));
+      let montoReserva = Math.round(montoFondoReserva * parseFloat(unidad.alicuota));
+      
+      // Si es la última unidad, ajustamos la diferencia de redondeo
+      if (i === unidades.length - 1) {
+        const diferenciaGastos = totalGastos - (sumaCobradaGastos + montoGastos);
+        const diferenciaReserva = montoFondoReserva - (sumaCobradaReserva + montoReserva);
+        montoGastos += diferenciaGastos;
+        montoReserva += diferenciaReserva;
+      }
+      
+      let montoCobrado = montoGastos + montoReserva;
+      
+      sumaCobradaGastos += montoGastos;
+      sumaCobradaReserva += montoReserva;
+
       const saldoAnterior = await obtenerSaldoAnterior(cliente, unidad.id);
       const totalAPagar = montoCobrado + saldoAnterior;
 
@@ -275,3 +296,23 @@ export const marcarCobroComoPagado = async (id) => {
   );
   return rows[0] || null;
 };
+
+export const tienePagosRegistrados = async (gastoId) => {
+  const { rows } = await consultar(
+    `SELECT COUNT(*)::integer as total
+     FROM Pagos_Registrados pr
+     INNER JOIN Cobros_Unidad cu ON pr.cobro_unidad_id = cu.id
+     WHERE cu.gasto_comun_mes_id = $1`,
+    [gastoId]
+  );
+  return (rows[0]?.total || 0) > 0;
+};
+
+export const eliminarCobrosPorGasto = async (gastoId) => {
+  const { rowCount } = await consultar(
+    `DELETE FROM Cobros_Unidad WHERE gasto_comun_mes_id = $1`,
+    [gastoId]
+  );
+  return rowCount;
+};
+
