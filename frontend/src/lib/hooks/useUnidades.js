@@ -106,6 +106,24 @@ export function useUnidades() {
   }, []);
 
   /**
+   * Obtiene el detalle completo de una unidad sin necesitar condominioId.
+   */
+  const obtenerDetalleStandalone = useCallback(async (unidadId) => {
+    setCargando(true);
+    setError(null);
+    try {
+      const respuesta = await api.get(`/unidades/${unidadId}/detalle`);
+      setUnidad(respuesta.datos);
+      return respuesta.datos;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setCargando(false);
+    }
+  }, []);
+
+  /**
    * Obtiene el detalle completo de una unidad (datos base + titulares + vehículos + mascotas).
    */
   const obtenerDetalleCompleto = useCallback(async (condominioId, unidadId) => {
@@ -249,6 +267,7 @@ export function useUnidades() {
     crearLote,
     actualizar,
     desactivar,
+    obtenerDetalleStandalone,
     obtenerDetalleCompleto,
     actualizarDatosBase,
     agregarTitular,

@@ -194,6 +194,7 @@ CREATE TABLE Unidades_Vecinales (
     condominio_id    UUID           NOT NULL REFERENCES Condominios(id) ON DELETE RESTRICT,
     bloque_edificio  VARCHAR(100),   -- Crucial para agrupar torres/bloques en Arica.
     numero           VARCHAR(20)    NOT NULL,
+    metros_cuadrados DECIMAL(8, 2)  DEFAULT NULL, -- Superficie útil, base para cálculo legal de alícuota. NULL = no registrado.
     alicuota         DECIMAL(5, 4)  NOT NULL DEFAULT 0.0000, -- Porcentaje de participación (ej: 0.0250 = 2.50%).
     tiene_estacionamiento BOOLEAN   NOT NULL DEFAULT FALSE,
     numero_estacionamiento VARCHAR(50),

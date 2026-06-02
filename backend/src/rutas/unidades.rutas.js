@@ -12,6 +12,12 @@ import { esquemaCrearUnidad, esquemaActualizarUnidad, esquemaCrearUnidadesLote }
 const router = Router();
 
 /**
+ * GET /api/v1/unidades/:id/detalle
+ * Obtiene el detalle completo de una unidad (autónomo, sin necesitar condominioId).
+ */
+router.get('/:id/detalle', controlador.obtenerDetalleStandalone);
+
+/**
  * GET /api/v1/unidades/:id
  * Obtiene una unidad vecinal por su ID.
  */

@@ -1,13 +1,13 @@
 // =============================================================================
 // SUMA — Página de Lista de Unidades Vecinales
-// Muestra tabla de unidades con filtro por condominio.
+// Muestra tabla de unidades con responsable de pago y estado financiero.
 // =============================================================================
 
 'use client';
 
 import { useEffect, useState, useCallback, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import api from '../../../lib/api.js';
 import { useUnidades } from '../../../lib/hooks/useUnidades.js';
 import Tabla from '../../../componentes/ui/Tabla.jsx';
@@ -15,6 +15,19 @@ import Boton from '../../../componentes/ui/Boton.jsx';
 import Modal from '../../../componentes/ui/Modal.jsx';
 import Select from '../../../componentes/ui/Select.jsx';
 import styles from './page.module.css';
+
+/**
+ * Mapea el estado_pago a configuración visual (color, etiqueta).
+ */
+const CONFIG_ESTADO = {
+  pagado:    { color: 'var(--color-exito)', fondo: 'hsla(142, 71%, 35%, 0.1)', etiqueta: 'Al día' },
+  pendiente: { color: 'var(--color-advertencia)', fondo: 'hsla(33, 95%, 54%, 0.1)', etiqueta: 'Pendiente' },
+  moroso:    { color: 'var(--color-error)', fondo: 'hsla(17, 92%, 50%, 0.1)', etiqueta: 'Moroso' },
+};
+
+const obtenerConfigEstado = (estadoPago) => {
+  return CONFIG_ESTADO[estadoPago] || { color: 'var(--color-texto-terciario)', fondo: 'rgba(0,0,0,0.04)', etiqueta: 'Sin registro' };
+};
 
 /**
  * Columnas de la tabla de unidades.
@@ -30,11 +43,74 @@ const columnas = [
     etiqueta: 'Bloque/Torre',
     render: (valor) => valor || '—',
   },
-  { clave: 'numero', etiqueta: 'Número' },
+  { clave: 'numero', etiqueta: 'N°' },
   {
-    clave: 'alicuota',
-    etiqueta: 'Alícuota',
-    render: (valor) => `${(parseFloat(valor) * 100).toFixed(2)}%`,
+    clave: 'responsable_nombre',
+    etiqueta: 'Responsable del Pago',
+    render: (_valor, fila) => {
+      const nombre = fila.responsable_nombre;
+      const tipo = fila.responsable_tipo;
+      const rut = fila.responsable_rut;
+      const telefono = fila.responsable_telefono;
+      const email = fila.responsable_email;
+
+      if (!nombre) return <span style={{ color: 'var(--color-texto-terciario)', fontStyle: 'italic', fontSize: '0.8rem' }}>Sin responsable</span>;
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--color-texto)' }}>{nombre}</span>
+            {tipo && (
+              <span style={{
+                fontSize: '0.65rem',
+                padding: '1px 6px',
+                borderRadius: '9999px',
+                background: tipo === 'propietario' ? 'hsla(279, 38%, 50%, 0.12)' : 'hsla(33, 95%, 54%, 0.12)',
+                color: tipo === 'propietario' ? 'var(--color-info)' : 'var(--color-advertencia)',
+                fontWeight: 600,
+                textTransform: 'capitalize',
+              }}>
+                {tipo}
+              </span>
+            )}
+          </div>
+          <div style={{ display: 'flex', gap: '8px', fontSize: '0.72rem', color: 'var(--color-texto-terciario)' }}>
+            {rut && <span>{rut}</span>}
+            {telefono && <span>{telefono}</span>}
+            {email && <span style={{ maxWidth: '140px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{email}</span>}
+          </div>
+        </div>
+      );
+    },
+  },
+  {
+    clave: 'estado_pago',
+    etiqueta: 'Estado',
+    render: (valor) => {
+      const cfg = obtenerConfigEstado(valor);
+      return (
+        <span style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: '6px',
+          padding: '4px 10px',
+          borderRadius: '9999px',
+          background: cfg.fondo,
+          fontWeight: 600,
+          fontSize: '0.78rem',
+          whiteSpace: 'nowrap',
+        }}>
+          <span style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            background: cfg.color,
+            flexShrink: 0,
+          }} />
+          <span style={{ color: cfg.color }}>{cfg.etiqueta}</span>
+        </span>
+      );
+    },
   },
 ];
 
@@ -50,6 +126,7 @@ export default function PaginaUnidades() {
 }
 
 function ContenidoUnidades() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const condominioIdParam = searchParams.get('condominio_id');
 
@@ -76,7 +153,6 @@ function ContenidoUnidades() {
         const respuesta = await api.get(`/condominios/${condominioId}/unidades`);
         setUnidades(respuesta.datos);
       } else {
-        // Cargar unidades de todos los condominios.
         const respCondominios = await api.get('/condominios');
         const todas = [];
         for (const cond of respCondominios.datos) {
@@ -127,7 +203,7 @@ function ContenidoUnidades() {
         <div>
           <h1 className={styles.titulo}>Unidades Vecinales</h1>
           <p className={styles.subtitulo}>
-            Gestiona las departamentos, casas y unidades de cada condominio.
+            Panorama general de salud financiera por unidad.
           </p>
         </div>
         <Link href="/dashboard/unidades/nueva">
@@ -146,6 +222,26 @@ function ContenidoUnidades() {
         />
       </div>
 
+      {/* Resumen de estados */}
+      <div className={styles.resumenBarra}>
+        {['pagado', 'pendiente', 'moroso'].map((estado) => {
+          const cfg = CONFIG_ESTADO[estado];
+          const count = unidades.filter((u) => u.estado_pago === estado).length;
+          return (
+            <div key={estado} className={styles.resumenItem}>
+              <span className={styles.resumenPunto} style={{ background: cfg.color }} />
+              <span className={styles.resumenEtiqueta}>{cfg.etiqueta}</span>
+              <span className={styles.resumenNumero}>{count}</span>
+            </div>
+          );
+        })}
+        <div className={styles.resumenItem}>
+          <span className={styles.resumenPunto} style={{ background: 'var(--color-texto-terciario)' }} />
+          <span className={styles.resumenEtiqueta}>Sin registro</span>
+          <span className={styles.resumenNumero}>{unidades.filter((u) => !u.estado_pago).length}</span>
+        </div>
+      </div>
+
       {/* Error */}
       {error && (
         <div className={styles.error}>
@@ -160,6 +256,16 @@ function ContenidoUnidades() {
         cargando={cargando || cargandoLista}
         vacioTexto="No hay unidades registradas para este condominio."
         acciones={[
+          {
+            etiqueta: 'Ver Ficha',
+            variante: 'primario',
+            onClick: (fila) => router.push(`/dashboard/unidades/${fila.id}`),
+          },
+          {
+            etiqueta: 'Editar',
+            variante: 'secundario',
+            onClick: (fila) => router.push(`/dashboard/condominios/${fila.condominio_id}/unidades/${fila.id}`),
+          },
           {
             etiqueta: 'Eliminar',
             variante: 'peligro',

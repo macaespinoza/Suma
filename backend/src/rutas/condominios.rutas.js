@@ -49,6 +49,18 @@ router.delete('/:id', controlador.desactivar);
  */
 router.get('/:id/unidades', controlador.listarUnidades);
 
+/**
+ * GET /api/v1/condominios/:condominioId/unidades/preview-alicuotas
+ * Genera vista previa de alícuotas por m2.
+ */
+router.get('/:condominioId/unidades/preview-alicuotas', unidadesControlador.previewAlicuotas);
+
+/**
+ * POST /api/v1/condominios/:condominioId/unidades/aplicar-alicuotas
+ * Aplica el cálculo de alícuotas por m2 a las unidades del condominio.
+ */
+router.post('/:condominioId/unidades/aplicar-alicuotas', unidadesControlador.aplicarAlicuotas);
+
 // =============================================================================
 // Ficha Administrativa de Unidades — Rutas Anidadas
 // =============================================================================

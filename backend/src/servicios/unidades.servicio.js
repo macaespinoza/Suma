@@ -235,3 +235,17 @@ export const eliminarMascota = async (unidadId, mascotaId) => {
     throw new ErrorApp('No se pudo eliminar la mascota.', 500);
   }
 };
+
+/**
+ * Genera vista previa de alícuotas por m2.
+ */
+export const calcularAlicuotasPorM2 = async (condominioId) => {
+  return await repositorio.calcularAlicuotasPorM2(condominioId);
+};
+
+/**
+ * Aplica alícuotas por m2 a las unidades.
+ */
+export const aplicarAlicuotasCalculadas = async (condominioId, nuevasAlicuotas) => {
+  return await repositorio.aplicarAlicuotasCalculadas(condominioId, nuevasAlicuotas);
+};

@@ -39,6 +39,7 @@ function ContenidoNuevaUnidad() {
     bloque_edificio: '',
     numero: '',
     alicuota: '',
+    metros_cuadrados: '',
   });
 
   const [errores, setErrores] = useState({});
@@ -96,6 +97,7 @@ function ContenidoNuevaUnidad() {
       await crear({
         ...formulario,
         alicuota: parseFloat(formulario.alicuota),
+        metros_cuadrados: formulario.metros_cuadrados ? parseFloat(formulario.metros_cuadrados) : null,
         bloque_edificio: formulario.bloque_edificio || null,
       });
       router.push('/dashboard/unidades');
@@ -171,17 +173,30 @@ function ContenidoNuevaUnidad() {
             />
           </div>
 
-          <Input
-            nombre="alicuota"
-            etiqueta="Alícuota"
-            tipo="number"
-            placeholder="Ej: 0.0417 (equivale a 4.17%)"
-            valor={formulario.alicuota}
-            onChange={handleChange}
-            error={errores.alicuota}
-            ayuda="Porcentaje de participación como decimal. Ej: 0.0417 = 4.17%."
-            requerido
-          />
+          <div className={styles.fila}>
+            <Input
+              nombre="metros_cuadrados"
+              etiqueta="Metros Cuadrados (m²)"
+              tipo="number"
+              step="0.01"
+              placeholder="Ej: 60.5"
+              valor={formulario.metros_cuadrados}
+              onChange={handleChange}
+              error={errores.metros_cuadrados}
+              ayuda="Superficie útil de la unidad. Base legal para calcular la alícuota."
+            />
+            <Input
+              nombre="alicuota"
+              etiqueta="Alícuota"
+              tipo="number"
+              placeholder="Ej: 0.0417 (equivale a 4.17%)"
+              valor={formulario.alicuota}
+              onChange={handleChange}
+              error={errores.alicuota}
+              ayuda="Porcentaje de participación como decimal. Ej: 0.0417 = 4.17%."
+              requerido
+            />
+          </div>
         </form>
       </TarjetaFormulario>
     </div>

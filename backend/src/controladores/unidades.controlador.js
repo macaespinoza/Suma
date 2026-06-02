@@ -72,6 +72,19 @@ export const desactivar = async (req, res, next) => {
 };
 
 /**
+ * GET /api/v1/unidades/:id/detalle
+ * Obtiene el detalle completo de una unidad (autónomo, sin necesitar condominioId).
+ */
+export const obtenerDetalleStandalone = async (req, res, next) => {
+  try {
+    const unidad = await servicio.obtenerDetalleCompleto(req.params.id);
+    return respuestaExitosa(res, unidad);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * POST /api/v1/unidades/lote
  * Crea múltiples unidades vecinales en lote.
  */
@@ -189,3 +202,33 @@ export const eliminarMascota = async (req, res, next) => {
   }
 };
 
+/**
+ * GET /api/v1/condominios/:condominioId/unidades/preview-alicuotas
+ * Genera una vista previa del cálculo de alícuotas por m2.
+ */
+export const previewAlicuotas = async (req, res, next) => {
+  try {
+    const preview = await servicio.calcularAlicuotasPorM2(req.params.condominioId);
+    return respuestaExitosa(res, preview);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * POST /api/v1/condominios/:condominioId/unidades/aplicar-alicuotas
+ * Aplica el cálculo de alícuotas por m2 a las unidades.
+ */
+export const aplicarAlicuotas = async (req, res, next) => {
+  try {
+    const { nuevasAlicuotas } = req.body;
+    if (!nuevasAlicuotas || !Array.isArray(nuevasAlicuotas)) {
+      return res.status(400).json({ error: 'Formato inválido. Se espera un array de nuevasAlicuotas.' });
+    }
+    
+    await servicio.aplicarAlicuotasCalculadas(req.params.condominioId, nuevasAlicuotas);
+    return respuestaExitosa(res, { mensaje: 'Alícuotas actualizadas correctamente.' });
+  } catch (error) {
+    next(error);
+  }
+};

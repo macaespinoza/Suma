@@ -31,6 +31,51 @@
   max-width: 400px;
 }
 
+/* Barra resumen de estados */
+.resumenBarra {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-4);
+  padding: var(--espacio-3) var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-xs);
+  overflow-x: auto;
+}
+
+.resumenItem {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  flex-shrink: 0;
+  padding: var(--espacio-1) 0;
+}
+
+.resumenPunto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.resumenEtiqueta {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+  font-weight: var(--peso-medium);
+}
+
+.resumenNumero {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+  background: var(--color-fondo);
+  padding: 1px 8px;
+  border-radius: var(--radio-full);
+  min-width: 26px;
+  text-align: center;
+}
+
 .error {
   padding: var(--espacio-4);
   background: hsla(0, 72%, 51%, 0.08);

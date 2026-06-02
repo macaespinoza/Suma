@@ -15,6 +15,7 @@ import Tabla from '../../../../componentes/ui/Tabla.jsx';
 import Modal from '../../../../componentes/ui/Modal.jsx';
 import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
 import PaginaDashboardFinanciero from './dashboard/page.js';
+import api from '../../../../lib/api.js';
 import styles from './[id].module.css';
 
 /**
@@ -27,6 +28,11 @@ const columnasUnidades = [
     render: (valor) => valor || '—',
   },
   { clave: 'numero', etiqueta: 'Número' },
+  {
+    clave: 'metros_cuadrados',
+    etiqueta: 'm²',
+    render: (valor) => valor ? `${valor} m²` : '—',
+  },
   {
     clave: 'alicuota',
     etiqueta: 'Alícuota',
@@ -90,6 +96,12 @@ export default function PaginaDetalleCondominio() {
   const [formularioUnidad, setFormularioUnidad] = useState({});
   const [mostrarFormularioEdicion, setMostrarFormularioEdicion] = useState(false);
 
+  // Alícuotas
+  const [modalAlicuotasAbierto, setModalAlicuotasAbierto] = useState(false);
+  const [cargandoAlicuotas, setCargandoAlicuotas] = useState(false);
+  const [previewAlicuotas, setPreviewAlicuotas] = useState(null);
+  const [errorAlicuotas, setErrorAlicuotas] = useState(null);
+
   useEffect(() => {
     if (id) {
       obtenerPorId(id).then((datos) => {
@@ -120,6 +132,7 @@ export default function PaginaDetalleCondominio() {
       numero: unidad.numero,
       bloque_edificio: unidad.bloque_edificio || '',
       alicuota: unidad.alicuota,
+      metros_cuadrados: unidad.metros_cuadrados || '',
     });
   };
 
@@ -130,6 +143,7 @@ export default function PaginaDetalleCondominio() {
         numero: formularioUnidad.numero,
         bloque_edificio: formularioUnidad.bloque_edificio || null,
         alicuota: parseFloat(formularioUnidad.alicuota),
+        metros_cuadrados: formularioUnidad.metros_cuadrados ? parseFloat(formularioUnidad.metros_cuadrados) : null,
       });
       if (actualizada) {
         setUnidades((prev) => prev.map((u) => (u.id === actualizada.id ? actualizada : u)));
@@ -153,6 +167,39 @@ export default function PaginaDetalleCondominio() {
   const cantidadTotal = formulario ? parseInt(formulario.cantidad_unidades || 0, 10) : 0;
   const faltantes = Math.max(0, cantidadTotal - unidades.length);
   const alicuotaEquitativa = cantidadTotal > 0 ? 1 / cantidadTotal : 0;
+
+  const handleAbrirModalAlicuotas = async () => {
+    setModalAlicuotasAbierto(true);
+    setCargandoAlicuotas(true);
+    setErrorAlicuotas(null);
+    try {
+      const res = await api.get(`/condominios/${id}/unidades/preview-alicuotas`);
+      setPreviewAlicuotas(res.datos);
+    } catch (err) {
+      setErrorAlicuotas(err.response?.data?.error || 'Error al calcular alícuotas');
+    } finally {
+      setCargandoAlicuotas(false);
+    }
+  };
+
+  const handleAplicarAlicuotas = async () => {
+    if (!previewAlicuotas) return;
+    setCargandoAlicuotas(true);
+    try {
+      await api.post(`/condominios/${id}/unidades/aplicar-alicuotas`, {
+        nuevasAlicuotas: previewAlicuotas,
+      });
+      setModalAlicuotasAbierto(false);
+      // Recargar unidades
+      setCargandoUnidades(true);
+      const datosUnidades = await listarUnidades(id);
+      setUnidades(datosUnidades || []);
+      setCargandoUnidades(false);
+    } catch (err) {
+      setErrorAlicuotas(err.response?.data?.error || 'Error al aplicar alícuotas');
+      setCargandoAlicuotas(false);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -220,6 +267,13 @@ export default function PaginaDetalleCondominio() {
         <div className={styles.seccionCabecera}>
           <h3 className={styles.seccionTitulo}>Unidades Vecinales</h3>
           <div className={styles.seccionAcciones}>
+            <Boton
+              variante="outline"
+              tamano="sm"
+              onClick={handleAbrirModalAlicuotas}
+            >
+              📊 Recalcular Alícuotas (Ley 21.442)
+            </Boton>
             <Boton
               variante="primario"
               tamano="sm"
@@ -373,6 +427,14 @@ export default function PaginaDetalleCondominio() {
             onChange={(e) => setFormularioUnidad({ ...formularioUnidad, bloque_edificio: e.target.value })}
           />
           <Input
+            nombre="metros_cuadrados"
+            etiqueta="Metros Cuadrados (m²)"
+            tipo="number"
+            step="0.01"
+            valor={formularioUnidad.metros_cuadrados || ''}
+            onChange={(e) => setFormularioUnidad({ ...formularioUnidad, metros_cuadrados: e.target.value })}
+          />
+          <Input
             nombre="alicuota"
             etiqueta="Alícuota"
             tipo="number"
@@ -399,6 +461,84 @@ export default function PaginaDetalleCondominio() {
       >
         <p>¿Estás seguro que deseas eliminar la unidad <strong>{modalEliminarUnidad?.numero}</strong>?</p>
       </Modal>
+
+      {/* Modal Gestión de Alícuotas */}
+      <Modal
+        abierto={modalAlicuotasAbierto}
+        onCerrar={() => setModalAlicuotasAbierto(false)}
+        titulo="Recálculo de Alícuotas (Ley 21.442)"
+        tamano="lg"
+        acciones={
+          <>
+            <Boton variante="fantasma" onClick={() => setModalAlicuotasAbierto(false)}>Cancelar</Boton>
+            <Boton 
+              variante="primario" 
+              onClick={handleAplicarAlicuotas} 
+              cargando={cargandoAlicuotas}
+              disabled={!previewAlicuotas || errorAlicuotas}
+            >
+              Aplicar y Guardar
+            </Boton>
+          </>
+        }
+      >
+        <div style={{ marginBottom: '1rem' }}>
+          <p style={{ color: 'var(--color-texto-secundario)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+            La Ley 21.442 establece que la alícuota de cada unidad se calcula en proporción a sus metros cuadrados respecto del total de la comunidad. 
+            A continuación se muestra una vista previa del cálculo para las unidades con <strong>m² registrados</strong>.
+          </p>
+          
+          {errorAlicuotas && (
+            <div className={styles.error} style={{ marginBottom: '1rem' }}>{errorAlicuotas}</div>
+          )}
+
+          {cargandoAlicuotas && !previewAlicuotas && (
+            <p>Calculando alícuotas...</p>
+          )}
+
+          {previewAlicuotas && (
+            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+                <thead style={{ background: 'var(--color-fondo)', position: 'sticky', top: 0 }}>
+                  <tr>
+                    <th style={{ padding: '0.75rem', textAlign: 'left', borderBottom: '1px solid var(--color-borde)' }}>Unidad</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'right', borderBottom: '1px solid var(--color-borde)' }}>m²</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'right', borderBottom: '1px solid var(--color-borde)' }}>Alícuota Actual</th>
+                    <th style={{ padding: '0.75rem', textAlign: 'right', borderBottom: '1px solid var(--color-borde)' }}>Nueva Alícuota</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {previewAlicuotas.map((u, i) => {
+                    const esModificada = Math.abs((u.alicuota_actual || 0) - u.nueva_alicuota) > 0.0001;
+                    return (
+                      <tr key={i} style={{ borderBottom: '1px solid var(--color-borde)' }}>
+                        <td style={{ padding: '0.75rem' }}>
+                          <strong>{u.numero}</strong> {u.bloque_edificio ? `(${u.bloque_edificio})` : ''}
+                        </td>
+                        <td style={{ padding: '0.75rem', textAlign: 'right' }}>
+                          {u.metros_cuadrados ? `${u.metros_cuadrados} m²` : <span style={{ color: 'var(--color-alerta)' }}>Falta m²</span>}
+                        </td>
+                        <td style={{ padding: '0.75rem', textAlign: 'right', color: 'var(--color-texto-terciario)' }}>
+                          {u.alicuota_actual ? `${(u.alicuota_actual * 100).toFixed(4)}%` : '—'}
+                        </td>
+                        <td style={{ padding: '0.75rem', textAlign: 'right', fontWeight: esModificada ? 600 : 400, color: esModificada ? 'var(--color-exito)' : 'inherit' }}>
+                          {(u.nueva_alicuota * 100).toFixed(4)}%
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <div style={{ marginTop: '1rem', padding: '1rem', background: 'var(--color-fondo)', borderRadius: 'var(--radio-md)', display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+                <span>Total Alícuotas:</span>
+                <span style={{ color: previewAlicuotas.reduce((acc, u) => acc + u.nueva_alicuota, 0) > 1.0001 ? 'var(--color-peligro)' : 'inherit' }}>
+                  {(previewAlicuotas.reduce((acc, u) => acc + u.nueva_alicuota, 0) * 100).toFixed(4)}%
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }
@@ -412,6 +552,7 @@ function FormularioUnidadInline({ condominioId, indiceSugerido, alicuotaPorDefec
     numero: String(indiceSugerido),
     bloque_edificio: '',
     alicuota: alicuotaPorDefecto ? alicuotaPorDefecto.toFixed(4) : '',
+    metros_cuadrados: '',
   });
 
   const handleChange = (e) => {
@@ -428,6 +569,7 @@ function FormularioUnidadInline({ condominioId, indiceSugerido, alicuotaPorDefec
         numero: formulario.numero,
         bloque_edificio: formulario.bloque_edificio || null,
         alicuota: parseFloat(formulario.alicuota),
+        metros_cuadrados: formulario.metros_cuadrados ? parseFloat(formulario.metros_cuadrados) : null,
       });
       if (nuevaUnidad) {
         onUnidadCreada(nuevaUnidad);
@@ -450,6 +592,14 @@ function FormularioUnidadInline({ condominioId, indiceSugerido, alicuotaPorDefec
         nombre="bloque_edificio"
         placeholder="Bloque/Torre (Opcional)"
         valor={formulario.bloque_edificio}
+        onChange={handleChange}
+      />
+      <Input
+        nombre="metros_cuadrados"
+        tipo="number"
+        step="0.01"
+        placeholder="m² (Ej: 60.5)"
+        valor={formulario.metros_cuadrados}
         onChange={handleChange}
       />
       <Input
