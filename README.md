@@ -8,10 +8,10 @@ El proyecto está diseñado bajo un modelo **SaaS (Software as a Service)** con 
 ---
 
 ## 🏗️ Arquitectura de la Aplicación
-La plataforma se divide lógicamente en dos ramas principales conectadas por un núcleo de datos:
+La plataforma se divide lógicamente en tres ramas principales conectadas por un núcleo de datos:
 
 1. **El Núcleo (Core):** Gestión de propiedades, distribución física (edificios/bloques característicos de Arica) e identidad validada de los usuarios (RUT chileno).
-2. **Portal Administrativo:** Motor contable para el cálculo y prorrateo de gastos comunes, emisión de cobros, registro de pagos y gestión de egresos operativos.
+2. **Portal Administrativo:** Motor contable para el cálculo y prorrateo de gastos comunes (conforme a la Ley N° 21.442, permitiendo la asignación y cálculo automático de alícuotas según los metros cuadrados de cada unidad), emisión de cobros, registro de pagos y gestión de egresos operativos.
 3. **Portal Comunitario:** Red social interna del condominio, avisos de utilidad pública, red de apoyo vecinal, economía circular (emprendimientos locales) y registro *pet-friendly*.
 
 ---
@@ -41,4 +41,5 @@ Este proyecto no se programa "al vuelo". Se rige bajo la metodología SDD para g
 Cualquier agente o desarrollador trabajando en esta base de código debe respetar las siguientes normativas:
 * **El RUT es Mandatorio:** El Rol Único Tributario (RUT) es el identificador principal. Debe validarse estrictamente a través del algoritmo de "Módulo 11" tanto en el backend (Node.js) como en la base de datos (PostgreSQL).
 * **Agrupación Territorial:** En Arica es común que los condominios se dividan en múltiples edificios, torres o bloques pequeños. La base de datos y la UI deben reflejar y soportar esta distribución (`bloque_edificio`).
+* **Ley de Copropiedad N° 21.442:** El cálculo y distribución de los gastos comunes (alícuota) se rige bajo la Ley N° 21.442. El sistema permite la asignación de metros cuadrados (`metros_cuadrados`) a cada unidad y cuenta con un algoritmo de prorrateo que calcula automáticamente las alícuotas correspondientes, compensando el redondeo decimal en la última unidad para asegurar que la suma de alícuotas sea exactamente `1.0000` (100%).
 * **Idioma:** El código, variables, comentarios y esquema de base de datos están escritos íntegramente en Español.
