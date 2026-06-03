@@ -16,17 +16,39 @@ export const listarPorCondominio = async (condominioId) => {
             uv.tiene_estacionamiento, uv.numero_estacionamiento,
             uv.tiene_bodega, uv.numero_bodega,
             uv.activo, uv.created_at, uv.updated_at,
+            uv.responsable_pago,
             c.nombre AS condominio_nombre,
-            COALESCE(prop.nombre, arr.nombre) AS responsable_nombre,
-            COALESCE(prop.rut, arr.rut) AS responsable_rut,
-            COALESCE(prop.email, arr.email) AS responsable_email,
-            COALESCE(prop.telefono, arr.telefono) AS responsable_telefono,
-            COALESCE(prop.tipo, arr.tipo) AS responsable_tipo,
+            CASE uv.responsable_pago
+              WHEN 'arrendatario' THEN COALESCE(arr.nombre, prop.nombre)
+              WHEN 'tercero' THEN COALESCE(ter.nombre, prop.nombre)
+              ELSE prop.nombre
+            END AS responsable_nombre,
+            CASE uv.responsable_pago
+              WHEN 'arrendatario' THEN COALESCE(arr.rut, prop.rut)
+              WHEN 'tercero' THEN COALESCE(ter.rut, prop.rut)
+              ELSE prop.rut
+            END AS responsable_rut,
+            CASE uv.responsable_pago
+              WHEN 'arrendatario' THEN COALESCE(arr.email, prop.email)
+              WHEN 'tercero' THEN COALESCE(ter.email, prop.email)
+              ELSE prop.email
+            END AS responsable_email,
+            CASE uv.responsable_pago
+              WHEN 'arrendatario' THEN COALESCE(arr.telefono, prop.telefono)
+              WHEN 'tercero' THEN COALESCE(ter.telefono, prop.telefono)
+              ELSE prop.telefono
+            END AS responsable_telefono,
+            CASE uv.responsable_pago
+              WHEN 'arrendatario' THEN COALESCE(arr.tipo, prop.tipo)
+              WHEN 'tercero' THEN COALESCE(ter.tipo, prop.tipo)
+              ELSE prop.tipo
+            END AS responsable_tipo,
             ultimo_cobro.estado_pago
      FROM Unidades_Vecinales uv
      JOIN Condominios c ON c.id = uv.condominio_id
      LEFT JOIN Titulares_Unidad prop ON prop.unidad_id = uv.id AND prop.tipo = 'propietario'
      LEFT JOIN Titulares_Unidad arr ON arr.unidad_id = uv.id AND arr.tipo = 'arrendatario'
+     LEFT JOIN Titulares_Unidad ter ON ter.unidad_id = uv.id AND ter.tipo = 'tercero'
      LEFT JOIN LATERAL (
        SELECT cu.estado_pago
        FROM Cobros_Unidad cu
@@ -53,6 +75,7 @@ export const obtenerPorId = async (id) => {
             uv.tiene_estacionamiento, uv.numero_estacionamiento,
             uv.tiene_bodega, uv.numero_bodega,
             uv.activo, uv.created_at, uv.updated_at,
+            uv.responsable_pago,
             c.nombre AS condominio_nombre
      FROM Unidades_Vecinales uv
      JOIN Condominios c ON c.id = uv.condominio_id
@@ -87,7 +110,7 @@ export const crear = async ({ condominio_id, bloque_edificio, numero, alicuota, 
  * @param {object} datos - Campos a actualizar.
  * @returns {Promise<object|null>} Unidad actualizada o null.
  */
-export const actualizar = async (id, { bloque_edificio, numero, alicuota, metros_cuadrados, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega }) => {
+export const actualizar = async (id, { bloque_edificio, numero, alicuota, metros_cuadrados, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega, responsable_pago }) => {
   const { rows } = await consultar(
     `UPDATE Unidades_Vecinales
      SET bloque_edificio = COALESCE($2, bloque_edificio),
@@ -97,10 +120,11 @@ export const actualizar = async (id, { bloque_edificio, numero, alicuota, metros
          tiene_estacionamiento = COALESCE($6, tiene_estacionamiento),
          numero_estacionamiento = COALESCE($7, numero_estacionamiento),
          tiene_bodega = COALESCE($8, tiene_bodega),
-         numero_bodega = COALESCE($9, numero_bodega)
+         numero_bodega = COALESCE($9, numero_bodega),
+         responsable_pago = COALESCE($10, responsable_pago)
      WHERE id = $1 AND activo = TRUE
      RETURNING *`,
-    [id, bloque_edificio, numero, alicuota, metros_cuadrados, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega]
+    [id, bloque_edificio, numero, alicuota, metros_cuadrados, tiene_estacionamiento, numero_estacionamiento, tiene_bodega, numero_bodega, responsable_pago]
   );
   return rows[0] || null;
 };
@@ -149,7 +173,8 @@ export const obtenerDetalleCompleto = async (id) => {
     `SELECT uv.id, uv.condominio_id, uv.bloque_edificio, uv.numero, uv.metros_cuadrados, uv.alicuota,
             uv.tiene_estacionamiento, uv.numero_estacionamiento,
             uv.tiene_bodega, uv.numero_bodega,
-            uv.activo, uv.created_at, uv.updated_at
+            uv.activo, uv.created_at, uv.updated_at,
+            uv.responsable_pago
      FROM Unidades_Vecinales uv
      WHERE uv.id = $1`,
     [id]

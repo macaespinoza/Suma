@@ -12,6 +12,18 @@ import api from '../../../../../../../lib/api.js';
 import TarjetaFormulario from '../../../../../../../componentes/ui/TarjetaFormulario.jsx';
 import Boton from '../../../../../../../componentes/ui/Boton.jsx';
 import Input from '../../../../../../../componentes/ui/Input.jsx';
+import {
+  ArrowLeft,
+  Clock,
+  CheckCircle,
+  WarningOctagon,
+  Coins,
+  Warning,
+  X,
+  Tray,
+  User,
+  ArrowCounterClockwise,
+} from '@phosphor-icons/react';
 import styles from './cobros.module.css';
 
 const formatoMoneda = (valor) =>
@@ -37,9 +49,9 @@ const ESTADO_COLORES = {
 };
 
 const ESTADO_ICONOS = {
-  pendiente: '⏳',
-  pagado: '✅',
-  moroso: '🚨',
+  pendiente: <Clock size={16} weight="fill" />,
+  pagado: <CheckCircle size={16} weight="fill" />,
+  moroso: <WarningOctagon size={16} weight="fill" />,
 };
 
 export default function PaginaListaCobros() {
@@ -125,7 +137,7 @@ export default function PaginaListaCobros() {
         </div>
         <div className={styles.cabeceraAcciones}>
           <Boton variante="outline" onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos/${gastoId}`)}>
-            ← Volver al Gasto
+            <><ArrowLeft size={16} weight="bold" /> Volver al Gasto</>
           </Boton>
         </div>
       </div>
@@ -142,21 +154,21 @@ export default function PaginaListaCobros() {
       {resumen && (
         <div className={styles.resumenGrid}>
           <div className={styles.resumenCard}>
-            <span className={styles.resumenIcono}>💰</span>
+            <span className={styles.resumenIcono}><Coins size={24} weight="fill" /></span>
             <div className={styles.resumenInfo}>
               <span className={styles.resumenLabel}>Total a Cobrar</span>
               <span className={styles.resumenValor}>{formatoMoneda(resumen.total_cobrado)}</span>
             </div>
           </div>
           <div className={`${styles.resumenCard} ${styles.resumenCardExito}`}>
-            <span className={styles.resumenIcono}>✅</span>
+            <span className={styles.resumenIcono}><CheckCircle size={24} weight="fill" /></span>
             <div className={styles.resumenInfo}>
               <span className={styles.resumenLabel}>Recaudado</span>
               <span className={styles.resumenValor}>{formatoMoneda(resumen.total_pagado)}</span>
             </div>
           </div>
           <div className={`${styles.resumenCard} ${styles.resumenCardAdvertencia}`}>
-            <span className={styles.resumenIcono}>⏳</span>
+            <span className={styles.resumenIcono}><Clock size={24} weight="fill" /></span>
             <div className={styles.resumenInfo}>
               <span className={styles.resumenLabel}>Pendiente</span>
               <span className={styles.resumenValor}>{formatoMoneda(resumen.total_pendiente)}</span>
@@ -210,16 +222,16 @@ export default function PaginaListaCobros() {
       {/* Error */}
       {error && (
         <div className={styles.errorBanner}>
-          <span>⚠️</span>
+          <span><Warning size={20} weight="fill" /></span>
           <p>{error}</p>
-          <button onClick={() => setError(null)}>✕</button>
+          <button onClick={() => setError(null)}><X size={16} weight="bold" /></button>
         </div>
       )}
 
       {/* Lista de cobros */}
       {cobros.length === 0 ? (
         <div className={styles.vacio}>
-          <span className={styles.vacioIcono}>📭</span>
+          <span className={styles.vacioIcono}><Tray size={32} weight="fill" /></span>
           <h3>No hay cobros registrados</h3>
           <p>Los cobros se generan automáticamente al publicar el gasto.</p>
         </div>
@@ -243,7 +255,7 @@ export default function PaginaListaCobros() {
                     </span>
                     {cobro.residente_principal && (
                       <span className={styles.cobroCardResidente}>
-                        👤 {cobro.residente_principal.nombre_completo}
+                        <><User size={16} weight="fill" /> {cobro.residente_principal.nombre_completo}</>
                       </span>
                     )}
                   </div>
@@ -277,14 +289,14 @@ export default function PaginaListaCobros() {
                       tamano="sm"
                       onClick={() => handleCambiarEstado(cobro.id, 'pagado')}
                     >
-                      ✅ Marcar Pagado
+                      <><CheckCircle size={16} weight="bold" /> Marcar Pagado</>
                     </Boton>
                     <Boton
                       variante="outline"
                       tamano="sm"
                       onClick={() => handleCambiarEstado(cobro.id, 'moroso')}
                     >
-                      🚨 Marcar Moroso
+                      <><WarningOctagon size={16} weight="bold" /> Marcar Moroso</>
                     </Boton>
                   </>
                 )}
@@ -295,14 +307,14 @@ export default function PaginaListaCobros() {
                       tamano="sm"
                       onClick={() => handleCambiarEstado(cobro.id, 'pagado')}
                     >
-                      ✅ Marcar Pagado
+                      <><CheckCircle size={16} weight="bold" /> Marcar Pagado</>
                     </Boton>
                     <Boton
                       variante="outline"
                       tamano="sm"
                       onClick={() => handleCambiarEstado(cobro.id, 'pendiente')}
                     >
-                      ⏳ Volver a Pendiente
+                      <><Clock size={16} weight="bold" /> Volver a Pendiente</>
                     </Boton>
                   </>
                 )}
@@ -312,7 +324,7 @@ export default function PaginaListaCobros() {
                     tamano="sm"
                     onClick={() => handleCambiarEstado(cobro.id, 'pendiente')}
                   >
-                    ↩️ Deshacer Pago
+                    <><ArrowCounterClockwise size={16} weight="bold" /> Deshacer Pago</>
                   </Boton>
                 )}
               </div>

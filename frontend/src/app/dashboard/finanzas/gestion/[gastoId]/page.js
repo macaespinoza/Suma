@@ -4,6 +4,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import api from '../../../../../lib/api';
+import {
+  ArrowLeft,
+  Clock,
+  Warning,
+  Rocket,
+  ClipboardText,
+  House,
+  Coins,
+} from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 const formatearCLP = (monto) =>
@@ -124,11 +133,11 @@ export default function DetalleGasto({ params, searchParams }) {
     return (
       <div className={styles.pagina}>
         <Link href="/dashboard/finanzas/gestion" className={styles.botonVolver}>
-          ← Volver a la Lista de Períodos
+          <><ArrowLeft size={16} weight="bold" /> Volver a la Lista de Períodos</>
         </Link>
         <div className={styles.tarjeta}>
           <div className={styles.estadoCargando}>
-            <span className={styles.estadoCargandoIcono}>⏳</span>
+            <span className={styles.estadoCargandoIcono}><Clock size={24} weight="fill" /></span>
             <p className={styles.estadoCargandoTexto}>Cargando detalle del período...</p>
           </div>
         </div>
@@ -140,11 +149,11 @@ export default function DetalleGasto({ params, searchParams }) {
     return (
       <div className={styles.pagina}>
         <Link href="/dashboard/finanzas/gestion" className={styles.botonVolver}>
-          ← Volver a la Lista de Períodos
+          <><ArrowLeft size={16} weight="bold" /> Volver a la Lista de Períodos</>
         </Link>
         <div className={styles.tarjeta}>
           <div className={styles.estadoVacio}>
-            <span className={styles.estadoVacioIcono}>⚠️</span>
+            <span className={styles.estadoVacioIcono}><Warning size={32} weight="fill" /></span>
             <p className={styles.estadoVacioTexto}>Período financiero no encontrado.</p>
           </div>
         </div>
@@ -157,7 +166,7 @@ export default function DetalleGasto({ params, searchParams }) {
   return (
     <div className={styles.pagina}>
       <Link href="/dashboard/finanzas/gestion" className={styles.botonVolver}>
-        ← Volver a la Lista de Períodos
+        <><ArrowLeft size={16} weight="bold" /> Volver a la Lista de Períodos</>
       </Link>
 
       <div className={styles.cabecera}>
@@ -172,7 +181,7 @@ export default function DetalleGasto({ params, searchParams }) {
         </div>
         {!estaPublicado && (
           <button className={styles.botonPrimario} onClick={manejarPublicar}>
-            🚀 Publicar Período
+            <><Rocket size={16} weight="bold" /> Publicar Período</>
           </button>
         )}
       </div>
@@ -181,7 +190,7 @@ export default function DetalleGasto({ params, searchParams }) {
         {/* Lado Izquierdo: Egresos */}
         <div className={styles.tarjeta}>
           <div className={styles.tarjetaHeader}>
-            <h3 className={styles.tarjetaTitulo}>📋 Egresos (Gastos)</h3>
+            <h3 className={styles.tarjetaTitulo}><ClipboardText size={20} weight="fill" /> Egresos (Gastos)</h3>
             {!estaPublicado && (
               <button className={styles.botonSecundario} onClick={() => setModalEgreso(true)}>
                 + Agregar
@@ -191,7 +200,7 @@ export default function DetalleGasto({ params, searchParams }) {
           
           {egresos.length === 0 ? (
             <div className={styles.estadoVacio}>
-              <span className={styles.estadoVacioIcono}>💸</span>
+              <span className={styles.estadoVacioIcono}><Coins size={32} weight="fill" /></span>
               <p className={styles.estadoVacioTexto}>No hay egresos registrados para este período.</p>
             </div>
           ) : (
@@ -212,7 +221,7 @@ export default function DetalleGasto({ params, searchParams }) {
         {/* Lado Derecho: Cobros y Pagos */}
         <div className={styles.tarjeta}>
           <div className={styles.tarjetaHeader}>
-            <h3 className={styles.tarjetaTitulo}>🏠 Cobros a Unidades</h3>
+            <h3 className={styles.tarjetaTitulo}><House size={20} weight="fill" /> Cobros a Unidades</h3>
           </div>
 
           {!estaPublicado ? (
@@ -221,7 +230,7 @@ export default function DetalleGasto({ params, searchParams }) {
             </div>
           ) : cobros.length === 0 ? (
             <div className={styles.estadoVacio}>
-              <span className={styles.estadoVacioIcono}>🏠</span>
+              <span className={styles.estadoVacioIcono}><House size={32} weight="fill" /></span>
               <p className={styles.estadoVacioTexto}>No hay cobros generados.</p>
             </div>
           ) : (

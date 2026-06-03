@@ -11,6 +11,7 @@ import Link from 'next/link';
 import api from '../../../../../lib/api.js';
 import TarjetaFormulario from '../../../../../componentes/ui/TarjetaFormulario.jsx';
 import Boton from '../../../../../componentes/ui/Boton.jsx';
+import { ArrowLeft, Plus, Warning, X, ClipboardText, Check, Clock, FileText } from '@phosphor-icons/react';
 import styles from './gastos.module.css';
 
 const formatoMoneda = (valor) =>
@@ -115,7 +116,7 @@ export default function PaginaListaGastos() {
             onClick={handleCrearGasto}
             cargando={creando}
           >
-            + Nuevo Período
+            <><Plus size={16} weight="bold" /> Nuevo Período</>
           </Boton>
         </div>
       </div>
@@ -147,20 +148,20 @@ export default function PaginaListaGastos() {
       {/* Error */}
       {error && (
         <div className={styles.errorBanner}>
-          <span>⚠️</span>
+          <span><Warning size={20} weight="fill" /></span>
           <p>{error}</p>
-          <button onClick={() => setError(null)}>✕</button>
+          <button onClick={() => setError(null)}><X size={16} weight="bold" /></button>
         </div>
       )}
 
       {/* Lista de gastos */}
       {gastosFiltrados.length === 0 ? (
         <div className={styles.vacio}>
-          <span className={styles.vacioIcono}>📋</span>
+          <span className={styles.vacioIcono}><ClipboardText size={32} weight="fill" /></span>
           <h3>No hay gastos registrados</h3>
           <p>Crea un nuevo período de gasto común para comenzar.</p>
           <Boton variante="primario" onClick={handleCrearGasto}>
-            + Crear Primer Período
+            <><Plus size={16} weight="bold" /> Crear Primer Período</>
           </Boton>
         </div>
       ) : (
@@ -174,7 +175,7 @@ export default function PaginaListaGastos() {
                       {formatearMes(gasto.mes_anio)}
                     </h3>
                     <span className={`${styles.estadoBadge} ${ESTADO_COLORES[gasto.estado]}`}>
-                      {gasto.estado === 'publicado' ? '✓Publicado' : '⏳Borrador'}
+                      {gasto.estado === 'publicado' ? <><Check size={16} weight="bold" /> Publicado</> : <><Clock size={16} weight="bold" /> Borrador</>}
                     </span>
                   </div>
                   <div className={styles.gastoCardMeta}>
@@ -229,7 +230,7 @@ export default function PaginaListaGastos() {
                       window.open(`${apiBaseUrl}/condominios/${condominioId}/gastos/${gasto.id}/liquidacion`, '_blank');
                     }}
                   >
-                    📄 Liquidación PDF
+                    <><FileText size={16} weight="bold" /> Liquidación PDF</>
                   </Boton>
                 )}
 

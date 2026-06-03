@@ -6,6 +6,17 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import {
+  FileText,
+  Folder,
+  CalendarBlank,
+  Check,
+  X,
+  Warning,
+  CheckCircle,
+  ArrowRight,
+  ArrowLeft,
+} from '@phosphor-icons/react';
 import api from '../../lib/api.js';
 import Input from './Input.jsx';
 import Select from './Select.jsx';
@@ -193,13 +204,17 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
 
         {nombreArchivo ? (
           <div className={styles.archivoSeleccionado}>
-            <span className={styles.iconoArchivo}>📄</span>
+            <span className={styles.iconoArchivo}>
+              <FileText size={24} weight="fill" />
+            </span>
             <span className={styles.nombreArchivo}>{nombreArchivo}</span>
             <span className={styles.cambiarArchivo}>Cambiar</span>
           </div>
         ) : (
           <>
-            <span className={styles.dropzoneIcono}>📂</span>
+            <span className={styles.dropzoneIcono}>
+              <Folder size={32} weight="fill" />
+            </span>
             <p className={styles.dropzoneTexto}>
               Arrastra tu archivo aquí o <strong>haz clic para seleccionar</strong>
             </p>
@@ -287,7 +302,7 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
 
         {preview.mes_detectado && (
           <div className={styles.mesDetectado}>
-            <span>📅 Mes/Año detectado: <strong>{preview.mes_detectado.mes}/{preview.mes_detectado.anio}</strong></span>
+            <span><CalendarBlank size={16} weight="fill" /> Mes/Año detectado: <strong>{preview.mes_detectado.mes}/{preview.mes_detectado.anio}</strong></span>
           </div>
         )}
 
@@ -320,10 +335,10 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
                     </td>
                     <td>
                       {item.esValido ? (
-                        <span className={styles.tagOk}>✓</span>
+                        <span className={styles.tagOk}><Check size={14} weight="bold" /></span>
                       ) : (
                         <span className={styles.tagError} title={item.errores?.join(', ')}>
-                          ✗ {item.errores?.[0]}
+                          <X size={14} weight="bold" /> {item.errores?.[0]}
                         </span>
                       )}
                     </td>
@@ -341,7 +356,7 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
 
         {erroresCount > 0 && (
           <div className={styles.advertencia}>
-            <span>⚠️</span>
+            <Warning size={20} weight="fill" />
             <p>
               {erroresCount} fila(s) tienen errores y <strong>no se importarán</strong>.
               Puedes corregir el archivo Excel y subirlo de nuevo.
@@ -355,7 +370,9 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
   const renderPaso3 = () => (
     <div className={styles.paso3}>
       <div className={styles.exito}>
-        <span className={styles.exitoIcono}>✅</span>
+        <span className={styles.exitoIcono}>
+          <CheckCircle size={32} weight="fill" />
+        </span>
         <h3>¡Importación completada!</h3>
         <p>Los egresos se han agregado al período de gasto.</p>
       </div>
@@ -366,9 +383,9 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
     <div className={styles.importador}>
       {error && (
         <div className={styles.errorBanner}>
-          <span>⚠️</span>
+          <Warning size={20} weight="fill" />
           <p>{error}</p>
-          <button onClick={() => setError(null)}>✕</button>
+          <button onClick={() => setError(null)}><X size={16} weight="bold" /></button>
         </div>
       )}
 
@@ -388,7 +405,7 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
               disabled={!archivo || !mapeo.columnaCategoria || !mapeo.columnaMonto}
               cargando={cargandoPreview}
             >
-              Previsualizar →
+              Previsualizar <ArrowRight size={16} weight="bold" />
             </Boton>
           </>
         )}
@@ -396,7 +413,7 @@ export default function ImportadorExcel({ condominioId, gastoId, gastoMesAnio, o
         {paso === 2 && (
           <>
             <Boton variante="fantasma" onClick={() => setPaso(1)}>
-              ← Volver
+              <ArrowLeft size={16} weight="bold" /> Volver
             </Boton>
             <Boton
               variante="primario"

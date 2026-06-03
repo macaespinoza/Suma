@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import api from '../../../../lib/api';
+import { ArrowLeft, Plus, Clock, CalendarBlank } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 const formatearCLP = (monto) =>
@@ -87,7 +88,7 @@ export default function GestionFinanciera() {
   return (
     <div className={styles.pagina}>
       <Link href="/dashboard/finanzas" className={styles.botonVolver}>
-        ← Volver al Dashboard Ejecutivo
+        <><ArrowLeft size={16} weight="bold" /> Volver al Dashboard Ejecutivo</>
       </Link>
       
       <div className={styles.cabecera}>
@@ -95,12 +96,12 @@ export default function GestionFinanciera() {
           <h1 className={styles.titulo}>Gestión Financiera</h1>
           <p className={styles.subtitulo}>Administra los períodos de gastos comunes y cobros.</p>
         </div>
-        <button 
+        <button
           className={styles.botonPrimario}
           onClick={() => setMostrarModal(true)}
           disabled={!condominioId}
         >
-          ➕ Nuevo Período
+          <><Plus size={16} weight="bold" /> Nuevo Período</>
         </button>
       </div>
 
@@ -122,12 +123,12 @@ export default function GestionFinanciera() {
       <div className={styles.tarjeta}>
         {cargando ? (
           <div className={styles.estadoCargando}>
-            <span className={styles.estadoCargandoIcono}>⏳</span>
+            <span className={styles.estadoCargandoIcono}><Clock size={24} weight="fill" /></span>
             <p className={styles.estadoCargandoTexto}>Cargando períodos financieros...</p>
           </div>
         ) : gastos.length === 0 ? (
           <div className={styles.estadoVacio}>
-            <span className={styles.estadoVacioIcono}>📅</span>
+            <span className={styles.estadoVacioIcono}><CalendarBlank size={32} weight="fill" /></span>
             <h3 className={styles.estadoVacioTitulo}>Sin períodos registrados</h3>
             <p className={styles.estadoVacioTexto}>
               Aún no hay períodos de gastos comunes creados para este condominio. Puedes comenzar creando el primero.

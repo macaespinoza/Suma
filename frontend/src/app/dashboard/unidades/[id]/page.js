@@ -10,6 +10,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
 import Boton from '../../../../componentes/ui/Boton.jsx';
 import Input from '../../../../componentes/ui/Input.jsx';
+import { ArrowLeft, Car, Package, PawPrint } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 export default function PaginaDetalleUnidad() {
@@ -128,7 +129,7 @@ export default function PaginaDetalleUnidad() {
       <div className={styles.cabecera}>
         <div>
           <Boton variante="fantasma" onClick={() => router.push('/dashboard/unidades')}>
-            ← Volver a unidades
+            <><ArrowLeft size={16} weight="bold" /> Volver a unidades</>
           </Boton>
           <h1 className={styles.titulo}>
             Unidad {unidad.numero}
@@ -153,7 +154,7 @@ export default function PaginaDetalleUnidad() {
         <h2 className={styles.seccionTitulo}>Datos Base</h2>
         <div className={styles.mosaico}>
           <div className={`${styles.tarjetaDato} ${unidad.tiene_estacionamiento ? styles.tarjetaActiva : styles.tarjetaInactiva}`}>
-            <span className={styles.datoIcono}>🚗</span>
+            <span className={styles.datoIcono}><Car size={24} weight="fill" /></span>
             <div>
               <span className={styles.datoEtiqueta}>Estacionamiento</span>
               <span className={styles.datoValor}>
@@ -164,7 +165,7 @@ export default function PaginaDetalleUnidad() {
             </div>
           </div>
           <div className={`${styles.tarjetaDato} ${unidad.tiene_bodega ? styles.tarjetaActiva : styles.tarjetaInactiva}`}>
-            <span className={styles.datoIcono}>📦</span>
+            <span className={styles.datoIcono}><Package size={24} weight="fill" /></span>
             <div>
               <span className={styles.datoEtiqueta}>Bodega</span>
               <span className={styles.datoValor}>
@@ -390,7 +391,7 @@ export default function PaginaDetalleUnidad() {
               {mascotas.map((m) => (
                 <li key={m.id} className={styles.itemLista}>
                   <span className={styles.itemEmoji}>
-                    {m.especie?.toLowerCase() === 'perro' ? '🐕' : m.especie?.toLowerCase() === 'gato' ? '🐈' : '🐾'}
+                    <PawPrint size={20} weight="fill" />
                   </span>
                   <span className={styles.itemTexto}>{m.nombre}</span>
                   <span className={styles.itemDetalle}>{m.especie}{m.raza ? ` · ${m.raza}` : ''}</span>

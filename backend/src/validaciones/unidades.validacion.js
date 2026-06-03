@@ -72,6 +72,12 @@ export const esquemaActualizarUnidad = Joi.object({
       'number.min': 'La alícuota no puede ser menor a 0.',
       'number.max': 'La alícuota no puede ser mayor a 1.',
     }),
+
+  responsable_pago: Joi.string()
+    .valid('propietario', 'arrendatario', 'tercero')
+    .messages({
+      'any.only': 'El responsable del pago debe ser "propietario", "arrendatario" o "tercero".',
+    }),
 }).min(1).messages({
   'object.min': 'Debe proporcionar al menos un campo para actualizar.',
 });
@@ -169,10 +175,10 @@ export const esquemaActualizarDatosBase = Joi.object({
  */
 export const esquemaTitular = Joi.object({
   tipo: Joi.string()
-    .valid('propietario', 'arrendatario')
+    .valid('propietario', 'arrendatario', 'tercero')
     .required()
     .messages({
-      'any.only': 'El tipo de titular debe ser "propietario" o "arrendatario".',
+      'any.only': 'El tipo de titular debe ser "propietario", "arrendatario" o "tercero".',
       'any.required': 'El tipo de titular es obligatorio.',
     }),
 

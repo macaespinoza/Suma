@@ -12,6 +12,7 @@ import Boton from '../../../../../../componentes/ui/Boton.jsx';
 import Input from '../../../../../../componentes/ui/Input.jsx';
 import Select from '../../../../../../componentes/ui/Select.jsx';
 import Toggle from '../../../../../../componentes/ui/Toggle.jsx';
+import { ArrowLeft, PawPrint } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 export default function FichaUnidad() {
@@ -237,7 +238,7 @@ export default function FichaUnidad() {
       {/* Cabecera */}
       <div className={styles.cabecera}>
         <Boton variante="fantasma" onClick={() => router.push(`/dashboard/condominios/${condominioId}/unidades`)}>
-          ← Volver a unidades
+          <><ArrowLeft size={16} weight="bold" /> Volver a unidades</>
         </Boton>
         <div>
           <h1 className={styles.titulo}>
@@ -483,7 +484,7 @@ export default function FichaUnidad() {
                 <li key={m.id} className={styles.itemLista}>
                   <div className={styles.itemInfo}>
                     <span className={styles.itemEmoji}>
-                      {m.especie?.toLowerCase() === 'perro' ? '🐕' : m.especie?.toLowerCase() === 'gato' ? '🐈' : '🐾'}
+                      <PawPrint size={20} weight="fill" />
                     </span>
                     <span className={styles.itemTexto}>{m.nombre}</span>
                     <span className={styles.itemDetalle}>{m.especie}{m.raza ? ` · ${m.raza}` : ''}</span>

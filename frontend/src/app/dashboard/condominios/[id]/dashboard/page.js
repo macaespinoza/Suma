@@ -12,6 +12,27 @@ import api from '../../../../../lib/api.js';
 import TarjetaFormulario from '../../../../../componentes/ui/TarjetaFormulario.jsx';
 import Boton from '../../../../../componentes/ui/Boton.jsx';
 import Calendario from '../../../../../componentes/ui/Calendario.jsx';
+import {
+  PencilSimple,
+  Coins,
+  ClipboardText,
+  Clock,
+  Bank,
+  ChartBar,
+  TrendDown,
+  Check,
+  Warning,
+  CalendarBlank,
+  Tray,
+  CreditCard,
+  LockKey,
+  Waves,
+  Link as LinkIcon,
+  ShoppingCart,
+  Globe,
+  ArrowLeft,
+  FileText,
+} from '@phosphor-icons/react';
 import styles from './dashboard.module.css';
 
 const formatoMoneda = (valor) =>
@@ -77,7 +98,7 @@ export default function PaginaDashboardFinanciero(props) {
   if (error) {
     return (
       <div className={styles.error}>
-        <div className={styles.errorIcono}>⚠️</div>
+        <div className={styles.errorIcono}><Warning size={32} weight="fill" /></div>
         <h3>Error al cargar</h3>
         <p>{error}</p>
         <Boton variante="fantasma" onClick={() => router.push('/dashboard/condominios')}>
@@ -127,14 +148,14 @@ export default function PaginaDashboardFinanciero(props) {
               tamano="sm"
               onClick={() => router.push(`/dashboard/condominios/${condominioId}`)}
             >
-              ✏️ Editar Condominio
+              <><PencilSimple size={16} weight="bold" /> Editar Condominio</>
             </Boton>
             <Boton
               variante="primario"
               tamano="sm"
               onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos`)}
             >
-              💰 Administrar Gastos
+              <><Coins size={16} weight="bold" /> Administrar Gastos</>
             </Boton>
           </div>
         </div>
@@ -146,7 +167,7 @@ export default function PaginaDashboardFinanciero(props) {
               variante="primario"
               onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos`)}
             >
-              💰 Administrar Gastos
+              <><Coins size={16} weight="bold" /> Administrar Gastos</>
             </Boton>
           </div>
         </div>
@@ -167,7 +188,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Total Gastado */}
         <div className={`${styles.metricaCard} ${styles.metricaGastos}`}>
           <div className={styles.metricaHeader}>
-            <span className={styles.metricaIcono}>💸</span>
+            <span className={styles.metricaIcono}><Coins size={24} weight="fill" /></span>
             <span className={styles.metricaEtiqueta}>Total Gastado</span>
           </div>
           <div className={styles.metricaValor}>
@@ -181,7 +202,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Total Cobrado */}
         <div className={`${styles.metricaCard} ${styles.metricaCobrado}`}>
           <div className={styles.metricaHeader}>
-            <span className={styles.metricaIcono}>📋</span>
+            <span className={styles.metricaIcono}><ClipboardText size={24} weight="fill" /></span>
             <span className={styles.metricaEtiqueta}>Total Cobrado</span>
           </div>
           <div className={styles.metricaValor}>
@@ -195,7 +216,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Total Recaudado */}
         <div className={`${styles.metricaCard} ${styles.metricaRecaudado}`}>
           <div className={styles.metricaHeader}>
-            <span className={styles.metricaIcono}>💰</span>
+            <span className={styles.metricaIcono}><Coins size={24} weight="fill" /></span>
             <span className={styles.metricaEtiqueta}>Total Recaudado</span>
           </div>
           <div className={styles.metricaValor}>
@@ -209,7 +230,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Pendiente de Cobro */}
         <div className={`${styles.metricaCard} ${styles.metricaPendiente}`}>
           <div className={styles.metricaHeader}>
-            <span className={styles.metricaIcono}>⏳</span>
+            <span className={styles.metricaIcono}><Clock size={24} weight="fill" /></span>
             <span className={styles.metricaEtiqueta}>Por Cobrar</span>
           </div>
           <div className={styles.metricaValor}>
@@ -226,7 +247,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Estado de Cuenta */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitulo}>🏦 Estado de Cuenta</h3>
+            <h3 className={styles.cardTitulo}><Bank size={20} weight="fill" /> Estado de Cuenta</h3>
           </div>
           <div className={styles.cardBody}>
             <div className={styles.estadoCuentasGrid}>
@@ -272,13 +293,13 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Deuda Histórica */}
         <div className={styles.card}>
           <div className={styles.cardHeader}>
-            <h3 className={styles.cardTitulo}>📊 Historial de Deuda</h3>
+            <h3 className={styles.cardTitulo}><ChartBar size={20} weight="fill" /> Historial de Deuda</h3>
           </div>
           <div className={styles.cardBody}>
             <div className={styles.deudaLista}>
               <div className={styles.deudaItem}>
                 <div className={styles.deudaItemInfo}>
-                  <span className={styles.deudaItemIcono}>📉</span>
+                  <span className={styles.deudaItemIcono}><TrendDown size={20} weight="fill" /></span>
                   <span className={styles.deudaItemLabel}>Deuda Anterior</span>
                 </div>
                 <span className={styles.deudaItemValor}>
@@ -287,7 +308,7 @@ export default function PaginaDashboardFinanciero(props) {
               </div>
               <div className={styles.deudaItem}>
                 <div className={styles.deudaItemInfo}>
-                  <span className={styles.deudaItemIcono}>✅</span>
+                  <span className={styles.deudaItemIcono}><Check size={20} weight="fill" /></span>
                   <span className={styles.deudaItemLabel}>Recuperado</span>
                 </div>
                 <span className={`${styles.deudaItemValor} ${styles.deudaItemValorExito}`}>
@@ -296,7 +317,7 @@ export default function PaginaDashboardFinanciero(props) {
               </div>
               <div className={styles.deudaItem}>
                 <div className={styles.deudaItemInfo}>
-                  <span className={styles.deudaItemIcono}>⚠️</span>
+                  <span className={styles.deudaItemIcono}><Warning size={20} weight="fill" /></span>
                   <span className={styles.deudaItemLabel}>Deuda Reciente</span>
                 </div>
                 <span className={`${styles.deudaItemValor} ${styles.deudaItemValorError}`}>
@@ -311,7 +332,7 @@ export default function PaginaDashboardFinanciero(props) {
       {/* Calendario de Actividades (Nuevo) */}
       <div className={styles.card} style={{ gridColumn: '1 / -1' }}>
         <div className={styles.cardHeader}>
-          <h3 className={styles.cardTitulo}>📅 Calendario de Actividades</h3>
+          <h3 className={styles.cardTitulo}><CalendarBlank size={20} weight="fill" /> Calendario de Actividades</h3>
         </div>
         <div className={styles.cardBody} style={{ padding: 0 }}>
           <Calendario eventos={eventosMock} />
@@ -323,7 +344,7 @@ export default function PaginaDashboardFinanciero(props) {
         {/* Egresos por Categoría */}
         <div className={styles.card}>
         <div className={styles.cardHeader}>
-          <h3 className={styles.cardTitulo}>📑 Egresos del Mes</h3>
+          <h3 className={styles.cardTitulo}><ClipboardText size={20} weight="fill" /> Egresos del Mes</h3>
           <span className={styles.cardTotal}>{formatoMoneda(egresos_mes?.total || 0)}</span>
         </div>
         <div className={styles.cardBody}>
@@ -346,7 +367,7 @@ export default function PaginaDashboardFinanciero(props) {
             </div>
           ) : (
             <div className={styles.vacio}>
-              <span>📭</span>
+              <span><Tray size={32} weight="fill" /></span>
               <p>No hay egresos registrados este mes.</p>
             </div>
           )}
@@ -356,7 +377,7 @@ export default function PaginaDashboardFinanciero(props) {
       {/* Pasarelas Activas */}
       <div className={styles.card}>
         <div className={styles.cardHeader}>
-          <h3 className={styles.cardTitulo}>💳 Pasarelas de Pago</h3>
+          <h3 className={styles.cardTitulo}><CreditCard size={20} weight="fill" /> Pasarelas de Pago</h3>
         </div>
         <div className={styles.cardBody}>
           {pasarelas_activas?.length > 0 ? (
@@ -364,11 +385,11 @@ export default function PaginaDashboardFinanciero(props) {
               {pasarelas_activas.map((pasarela) => (
                 <div key={pasarela} className={styles.pasarelaItem}>
                   <span className={styles.pasarelaIcono}>
-                    {pasarela === 'flow' && '🌊'}
-                    {pasarela === 'fintoc' && '🔗'}
-                    {pasarela === 'mercado_pago' && '🛒'}
-                    {pasarela === 'webpay' && '🌐'}
-                    {pasarela === 'transferencia_manual' && '🏦'}
+                    {pasarela === 'flow' && <Waves size={20} weight="fill" />}
+                    {pasarela === 'fintoc' && <LinkIcon size={20} weight="fill" />}
+                    {pasarela === 'mercado_pago' && <ShoppingCart size={20} weight="fill" />}
+                    {pasarela === 'webpay' && <Globe size={20} weight="fill" />}
+                    {pasarela === 'transferencia_manual' && <Bank size={20} weight="fill" />}
                   </span>
                   <span className={styles.pasarelaNombre}>
                     {pasarela.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -381,7 +402,7 @@ export default function PaginaDashboardFinanciero(props) {
             </div>
           ) : (
             <div className={styles.vacio}>
-              <span>🔒</span>
+              <span><LockKey size={32} weight="fill" /></span>
               <p>No hay pasarelas de pago configuradas.</p>
             </div>
           )}

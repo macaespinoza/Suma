@@ -3,6 +3,21 @@
 // =============================================================================
 
 import './globals.css';
+import { Archivo, Inter } from 'next/font/google';
+
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--fuente-titulos',
+  display: 'swap',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--fuente-cuerpo',
+  display: 'swap',
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+});
 
 export const metadata = {
   title: {
@@ -48,7 +63,7 @@ export const metadata = {
 
 export default function LayoutRaiz({ children }) {
   return (
-    <html lang="es-CL">
+    <html lang="es-CL" className={`${archivo.variable} ${inter.variable}`}>
       <body>
         {children}
       </body>

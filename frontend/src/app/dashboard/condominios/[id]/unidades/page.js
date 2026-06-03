@@ -10,6 +10,7 @@ import { useRouter, useParams } from 'next/navigation';
 import { useCondominios } from '../../../../../lib/hooks/useCondominios.js';
 import Tabla from '../../../../../componentes/ui/Tabla.jsx';
 import Boton from '../../../../../componentes/ui/Boton.jsx';
+import { ArrowLeft } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 const columnasUnidades = [
@@ -63,7 +64,7 @@ export default function PaginaUnidades() {
       <div className={styles.cabecera}>
         <div>
           <Boton variante="fantasma" onClick={() => router.push(`/dashboard/condominios/${condominioId}`)}>
-            ← Volver al condominio
+            <><ArrowLeft size={16} weight="bold" /> Volver al condominio</>
           </Boton>
           <h1 className={styles.titulo}>
             Unidades Vecinales

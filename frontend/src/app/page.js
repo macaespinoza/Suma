@@ -2,6 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import {
+  Buildings,
+  ChartBar,
+  Heart,
+  ShoppingCart,
+  Warning,
+  ArrowRight,
+  PawPrint,
+} from '@phosphor-icons/react';
 import styles from './page.module.css';
 import { mockAuth } from '../lib/auth-mock.js';
 
@@ -48,7 +57,9 @@ export default function PaginaInicio() {
       <div className={styles.panelBranding}>
         <div className={styles.brandingContenido}>
           <div className={styles.brandingLogo}>
-            <div className={styles.brandingIcono}>🏢</div>
+            <div className={styles.brandingIcono}>
+              <Buildings size={48} weight="fill" />
+            </div>
             <span className={styles.brandingNombre}>SUMA</span>
           </div>
           <h1 className={styles.brandingTitulo}>Gestión y Cohesión Comunitaria</h1>
@@ -58,19 +69,25 @@ export default function PaginaInicio() {
           </p>
           <div className={styles.brandingFeatures}>
             <div className={styles.brandingFeature}>
-              <span className={styles.brandingFeatureIcono}>📊</span>
+              <span className={styles.brandingFeatureIcono}>
+                <ChartBar size={20} weight="fill" />
+              </span>
               <span>Gastos comunes y cobranza inteligente</span>
             </div>
             <div className={styles.brandingFeature}>
-              <span className={styles.brandingFeatureIcono}>🤝</span>
+              <span className={styles.brandingFeatureIcono}>
+                <Heart size={20} weight="fill" />
+              </span>
               <span>Red vecinal y apoyo mutuo</span>
             </div>
             <div className={styles.brandingFeature}>
-              <span className={styles.brandingFeatureIcono}>🛒</span>
+              <span className={styles.brandingFeatureIcono}>
+                <ShoppingCart size={20} weight="fill" />
+              </span>
               <span>Economía circular local</span>
             </div>
           </div>
-          <p className={styles.brandingTagline}>Hecho en Arica · Para Chile 🇨🇱</p>
+          <p className={styles.brandingTagline}>Hecho en Arica · Para Chile</p>
         </div>
       </div>
 
@@ -78,7 +95,9 @@ export default function PaginaInicio() {
       <div className={styles.panelFormulario}>
         <div className={styles.formularioContenedor}>
           <div className={styles.formularioHeader}>
-            <span className={styles.formularioLogo}>🏢</span>
+            <span className={styles.formularioLogo}>
+              <Buildings size={32} weight="fill" />
+            </span>
             <h2 className={styles.formularioTitulo}>Iniciar Sesión</h2>
             <p className={styles.formularioSubtitulo}>
               Accede al panel de tu condominio
@@ -117,7 +136,7 @@ export default function PaginaInicio() {
 
             {error && (
               <div className={styles.errorMensaje} role="alert">
-                <span>⚠️</span>
+                <Warning size={20} weight="fill" />
                 <span>{error}</span>
               </div>
             )}
@@ -128,7 +147,9 @@ export default function PaginaInicio() {
               ) : (
                 <>
                   <span>Entrar</span>
-                  <span className={styles.botonAccionIcono}>→</span>
+                  <span className={styles.botonAccionIcono}>
+                    <ArrowRight size={16} weight="bold" />
+                  </span>
                 </>
               )}
             </button>
@@ -156,26 +177,34 @@ export default function PaginaInicio() {
             <p className={styles.modulosTitulo}>Módulos del sistema</p>
             <div className={styles.modulosGrid}>
               <div className={styles.moduloItem}>
-                <span className={styles.moduloIcono}>📊</span>
+                <span className={styles.moduloIcono}>
+                  <ChartBar size={20} weight="fill" />
+                </span>
                 <span className={styles.moduloNombre}>Administración</span>
               </div>
               <div className={styles.moduloItem}>
-                <span className={styles.moduloIcono}>🏘️</span>
+                <span className={styles.moduloIcono}>
+                  <Buildings size={20} weight="fill" />
+                </span>
                 <span className={styles.moduloNombre}>Comunidad</span>
               </div>
               <div className={styles.moduloItem}>
-                <span className={styles.moduloIcono}>🛒</span>
+                <span className={styles.moduloIcono}>
+                  <ShoppingCart size={20} weight="fill" />
+                </span>
                 <span className={styles.moduloNombre}>Mercadito</span>
               </div>
               <div className={styles.moduloItem}>
-                <span className={styles.moduloIcono}>🐾</span>
+                <span className={styles.moduloIcono}>
+                  <PawPrint size={20} weight="fill" />
+                </span>
                 <span className={styles.moduloNombre}>Mascotas</span>
               </div>
             </div>
           </div>
 
           <footer className={styles.footer}>
-            <p>SUMA © 2026 — ComunidApp · Arica, Chile 🇨🇱</p>
+            <p>SUMA © 2026 — ComunidApp · Arica, Chile</p>
           </footer>
         </div>
       </div>

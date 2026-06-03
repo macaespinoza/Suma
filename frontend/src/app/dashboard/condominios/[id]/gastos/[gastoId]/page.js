@@ -14,6 +14,35 @@ import Input from '../../../../../../componentes/ui/Input.jsx';
 import Select from '../../../../../../componentes/ui/Select.jsx';
 import Modal from '../../../../../../componentes/ui/Modal.jsx';
 import ImportadorExcel from '../../../../../../componentes/ui/ImportadorExcel.jsx';
+import {
+  ArrowLeft,
+  Check,
+  ArrowUUpLeft,
+  FileText,
+  Download,
+  ClipboardText,
+  Coins,
+  ArrowRight,
+  Drop,
+  Lightning,
+  Fire,
+  Broom,
+  Shield,
+  Wrench,
+  Hammer,
+  WarningOctagon,
+  Package,
+  PencilSimple,
+  Trash,
+  Paperclip,
+  Hourglass,
+  CheckCircle,
+  X,
+  Tray,
+  LockKey,
+  Clock,
+  Plus,
+} from '@phosphor-icons/react';
 import styles from './detalle.module.css';
 
 const formatoMoneda = (valor) =>
@@ -33,15 +62,15 @@ const formatearMes = (fecha) => {
 };
 
 const CATEGORIAS_RAPIDAS = [
-  { nombre: 'Agua', icono: '💧' },
-  { nombre: 'Luz', icono: '⚡' },
-  { nombre: 'Aseo', icono: '🧹' },
-  { nombre: 'Conserjería', icono: '🛡️' },
-  { nombre: 'Administración', icono: '📋' },
-  { nombre: 'Mantención', icono: '🔧' },
-  { nombre: 'Reparación', icono: '🔨' },
-  { nombre: 'Emergencia', icono: '🚨' },
-  { nombre: 'Otros', icono: '📦' }
+  { nombre: 'Agua', icono: <Drop size={24} weight="fill" /> },
+  { nombre: 'Luz', icono: <Lightning size={24} weight="fill" /> },
+  { nombre: 'Aseo', icono: <Broom size={24} weight="fill" /> },
+  { nombre: 'Conserjería', icono: <Shield size={24} weight="fill" /> },
+  { nombre: 'Administración', icono: <ClipboardText size={24} weight="fill" /> },
+  { nombre: 'Mantención', icono: <Wrench size={24} weight="fill" /> },
+  { nombre: 'Reparación', icono: <Hammer size={24} weight="fill" /> },
+  { nombre: 'Emergencia', icono: <WarningOctagon size={24} weight="fill" /> },
+  { nombre: 'Otros', icono: <Package size={24} weight="fill" /> }
 ];
 
 const CATEGORIAS_COMPLETAS = [
@@ -69,21 +98,21 @@ const AGRUPACIONES = {
 };
 
 const ICONOS_CATEGORIA = {
-  'Agua': '💧',
-  'Luz': '⚡',
-  'Electricidad': '⚡',
-  'Gas': '🔥',
-  'Conserjería': '🛡️',
-  'Portería': '🛡️',
-  'Seguridad': '🔒',
-  'Administración': '📋',
-  'Mantención': '🔧',
-  'Reparación': '🔨',
-  'Aseo': '🧹',
-  'Emergencia': '🚨',
-  'Seguros': '🛡️',
-  'Otros': '📦',
-  'Otro': '📦',
+  'Agua': <Drop size={20} weight="fill" />,
+  'Luz': <Lightning size={20} weight="fill" />,
+  'Electricidad': <Lightning size={20} weight="fill" />,
+  'Gas': <Fire size={20} weight="fill" />,
+  'Conserjería': <Shield size={20} weight="fill" />,
+  'Portería': <Shield size={20} weight="fill" />,
+  'Seguridad': <LockKey size={20} weight="fill" />,
+  'Administración': <ClipboardText size={20} weight="fill" />,
+  'Mantención': <Wrench size={20} weight="fill" />,
+  'Reparación': <Hammer size={20} weight="fill" />,
+  'Aseo': <Broom size={20} weight="fill" />,
+  'Emergencia': <WarningOctagon size={20} weight="fill" />,
+  'Seguros': <Shield size={20} weight="fill" />,
+  'Otros': <Package size={20} weight="fill" />,
+  'Otro': <Package size={20} weight="fill" />,
 };
 
 export default function PaginaDetalleGasto() {
@@ -356,17 +385,17 @@ export default function PaginaDetalleGasto() {
         </div>
         <div className={styles.cabeceraAcciones}>
           <Boton variante="outline" onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos`)}>
-            ← Volver
+            <><ArrowLeft size={16} weight="bold" /> Volver</>
           </Boton>
           {gasto.estado === 'borrador' && (
             <Boton variante="primario" onClick={() => setModalPrevisualizacion(true)} cargando={publicando}>
-              ✓ Publicar Gasto
+              <><Check size={16} weight="bold" /> Publicar Gasto</>
             </Boton>
           )}
           {gasto.estado === 'publicado' && (
             <>
               <Boton variante="peligro" onClick={handleDespublicar} cargando={despublicando}>
-                ↩ Deshacer Publicación
+                <><ArrowUUpLeft size={16} weight="bold" /> Deshacer Publicación</>
               </Boton>
               <Boton
                 variante="primario"
@@ -375,7 +404,7 @@ export default function PaginaDetalleGasto() {
                   window.open(`${apiBaseUrl}/condominios/${condominioId}/gastos/${gastoId}/liquidacion?descargar=true`, '_blank');
                 }}
               >
-                📄 Descargar PDF
+                <><FileText size={16} weight="bold" /> Descargar PDF</>
               </Boton>
             </>
           )}
@@ -387,7 +416,7 @@ export default function PaginaDetalleGasto() {
         <div className={styles.tituloRow}>
           <h1 className={styles.titulo}>{formatearMes(gasto.mes_anio)}</h1>
           <span className={`${styles.estadoBadge} ${gasto.estado === 'publicado' ? styles.estadoPublicado : styles.estadoBorrador}`}>
-            {gasto.estado === 'publicado' ? '✓Publicado' : '⏳Borrador'}
+            {gasto.estado === 'publicado' ? <><Check size={16} weight="bold" /> Publicado</> : <><Clock size={16} weight="bold" /> Borrador</>}
           </span>
         </div>
         <p className={styles.subtitulo}>{condominio?.nombre}</p>
@@ -451,14 +480,14 @@ export default function PaginaDetalleGasto() {
       {/* Egresos */}
       <div className={styles.seccion}>
         <div className={styles.seccionHeader}>
-          <h2 className={styles.seccionTitulo}>📑 Detalle de Egresos</h2>
+          <h2 className={styles.seccionTitulo}><ClipboardText size={20} weight="fill" /> Detalle de Egresos</h2>
           {gasto.estado === 'borrador' && (
             <div style={{ display: 'flex', gap: '8px' }}>
               <Boton variante="fantasma" tamano="sm" onClick={() => setModalImportar(true)}>
-                📥 Importar Excel
+                <><Download size={16} weight="bold" /> Importar Excel</>
               </Boton>
               <Boton variante="outline" tamano="sm" onClick={() => handleAbrirModalRapido('')}>
-                + Otro Egreso
+                <><Plus size={16} weight="bold" /> Otro Egreso</>
               </Boton>
             </div>
           )}
@@ -475,7 +504,7 @@ export default function PaginaDetalleGasto() {
                 {data.items.map((egreso) => (
                   <div key={egreso.id} className={styles.egresoItem}>
                     <div className={styles.egresoInfo}>
-                      <span className={styles.egresoIcono}>{ICONOS_CATEGORIA[egreso.categoria] || '📦'}</span>
+                      <span className={styles.egresoIcono}>{ICONOS_CATEGORIA[egreso.categoria] || <Package size={20} weight="fill" />}</span>
                       <div>
                         <span className={styles.egresoNombre}>{egreso.categoria}</span>
                         {egreso.descripcion && (
@@ -483,7 +512,7 @@ export default function PaginaDetalleGasto() {
                         )}
                         {egreso.archivo_respaldo_url && (
                           <a href={egreso.archivo_respaldo_url} target="_blank" rel="noopener noreferrer" className={styles.enlaceRespaldo}>
-                            📎 Ver Comprobante
+                            <><Paperclip size={16} weight="bold" /> Ver Comprobante</>
                           </a>
                         )}
                       </div>
@@ -497,14 +526,14 @@ export default function PaginaDetalleGasto() {
                             onClick={() => handleAbrirEditarEgreso(egreso)}
                             title="Editar egreso"
                           >
-                            ✏️
+                            <PencilSimple size={16} weight="bold" />
                           </button>
                           <button
                             className={styles.botonAccionEgreso}
                             onClick={() => handleEliminarEgreso(egreso.id)}
                             title="Eliminar egreso"
                           >
-                            🗑️
+                            <Trash size={16} weight="bold" />
                           </button>
                         </div>
                       )}
@@ -518,7 +547,7 @@ export default function PaginaDetalleGasto() {
 
         {Object.keys(egresosAgrupados).length === 0 && (
           <div className={styles.vacio}>
-            <span>📭</span>
+            <span><Tray size={32} weight="fill" /></span>
             <p>No hay egresos registrados.</p>
           </div>
         )}
@@ -528,13 +557,13 @@ export default function PaginaDetalleGasto() {
       {gasto.estado === 'publicado' && (
         <div className={styles.seccion}>
           <div className={styles.seccionHeader}>
-            <h2 className={styles.seccionTitulo}>💰 Cobros por Unidad</h2>
+            <h2 className={styles.seccionTitulo}><Coins size={20} weight="fill" /> Cobros por Unidad</h2>
             <Boton
               variante="outline"
               tamano="sm"
               onClick={() => router.push(`/dashboard/condominios/${condominioId}/gastos/${gastoId}/cobros`)}
             >
-              Ver Gestión de Cobros →
+              Ver Gestión de Cobros <ArrowRight size={16} weight="bold" />
             </Boton>
           </div>
           <div className={styles.cobrosResumenMini}>
@@ -644,22 +673,22 @@ export default function PaginaDetalleGasto() {
                     onChange={handleSubirArchivo}
                     accept=".pdf,.png,.jpg,.jpeg,.doc,.docx"
                   />
-                  <span style={{ fontSize: '2rem' }}>📎</span>
+                  <span style={{ fontSize: '2rem' }}><Paperclip size={24} weight="fill" /></span>
                   {archivoSubiendo ? (
-                    <span className={styles.archivoTexto}>Subiendo archivo...⏳</span>
+                    <span className={styles.archivoTexto}>Subiendo archivo... <Hourglass size={16} weight="fill" /></span>
                   ) : (
                     <span className={styles.archivoTexto}>Haz clic para cargar documento (PDF, IMG)</span>
                   )}
                 </div>
               ) : (
                 <div className={styles.archivoBadge}>
-                  <span>✅ Comprobante Adjunto</span>
-                  <button 
-                    type="button" 
+                  <span><CheckCircle size={16} weight="fill" /> Comprobante Adjunto</span>
+                  <button
+                    type="button"
                     onClick={() => setEgresoForm(prev => ({ ...prev, archivo_respaldo_url: '' }))}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', marginLeft: '8px' }}
                   >
-                    ❌ Quitar
+                    <X size={16} weight="bold" /> Quitar
                   </button>
                 </div>
               )}
@@ -678,10 +707,10 @@ export default function PaginaDetalleGasto() {
           acciones={
             <>
               <Boton variante="outline" onClick={() => setModalPrevisualizacion(false)}>
-                ✏️ Volver a Editar
+                <><PencilSimple size={16} weight="bold" /> Volver a Editar</>
               </Boton>
               <Boton variante="primario" onClick={confirmarPublicar} cargando={publicando}>
-                ✓ Confirmar y Publicar
+                <><Check size={16} weight="bold" /> Confirmar y Publicar</>
               </Boton>
             </>
           }

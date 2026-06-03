@@ -6,6 +6,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CaretLeft, CaretRight, Sun } from '@phosphor-icons/react';
 import Modal from './Modal.jsx';
 import Boton from './Boton.jsx';
 import styles from './Calendario.module.css';
@@ -120,13 +121,13 @@ export default function Calendario({ eventos = [] }) {
         </h3>
         <div className={styles.navegacion}>
           <button onClick={irMesAnterior} className={styles.botonNav} aria-label="Mes anterior">
-            ◀
+            <CaretLeft size={16} weight="bold" />
           </button>
           <button onClick={irHoy} className={`${styles.botonNav} ${styles.botonHoy}`}>
             Hoy
           </button>
           <button onClick={irMesSiguiente} className={styles.botonNav} aria-label="Mes siguiente">
-            ▶
+            <CaretRight size={16} weight="bold" />
           </button>
         </div>
       </div>
@@ -172,7 +173,9 @@ export default function Calendario({ eventos = [] }) {
             </ul>
           ) : (
             <div className={styles.vacioModal}>
-              <span className={styles.vacioIcono}>🏖️</span>
+              <span className={styles.vacioIcono}>
+                <Sun size={32} weight="fill" />
+              </span>
               <p>No hay eventos ni acciones registradas en este día.</p>
             </div>
           )}

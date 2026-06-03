@@ -6,16 +6,31 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import {
+  ChartBar,
+  Buildings,
+  House,
+  Users,
+  Coins,
+  FileText,
+  CreditCard,
+  Megaphone,
+  ShoppingCart,
+  CalendarBlank,
+  PawPrint,
+  Bell,
+  User,
+} from '@phosphor-icons/react';
 import styles from './layout.module.css';
 
 /**
  * Definición de navegación del sidebar.
  */
 const navegacion = [
-  { href: '/dashboard', icono: '📊', etiqueta: 'Dashboard' },
-  { href: '/dashboard/condominios', icono: '🏘️', etiqueta: 'Condominios' },
-  { href: '/dashboard/unidades', icono: '🏠', etiqueta: 'Unidades' },
-  { href: '/dashboard/usuarios', icono: '👥', etiqueta: 'Usuarios' },
+  { href: '/dashboard', icono: <ChartBar size={20} weight="fill" />, etiqueta: 'Dashboard' },
+  { href: '/dashboard/condominios', icono: <Buildings size={20} weight="fill" />, etiqueta: 'Condominios' },
+  { href: '/dashboard/unidades', icono: <House size={20} weight="fill" />, etiqueta: 'Unidades' },
+  { href: '/dashboard/usuarios', icono: <Users size={20} weight="fill" />, etiqueta: 'Usuarios' },
 ];
 
 /**
@@ -39,7 +54,7 @@ export default function LayoutDashboard({ children }) {
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Link href="/dashboard" className={styles.sidebarLogoLink}>
-            <span className={styles.sidebarLogo}>🏢</span>
+            <span className={styles.sidebarLogo}><Buildings size={24} weight="fill" /></span>
             <span className={styles.sidebarTitulo}>SUMA</span>
           </Link>
         </div>
@@ -65,34 +80,34 @@ export default function LayoutDashboard({ children }) {
                 href="/dashboard/finanzas"
                 className={`${styles.navItem} ${pathname === '/dashboard/finanzas' ? styles.navItemActivo : ''}`}
               >
-                <span className={styles.navIcono}>💰</span>
+                <span className={styles.navIcono}><Coins size={20} weight="fill" /></span>
                 <span>Dashboard Financiero</span>
               </Link>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>📄</span>
+              <span className={styles.navIcono}><FileText size={20} weight="fill" /></span>
               <span>Cobros</span>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>💳</span>
+              <span className={styles.navIcono}><CreditCard size={20} weight="fill" /></span>
               <span>Pagos</span>
             </li>
 
             <li className={styles.navSeparador}>Comunidad</li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>📢</span>
+              <span className={styles.navIcono}><Megaphone size={20} weight="fill" /></span>
               <span>Muro Social</span>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>🛒</span>
+              <span className={styles.navIcono}><ShoppingCart size={20} weight="fill" /></span>
               <span>Mercadito</span>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>📅</span>
+              <span className={styles.navIcono}><CalendarBlank size={20} weight="fill" /></span>
               <span>Eventos</span>
             </li>
             <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}>🐾</span>
+              <span className={styles.navIcono}><PawPrint size={20} weight="fill" /></span>
               <span>Mascotas</span>
             </li>
           </ul>
@@ -100,7 +115,7 @@ export default function LayoutDashboard({ children }) {
 
         <div className={styles.sidebarFooter}>
           <div className={styles.usuarioInfo}>
-            <div className={styles.usuarioAvatar}>👤</div>
+            <div className={styles.usuarioAvatar}><User size={20} weight="fill" /></div>
             <div>
               <p className={styles.usuarioNombre}>Admin</p>
               <p className={styles.usuarioRol}>Administrador</p>
@@ -118,7 +133,7 @@ export default function LayoutDashboard({ children }) {
           </div>
           <div className={styles.headerDerecha}>
             {/* TODO (Open Code): Notificaciones, búsqueda, perfil */}
-            <span className={styles.headerIcono}>🔔</span>
+            <span className={styles.headerIcono}><Bell size={20} weight="fill" /></span>
           </div>
         </header>
 

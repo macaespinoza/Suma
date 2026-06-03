@@ -16,6 +16,7 @@ import Modal from '../../../../componentes/ui/Modal.jsx';
 import { useUnidades } from '../../../../lib/hooks/useUnidades.js';
 import PaginaDashboardFinanciero from './dashboard/page.js';
 import api from '../../../../lib/api.js';
+import { ChartBar, PencilSimple, ArrowLeft } from '@phosphor-icons/react';
 import styles from './[id].module.css';
 
 /**
@@ -272,7 +273,7 @@ export default function PaginaDetalleCondominio() {
               tamano="sm"
               onClick={handleAbrirModalAlicuotas}
             >
-              📊 Recalcular Alícuotas (Ley 21.442)
+              <><ChartBar size={16} weight="bold" /> Recalcular Alícuotas (Ley 21.442)</>
             </Boton>
             <Boton
               variante="primario"
@@ -322,7 +323,7 @@ export default function PaginaDetalleCondominio() {
       <div className={styles.seccionEdicion} style={{ marginTop: '3rem', paddingBottom: '2rem' }}>
         {!mostrarFormularioEdicion ? (
           <Boton variante="outline" onClick={() => setMostrarFormularioEdicion(true)}>
-            ✏️ Editar datos del Condominio
+            <><PencilSimple size={16} weight="bold" /> Editar datos del Condominio</>
           </Boton>
         ) : (
           <TarjetaFormulario

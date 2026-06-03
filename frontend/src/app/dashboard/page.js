@@ -7,7 +7,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
+import {
+  Buildings,
+  House,
+  Users,
+  ChartBar,
+  CheckCircle,
+  ArrowsClockwise,
+  HardHat,
+  Coins,
+} from '@phosphor-icons/react';
 import api from '../../lib/api.js';
 import styles from './page.module.css';
 
@@ -68,7 +79,9 @@ export default function PaginaDashboard() {
       <div className={styles.bentoGrid}>
         {/* Metrica: Condominios */}
         <Link href="/dashboard/condominios" className={`${styles.metricaCard} ${styles.metricaPrimario}`}>
-          <div className={styles.metricaIcono}>🏘️</div>
+          <div className={styles.metricaIcono}>
+            <Image src="/iconos/building.png" width={36} height={36} alt="Condominios" />
+          </div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '—' : metricas.condominios}
@@ -79,7 +92,9 @@ export default function PaginaDashboard() {
 
         {/* Metrica: Unidades */}
         <Link href="/dashboard/unidades" className={`${styles.metricaCard} ${styles.metricaExito}`}>
-          <div className={styles.metricaIcono}>🏠</div>
+          <div className={styles.metricaIcono}>
+            <Image src="/iconos/residential.png" width={36} height={36} alt="Unidades" />
+          </div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '—' : metricas.unidades}
@@ -90,7 +105,9 @@ export default function PaginaDashboard() {
 
         {/* Metrica: Usuarios */}
         <Link href="/dashboard/usuarios" className={`${styles.metricaCard} ${styles.metricaAdvertencia}`}>
-          <div className={styles.metricaIcono}>👥</div>
+          <div className={styles.metricaIcono}>
+            <Image src="/iconos/people.png" width={36} height={36} alt="Usuarios" />
+          </div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '—' : metricas.usuarios}
@@ -101,7 +118,9 @@ export default function PaginaDashboard() {
 
         {/* Metrica: Activos */}
         <Link href="/dashboard/condominios" className={`${styles.metricaCard} ${styles.metricaInfo}`}>
-          <div className={styles.metricaIcono}>📊</div>
+          <div className={styles.metricaIcono}>
+            <Image src="/iconos/line-graph.png" width={36} height={36} alt="Activos" />
+          </div>
           <div className={styles.metricaDetalle}>
             <span className={styles.metricaValor}>
               {cargando ? '—' : metricas.condominios}
@@ -118,7 +137,9 @@ export default function PaginaDashboard() {
           </div>
           <div className={styles.moduloContenido}>
             <div className={styles.moduloPlaceholder}>
-              <span className={styles.moduloPlaceholderIcono}>🗳️</span>
+              <span className={styles.moduloPlaceholderIcono}>
+                <CheckCircle size={32} weight="fill" />
+              </span>
               <span className={styles.moduloPlaceholderTexto}>
                 Votaciones comunitarias, asambleas y decisiones vecinales.
               </span>
@@ -134,7 +155,9 @@ export default function PaginaDashboard() {
           </div>
           <div className={styles.moduloContenido}>
             <div className={styles.moduloPlaceholder}>
-              <span className={styles.moduloPlaceholderIcono}>♻️</span>
+              <span className={styles.moduloPlaceholderIcono}>
+                <ArrowsClockwise size={32} weight="fill" />
+              </span>
               <span className={styles.moduloPlaceholderTexto}>
                 Marketplace local, trueque y sustentabilidad.
               </span>
@@ -150,7 +173,9 @@ export default function PaginaDashboard() {
           </div>
           <div className={styles.moduloContenido}>
             <div className={styles.moduloPlaceholder}>
-              <span className={styles.moduloPlaceholderIcono}>🏗️</span>
+              <span className={styles.moduloPlaceholderIcono}>
+                <HardHat size={32} weight="fill" />
+              </span>
               <span className={styles.moduloPlaceholderTexto}>
                 Estado de propiedades, mantencion y activos.
               </span>
@@ -165,19 +190,27 @@ export default function PaginaDashboard() {
           <h3 className={styles.seccionTitulo}>Accesos Rapidos</h3>
           <div className={styles.accesosRapidos}>
             <Link href="/dashboard/condominios" className={styles.accesoRapido}>
-              <span className={styles.accesoIcono}>🏘️</span>
+              <span className={styles.accesoIcono}>
+                <Buildings size={20} weight="fill" />
+              </span>
               <span className={styles.accesoTexto}>Gestionar Condominios</span>
             </Link>
             <Link href="/dashboard/unidades" className={styles.accesoRapido}>
-              <span className={styles.accesoIcono}>🏠</span>
+              <span className={styles.accesoIcono}>
+                <House size={20} weight="fill" />
+              </span>
               <span className={styles.accesoTexto}>Gestionar Unidades</span>
             </Link>
             <Link href="/dashboard/usuarios" className={styles.accesoRapido}>
-              <span className={styles.accesoIcono}>👥</span>
+              <span className={styles.accesoIcono}>
+                <Users size={20} weight="fill" />
+              </span>
               <span className={styles.accesoTexto}>Gestionar Usuarios</span>
             </Link>
             <Link href="/dashboard/finanzas" className={styles.accesoRapido}>
-              <span className={styles.accesoIcono}>💰</span>
+              <span className={styles.accesoIcono}>
+                <Coins size={20} weight="fill" />
+              </span>
               <span className={styles.accesoTexto}>Dashboard Financiero</span>
             </Link>
           </div>
@@ -187,7 +220,9 @@ export default function PaginaDashboard() {
           <h3 className={styles.seccionTitulo}>Administracion</h3>
           <div className={styles.accesosRapidos}>
             <Link href="/dashboard/finanzas" className={styles.accesoRapido}>
-              <span className={styles.accesoIcono}>💰</span>
+              <span className={styles.accesoIcono}>
+                <Coins size={20} weight="fill" />
+              </span>
               <span className={styles.accesoTexto}>Dashboard Financiero</span>
             </Link>
           </div>

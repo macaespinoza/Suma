@@ -10,6 +10,22 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import api from '../../../lib/api.js';
+import {
+  Gear,
+  Buildings,
+  Warning,
+  ChartBar,
+  CalendarBlank,
+  Coins,
+  Check,
+  Clock,
+  House,
+  TrendUp,
+  Info,
+  CreditCard,
+  Link as LinkIcon,
+  Bank,
+} from '@phosphor-icons/react';
 import styles from './page.module.css';
 
 // Paleta de colores para barras de categorías de egresos.
@@ -20,8 +36,11 @@ const COLORES_CATEGORIAS = [
 
 // Iconos decorativos para las pasarelas de pago.
 const ICONOS_PASARELA = {
-  flow: '🔵', fintoc: '🟢', mercado_pago: '🟡',
-  webpay: '🔴', transferencia_manual: '🏦',
+  flow: <LinkIcon size={16} weight="fill" />,
+  fintoc: <LinkIcon size={16} weight="fill" />,
+  mercado_pago: <LinkIcon size={16} weight="fill" />,
+  webpay: <LinkIcon size={16} weight="fill" />,
+  transferencia_manual: <Bank size={16} weight="fill" />,
 };
 
 /**
@@ -240,7 +259,7 @@ export default function PaginaDashboardFinanciero() {
           <p className={styles.subtitulo}>Cargando datos...</p>
         </div>
         <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          ⚙️ Gestionar Finanzas
+          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
         </Link>
       </div>
         <div className={styles.kpiGrid}>
@@ -267,11 +286,11 @@ export default function PaginaDashboardFinanciero() {
           <h1 className={styles.titulo}>Dashboard Financiero</h1>
         </div>
         <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          ⚙️ Gestionar Finanzas
+          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
         </Link>
       </div>
         <div className={styles.estadoVacio}>
-          <span className={styles.estadoVacioIcono}>🏢</span>
+          <span className={styles.estadoVacioIcono}><Buildings size={32} weight="fill" /></span>
           <h3 className={styles.estadoVacioTitulo}>Sin Condominios</h3>
           <p className={styles.estadoVacioTexto}>
             Registra tu primer condominio para comenzar a gestionar las
@@ -296,7 +315,7 @@ export default function PaginaDashboardFinanciero() {
           </p>
         </div>
         <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          ⚙️ Gestionar Finanzas
+          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
         </Link>
       </div>
 
@@ -349,7 +368,7 @@ export default function PaginaDashboardFinanciero() {
       {/* --- Error --- */}
       {error && (
         <div className={styles.error}>
-          <span>⚠️</span> {error}
+          <span><Warning size={20} weight="fill" /></span> {error}
         </div>
       )}
 
@@ -374,7 +393,7 @@ export default function PaginaDashboardFinanciero() {
           {/* Sin períodos registrados */}
           {!periodo?.mes_anio && periodos.length === 0 && (
             <div className={styles.estadoVacio}>
-              <span className={styles.estadoVacioIcono}>📊</span>
+              <span className={styles.estadoVacioIcono}><ChartBar size={32} weight="fill" /></span>
               <h3 className={styles.estadoVacioTitulo}>Sin Gastos Registrados</h3>
               <p className={styles.estadoVacioTexto}>
                 Aún no hay períodos de gastos comunes creados para este
@@ -389,7 +408,7 @@ export default function PaginaDashboardFinanciero() {
               {/* Aviso de período histórico */}
               {!esUltimoPeriodo && (
                 <div className={styles.infoBox}>
-                  📅 Estás viendo datos del período{' '}
+                  <><CalendarBlank size={16} weight="fill" /> Estás viendo datos del período{' '}</>
                   <strong>{formatearMes(periodo?.mes_anio)}</strong>. El detalle
                   de unidades y deuda histórica solo está disponible para el
                   período actual.
@@ -400,7 +419,7 @@ export default function PaginaDashboardFinanciero() {
               <div className={styles.kpiGrid}>
                 {/* KPI: Total Gastos */}
                 <div className={`${styles.kpiTarjeta} ${styles.kpiGastos}`}>
-                  <div className={styles.kpiIcono}>💰</div>
+                  <div className={styles.kpiIcono}><Coins size={24} weight="fill" /></div>
                   <div className={styles.kpiContenido}>
                     <span className={styles.kpiValor}>
                       {formatearCLP(periodo?.total_gastos)}
@@ -414,7 +433,7 @@ export default function PaginaDashboardFinanciero() {
 
                 {/* KPI: Recaudado */}
                 <div className={`${styles.kpiTarjeta} ${styles.kpiRecaudado}`}>
-                  <div className={styles.kpiIcono}>✅</div>
+                  <div className={styles.kpiIcono}><Check size={24} weight="fill" /></div>
                   <div className={styles.kpiContenido}>
                     <span className={styles.kpiValor}>
                       {formatearCLP(periodo?.total_pagado)}
@@ -428,7 +447,7 @@ export default function PaginaDashboardFinanciero() {
 
                 {/* KPI: Pendiente */}
                 <div className={`${styles.kpiTarjeta} ${styles.kpiPendiente}`}>
-                  <div className={styles.kpiIcono}>⏳</div>
+                  <div className={styles.kpiIcono}><Clock size={24} weight="fill" /></div>
                   <div className={styles.kpiContenido}>
                     <span className={styles.kpiValor}>
                       {formatearCLP(periodo?.total_pendiente)}
@@ -444,7 +463,7 @@ export default function PaginaDashboardFinanciero() {
 
                 {/* KPI: Tasa de Recaudación */}
                 <div className={`${styles.kpiTarjeta} ${styles.kpiTasa}`}>
-                  <div className={styles.kpiIcono}>📊</div>
+                  <div className={styles.kpiIcono}><ChartBar size={24} weight="fill" /></div>
                   <div className={styles.kpiContenido}>
                     <span className={styles.kpiValor}>
                       {(periodo?.tasa_recaudacion || 0).toFixed(1)}%
@@ -456,10 +475,10 @@ export default function PaginaDashboardFinanciero() {
                       className={`${styles.tasaBadge} ${obtenerClaseTasa(periodo?.tasa_recaudacion || 0)}`}
                     >
                       {periodo?.tasa_recaudacion >= 80
-                        ? '🟢 Saludable'
+                        ? 'Saludable'
                         : periodo?.tasa_recaudacion >= 50
-                          ? '🟡 Regular'
-                          : '🔴 Crítica'}
+                          ? 'Regular'
+                          : 'Crítica'}
                     </span>
                   </div>
                 </div>
@@ -470,7 +489,7 @@ export default function PaginaDashboardFinanciero() {
                 {/* --- Distribución de Egresos --- */}
                 <div className={styles.tarjeta} style={{ animationDelay: '0.25s' }}>
                   <h3 className={styles.tarjetaTitulo}>
-                    📋 Distribución de Egresos
+                    <ClipboardText size={20} weight="fill" /> Distribución de Egresos
                   </h3>
                   {categorias.length > 0 ? (
                     <div className={styles.egresosLista}>
@@ -517,7 +536,7 @@ export default function PaginaDashboardFinanciero() {
                 {/* --- Estado de Cuenta por Unidades --- */}
                 <div className={styles.tarjeta} style={{ animationDelay: '0.3s' }}>
                   <h3 className={styles.tarjetaTitulo}>
-                    🏠 Estado de Cuenta por Unidades
+                    <House size={20} weight="fill" /> Estado de Cuenta por Unidades
                   </h3>
 
                   {estado && esUltimoPeriodo ? (
@@ -572,7 +591,7 @@ export default function PaginaDashboardFinanciero() {
                       {deuda && (
                         <div className={styles.deudaSeccion}>
                           <h4 className={styles.deudaSeccionTitulo}>
-                            📈 Deuda Histórica
+                            <TrendUp size={20} weight="fill" /> Deuda Histórica
                           </h4>
                           <div className={styles.deudaFila}>
                             <span className={styles.deudaEtiqueta}>
@@ -603,7 +622,7 @@ export default function PaginaDashboardFinanciero() {
                     </>
                   ) : (
                     <div className={styles.infoBox}>
-                      ℹ️ El detalle de unidades y deuda histórica está
+                      <><Info size={16} weight="fill" /> El detalle de unidades y deuda histórica está</>
                       disponible solo para el período más reciente publicado.
                     </div>
                   )}
@@ -615,12 +634,12 @@ export default function PaginaDashboardFinanciero() {
                       style={{ marginTop: 'var(--espacio-4)' }}
                     >
                       <h4 className={styles.deudaSeccionTitulo}>
-                        💳 Pasarelas de Pago Activas
+                        <CreditCard size={20} weight="fill" /> Pasarelas de Pago Activas
                       </h4>
                       <div className={styles.pasarelasContenedor}>
                         {pasarelas.map((p) => (
                           <span key={p} className={styles.pasarelaBadge}>
-                            {ICONOS_PASARELA[p] || '🔗'}{' '}
+                            {ICONOS_PASARELA[p] || <LinkIcon size={16} weight="fill" />}{' '}
                             {p.replace(/_/g, ' ')}
                           </span>
                         ))}
@@ -634,7 +653,7 @@ export default function PaginaDashboardFinanciero() {
               {periodos.length > 0 && (
                 <div className={`${styles.tarjeta} ${styles.tablaContenedor}`}>
                   <h3 className={styles.tarjetaTitulo}>
-                    📅 Historial de Períodos
+                    <CalendarBlank size={20} weight="fill" /> Historial de Períodos
                   </h3>
                   <div className={styles.tablaScroll}>
                     <table className={styles.tablaHistorico}>
