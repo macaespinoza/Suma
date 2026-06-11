@@ -3,9 +3,9 @@
  * ============================================================================= */
 
 .calendarioContenedor {
-  background: rgba(24, 25, 30, 0.65);
+  background: rgba(19, 22, 20, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(24, 25, 30, 0.5);
+  border: 1px solid rgba(19, 22, 20, 0.5);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   overflow: hidden;
@@ -69,7 +69,7 @@
 .diasSemana {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 248, 240, 0.03);
   border-bottom: 1px solid var(--color-borde);
 }
 
@@ -114,7 +114,7 @@
 
 
 .celdaVacia {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 248, 240, 0.03);
 }
 
 
@@ -175,27 +175,27 @@
 
 /* Variantes de colores para los eventos */
 .evento_ingreso {
-  background: hsla(152, 52%, 58%, 0.15);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
   border-left: 2px solid var(--color-exito);
 }
 
 .evento_egreso {
-  background: hsla(8, 100%, 69%, 0.15);
+  background: var(--color-pumpkin-spice-light);
   color: var(--color-error);
   border-left: 2px solid var(--color-error);
 }
 
 .evento_recordatorio {
-  background: hsla(262, 100%, 72%, 0.15);
-  color: #3b82f6; /* Azul */
-  border-left: 2px solid #3b82f6;
+  background: var(--color-school-bus-yellow-light);
+  color: var(--color-school-bus-yellow);
+  border-left: 2px solid var(--color-school-bus-yellow);
 }
 
 .evento_admin {
-  background: hsla(270, 70%, 50%, 0.15);
-  color: #8b5cf6; /* Morado */
-  border-left: 2px solid #8b5cf6;
+  background: var(--color-hot-pink-web-light);
+  color: var(--color-hot-pink-web);
+  border-left: 2px solid var(--color-hot-pink-web);
 }
 
 /* Modal y Celdas Clickeables */

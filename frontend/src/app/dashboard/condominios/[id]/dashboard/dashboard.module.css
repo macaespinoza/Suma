@@ -92,10 +92,8 @@
 .metricaCard {
   padding: var(--espacio-6);
   border-radius: var(--radio-2xl);
-  background: rgba(24, 25, 30, 0.7);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(24, 25, 30, 0.6);
-  box-shadow: var(--sombra-sm);
+  border: 2px solid var(--color-onyx);
+  box-shadow: var(--sombra-neo);
   transition: all var(--transicion-normal);
   animation: fadeInUp 0.5s ease-out backwards;
   position: relative;
@@ -108,11 +106,15 @@
 .metricaCard:nth-child(4) { animation-delay: 0.2s; }
 
 .metricaCard:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--sombra-md);
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 #000000;
 }
 
-
+/* Fondos sólido de colores protagonistas */
+.metricaGastos { background: var(--color-pumpkin-spice); }
+.metricaCobrado { background: var(--color-hot-pink-web); }
+.metricaRecaudado { background: var(--color-spring-green); }
+.metricaPendiente { background: var(--color-school-bus-yellow); }
 
 .metricaHeader {
   display: flex;
@@ -123,50 +125,42 @@
 
 .metricaIcono {
   font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-xs);
-}
-
-.metricaGastos .metricaIcono {
-  background: linear-gradient(135deg, #f54d0b, #ff8a65);
-}
-.metricaCobrado .metricaIcono {
-  background: linear-gradient(135deg, #5122a7, #8e4fb0);
-}
-.metricaRecaudado .metricaIcono {
-  background: linear-gradient(135deg, #2D8659, var(--color-exito));
-}
-.metricaPendiente .metricaIcono {
-  background: linear-gradient(135deg, #f9951a, var(--color-advertencia));
+  background: var(--color-onyx);
+  color: var(--color-blanco-calido);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .metricaEtiqueta {
   font-size: var(--texto-sm);
-  color: var(--color-texto-secundario);
-  font-weight: var(--peso-medium);
+  color: var(--color-onyx);
+  font-weight: var(--peso-bold);
+  opacity: 0.85;
 }
 
 .metricaValor {
   font-size: var(--texto-2xl);
   font-weight: var(--peso-extrabold);
-  color: var(--color-texto);
+  color: var(--color-onyx);
   line-height: var(--interlineado-tight);
 }
 
 .metricaSubvalor {
   font-size: var(--texto-xs);
-  color: var(--color-texto-terciario);
+  color: var(--color-onyx);
   margin-top: var(--espacio-1);
+  opacity: 0.7;
 }
 
 .metricaSubvalorExito {
-  color: var(--color-exito);
+  color: var(--color-onyx);
   font-weight: var(--peso-semibold);
+  opacity: 0.9;
 }
 
 /* =============================================================================
@@ -182,9 +176,9 @@
  * CARDS GENÉRICAS
  * ============================================================================= */
 .card {
-  background: rgba(24, 25, 30, 0.65);
+  background: rgba(19, 22, 20, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(24, 25, 30, 0.5);
+  border: 1px solid rgba(19, 22, 20, 0.5);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   transition: all var(--transicion-normal);
@@ -246,13 +240,13 @@
 }
 
 .estadoItemExito {
-  background: hsla(152, 52%, 58%, 0.1);
+  background: var(--color-spring-green-light);
 }
 .estadoItemAdvertencia {
-  background: hsla(262, 100%, 72%, 0.1);
+  background: var(--color-school-bus-yellow-light);
 }
 .estadoItemError {
-  background: hsla(8, 100%, 69%, 0.1);
+  background: var(--color-pumpkin-spice-light);
 }
 .estadoItemTotal {
   background: var(--color-primario-light);
@@ -429,7 +423,7 @@
 }
 
 .pasarelaBadgeActiva {
-  background: hsla(152, 52%, 58%, 0.12);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
 }
 

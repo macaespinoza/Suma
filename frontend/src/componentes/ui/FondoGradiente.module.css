@@ -1,0 +1,115 @@
+/* =============================================================================
+ * SUMA — Fondo con Gradientes Dinámicos (Neo-Brutalismo Oscuro)
+ * Blobs de color animados que flotan suavemente sobre el fondo Onyx.
+ * ============================================================================= */
+
+.fondo {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--color-onyx);
+}
+
+/* --- Blobs de gradiente radial --- */
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+/* Blob Áureo (Amarillo + Naranja + Rosa) — el protagonista */
+.blobAureo {
+  width: 70vw;
+  height: 70vw;
+  max-width: 900px;
+  max-height: 900px;
+  top: -10%;
+  right: -15%;
+  background: radial-gradient(
+    circle at 40% 40%,
+    rgba(255, 194, 11, 0.18) 0%,
+    rgba(255, 115, 0, 0.12) 35%,
+    rgba(247, 101, 171, 0.08) 65%,
+    transparent 80%
+  );
+  animation: flotarAureo 24s ease-in-out infinite alternate;
+}
+
+/* Blob Rosa — contrapeso inferior izquierdo */
+.blobRosa {
+  width: 55vw;
+  height: 55vw;
+  max-width: 700px;
+  max-height: 700px;
+  bottom: -15%;
+  left: -10%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(247, 101, 171, 0.14) 0%,
+    rgba(255, 115, 0, 0.08) 50%,
+    transparent 75%
+  );
+  animation: flotarRosa 28s ease-in-out infinite alternate;
+}
+
+/* Blob Verde — acento sutil detrás del contenido */
+.blobVerde {
+  width: 40vw;
+  height: 40vw;
+  max-width: 500px;
+  max-height: 500px;
+  top: 40%;
+  left: 30%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(77, 237, 151, 0.09) 0%,
+    rgba(7, 78, 54, 0.05) 50%,
+    transparent 75%
+  );
+  animation: flotarVerde 32s ease-in-out infinite alternate;
+}
+
+/* Blob pequeño áureo de detalle */
+.blobDetalle {
+  width: 25vw;
+  height: 25vw;
+  max-width: 300px;
+  max-height: 300px;
+  top: 60%;
+  right: 10%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 194, 11, 0.10) 0%,
+    transparent 70%
+  );
+  animation: flotarDetalle 20s ease-in-out infinite alternate;
+}
+
+/* --- Animaciones de flotación suave --- */
+@keyframes flotarAureo {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-30px, 20px) scale(1.05); }
+  66% { transform: translate(20px, -15px) scale(0.98); }
+  100% { transform: translate(-10px, 10px) scale(1.02); }
+}
+
+@keyframes flotarRosa {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -20px) scale(1.08); }
+  100% { transform: translate(-15px, 15px) scale(0.95); }
+}
+
+@keyframes flotarVerde {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-20px, -30px) rotate(5deg); }
+  100% { transform: translate(15px, 10px) rotate(-3deg); }
+}
+
+@keyframes flotarDetalle {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(20px, -25px); }
+  100% { transform: translate(-10px, 15px); }
+}

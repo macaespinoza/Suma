@@ -92,12 +92,12 @@
 }
 
 .estadoBorrador {
-  background: hsla(262, 100%, 72%, 0.12);
+  background: var(--color-school-bus-yellow-light);
   color: var(--color-advertencia);
 }
 
 .estadoPublicado {
-  background: hsla(152, 52%, 58%, 0.12);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
 }
 
@@ -114,9 +114,9 @@
   align-items: center;
   gap: var(--espacio-2);
   padding: var(--espacio-6);
-  background: rgba(24, 25, 30, 0.7);
+  background: rgba(19, 22, 20, 0.7);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(24, 25, 30, 0.6);
+  border: 1px solid rgba(19, 22, 20, 0.6);
   border-radius: var(--radio-2xl);
   box-shadow: var(--sombra-sm);
   text-align: center;
@@ -152,9 +152,9 @@
 
 /* --- Sección --- */
 .seccion {
-  background: rgba(24, 25, 30, 0.65);
+  background: rgba(19, 22, 20, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(24, 25, 30, 0.5);
+  border: 1px solid rgba(19, 22, 20, 0.5);
   border-radius: var(--radio-2xl);
   padding: var(--espacio-6);
   box-shadow: var(--sombra-sm);
@@ -333,17 +333,17 @@
 
 /* --- Estados Cobro --- */
 .estadoPendiente {
-  background: hsla(262, 100%, 72%, 0.12);
+  background: var(--color-school-bus-yellow-light);
   color: var(--color-advertencia);
 }
 
 .estadoPagado {
-  background: hsla(152, 52%, 58%, 0.12);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
 }
 
 .estadoMoroso {
-  background: hsla(8, 100%, 69%, 0.12);
+  background: var(--color-pumpkin-spice-light);
   color: var(--color-error);
 }
 
@@ -469,7 +469,7 @@
   transform: translateY(-4px);
   box-shadow: var(--sombra-md);
   border-color: var(--color-primario);
-  background: linear-gradient(135deg, rgba(24, 25, 30, 0.9), rgba(240, 248, 255, 0.5));
+  background: linear-gradient(135deg, rgba(19, 22, 20, 0.9), rgba(255, 248, 240, 0.5));
 }
 
 
@@ -529,7 +529,7 @@
   align-items: center;
   gap: var(--espacio-2);
   padding: var(--espacio-2) var(--espacio-3);
-  background: hsla(152, 52%, 58%, 0.1);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
   border-radius: var(--radio-md);
   font-size: var(--texto-xs);
@@ -579,7 +579,7 @@
 }
 
 .enlaceRespaldo:hover {
-  background: hsla(262, 100%, 72%, 0.1);
+  background: var(--color-school-bus-yellow-light);
 }
 
 /* --- Monto Gigante --- */
@@ -613,7 +613,7 @@
 .montoGiganteInput:focus {
   outline: none;
   border-color: var(--color-primario);
-  box-shadow: 0 0 0 4px hsla(262, 100%, 72%, 0.1);
+  box-shadow: 0 0 0 4px var(--color-school-bus-yellow-light);
 }
 
 .montoGiganteInput::placeholder {

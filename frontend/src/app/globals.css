@@ -1,45 +1,78 @@
 /* =============================================================================
- * SUMA — Sistema de Diseño Global (Neo-Brutalismo Oscuro Premium)
+ * SUMA — Sistema de Diseño Global (Neo-Brutalismo Oscuro Premium v2)
  * Tokens CSS para colores, tipografia, espaciado y geometria.
- * Forzado a dark mode exclusivo.
+ * Forzado a dark mode exclusivo con paleta oficial SUMA.
  * ============================================================================= */
 
 /* --- Google Fonts: Archivo (titulos) e Inter (cuerpo) ---
    Inyectadas via next/font/google en layout.js para auto-hosting optimizado --- */
 
 /* =============================================================================
- * VARIABLES GLOBALES (DARK MODE EXCLUSIVO — Neo-Brutalismo Oscuro Premium)
+ * PALETA OFICIAL SUMA (Coolors Exported Palette)
+ * https://coolors.co/131614-ffc20b-f765ab-ff7300-4ded97-074e36
  * ============================================================================= */
 :root {
-  /* --- Paleta de Acentos (Usados con extrema moderacion) --- */
-  --color-primario: #A370FF;          /* Lilac / Vibrant Violet */
-  --color-primario-hover: #B88CFF;
-  --color-primario-light: hsla(262, 100%, 72%, 0.12);
-  --color-secundario: #5CCB9E;         /* Mint / Sage Green */
-  --color-secundario-hover: #7AD9B4;
-  --color-acento: #FF7A60;             /* Terracota / Soft Coral */
-  --color-acento-hover: #FF9985;
+  /* --- Colores Base Oficiales --- */
+  --color-onyx: #131614;
+  --color-school-bus-yellow: #ffc20b;
+  --color-hot-pink-web: #f765ab;
+  --color-pumpkin-spice: #ff7300;
+  --color-spring-green: #4ded97;
+  --color-emerald-depths: #074e36;
+  --color-blanco-calido: #fff8f0;
 
-  /* --- Semanticos --- */
-  --color-exito: #5CCB9E;
-  --color-advertencia: #FF7A60;
-  --color-error: #FF7A60;
-  --color-error-hover: #FF9985;
-  --color-info: #A370FF;
+  /* --- Derivados estructurales (capas sobre Onyx) --- */
+  --color-superficie-base: #1c1f1d;
+  --color-superficie-elevada-base: #252927;
+  --color-borde-base: #2f3330;
+  --color-borde-subtle-base: #3a3f3c;
 
-  /* --- Neutros (Estructurales) --- */
-  --color-fondo: #0E0F12;             /* Antracita profundo — PROHIBIDO #000 */
-  --color-superficie: #18191E;         /* Carbon mineral */
-  --color-superficie-elevada: #1D1F25; /* Grafito oscuro */
-  --color-borde: #2D3039;              /* Gris metalizado atenuado */
-  --color-borde-subtle: #343846;       /* Separacion quirurgica */
-  --color-borde-focus: #A370FF;
+  /* --- Acentos Derivados (hover / light) --- */
+  --color-spring-green-hover: #3dd98a;
+  --color-spring-green-light: rgba(77, 237, 151, 0.14);
+
+  --color-hot-pink-web-hover: #e0559a;
+  --color-hot-pink-web-light: rgba(247, 101, 171, 0.14);
+
+  --color-school-bus-yellow-hover: #e6af00;
+  --color-school-bus-yellow-light: rgba(255, 194, 11, 0.14);
+
+  --color-pumpkin-spice-hover: #e06600;
+  --color-pumpkin-spice-light: rgba(255, 115, 0, 0.14);
+
+  --color-emerald-depths-hover: #0a6648;
+  --color-emerald-depths-light: rgba(7, 78, 54, 0.14);
+
+  /* --- Semanticos (Neobrutalismo Colorido) --- */
+  --color-primario: var(--color-spring-green);
+  --color-primario-hover: var(--color-spring-green-hover);
+  --color-primario-light: var(--color-spring-green-light);
+
+  --color-secundario: var(--color-emerald-depths);
+  --color-secundario-hover: var(--color-emerald-depths-hover);
+
+  --color-acento: var(--color-hot-pink-web);
+  --color-acento-hover: var(--color-hot-pink-web-hover);
+
+  --color-exito: var(--color-spring-green);
+  --color-advertencia: var(--color-school-bus-yellow);
+  --color-error: var(--color-pumpkin-spice);
+  --color-error-hover: var(--color-pumpkin-spice-hover);
+  --color-info: var(--color-school-bus-yellow);
+
+  /* --- Neutros Estructurales --- */
+  --color-fondo: var(--color-onyx);
+  --color-superficie: var(--color-superficie-base);
+  --color-superficie-elevada: var(--color-superficie-elevada-base);
+  --color-borde: var(--color-borde-base);
+  --color-borde-subtle: var(--color-borde-subtle-base);
+  --color-borde-focus: var(--color-spring-green);
 
   /* --- Texto --- */
-  --color-texto: #F1F2F4;              /* Blanco lino / Off-white templado */
-  --color-texto-secundario: #8A8F9E;  /* Gris ceniza / Platino */
-  --color-texto-terciario: #5E6270;    /* Gris profundo para metadatos */
-  --color-texto-invertido: #0E0F12;
+  --color-texto: var(--color-blanco-calido);
+  --color-texto-secundario: #c8c5c0;
+  --color-texto-terciario: #8a8782;
+  --color-texto-invertido: var(--color-onyx);
 
   /* --- Tipografia --- */
   --fuente-principal: var(--fuente-cuerpo), -apple-system, BlinkMacSystemFont, sans-serif;
@@ -64,7 +97,7 @@
   --interlineado: 1.6;
   --interlineado-tight: 1.25;
 
-  /* --- Espaciado (layouts amplios, aire generoso) --- */
+  /* --- Espaciado --- */
   --espacio-1: 0.25rem;    /* 4px */
   --espacio-2: 0.5rem;     /* 8px */
   --espacio-3: 0.75rem;    /* 12px */
@@ -84,10 +117,17 @@
   --radio-2xl: 1rem;       /* 16px */
   --radio-full: 9999px;
 
-  /* --- Sombras: Hard shadow ultra-delgado o ninguna --- */
-  --sombra-xs: 2px 2px 0 #000000;
-  --sombra-sm: 2px 2px 0 #000000;
-  --sombra-md: 2px 2px 0 #000000;
+  /* --- Sombras: Hard shadow neobrutalista --- */
+  --sombra-neo: 3px 3px 0 #000000;
+  --sombra-neo-primario: 3px 3px 0 rgba(7, 78, 54, 0.6);
+  --sombra-neo-acento: 3px 3px 0 rgba(138, 34, 89, 0.5);
+  --sombra-neo-amarillo: 3px 3px 0 rgba(153, 115, 0, 0.5);
+  --sombra-neo-naranja: 3px 3px 0 rgba(153, 69, 0, 0.5);
+
+  /* Sombras legacy (mantenidas para compatibilidad, ahora alias) */
+  --sombra-xs: var(--sombra-neo);
+  --sombra-sm: var(--sombra-neo);
+  --sombra-md: var(--sombra-neo);
   --sombra-lg: none;
   --sombra-xl: none;
 
@@ -187,9 +227,10 @@ input, textarea, select, button {
 /* --- Tarjeta (Card) --- */
 .tarjeta {
   background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
+  border: 1.5px solid var(--color-borde);
   border-radius: var(--radio-xl);
   padding: var(--espacio-6);
+  box-shadow: var(--sombra-neo);
 }
 
 .tarjeta:hover {
@@ -233,7 +274,7 @@ input, textarea, select, button {
 
 /* --- Focus visible (accesibilidad) --- */
 :focus-visible {
-  outline: 2px solid var(--color-borde-focus);
+  outline: 2.5px solid var(--color-borde-focus);
   outline-offset: 2px;
   border-radius: var(--radio-sm);
 }
@@ -245,7 +286,7 @@ input, textarea, select, button {
   white-space: nowrap;
 }
 
-/* --- Badge / Etiqueta (estilo etiqueta tecnica de planos) --- */
+/* --- Badge / Etiqueta --- */
 .etiqueta {
   display: inline-flex;
   align-items: center;
@@ -258,28 +299,48 @@ input, textarea, select, button {
 }
 
 .etiqueta--exito {
-  background: hsla(152, 52%, 58%, 0.12);
-  color: var(--color-exito);
+  background: var(--color-spring-green-light);
+  color: var(--color-spring-green);
 }
 
 .etiqueta--error {
-  background: hsla(8, 100%, 69%, 0.12);
-  color: var(--color-error);
+  background: var(--color-pumpkin-spice-light);
+  color: var(--color-pumpkin-spice);
 }
 
 .etiqueta--advertencia {
-  background: hsla(8, 100%, 69%, 0.12);
-  color: var(--color-advertencia);
+  background: var(--color-school-bus-yellow-light);
+  color: var(--color-school-bus-yellow);
 }
 
 .etiqueta--info {
-  background: hsla(262, 100%, 72%, 0.12);
-  color: var(--color-info);
+  background: var(--color-emerald-depths-light);
+  color: var(--color-emerald-depths);
 }
 
-/* --- Separador de linea fina quirurgica --- */
+/* --- Separador de linea fina --- */
 .linea-fina {
-  height: 1px;
+  height: 1.5px;
   background: var(--color-borde);
   width: 100%;
 }
+
+/* =============================================================================
+ * UTILIDADES DE COLORES PROTAGONISTAS
+ * ============================================================================= */
+
+.texto-amarillo { color: var(--color-school-bus-yellow); }
+.texto-rosa { color: var(--color-hot-pink-web); }
+.texto-naranja { color: var(--color-pumpkin-spice); }
+.texto-verde { color: var(--color-spring-green); }
+.texto-esmeralda { color: var(--color-emerald-depths); }
+.texto-onyx { color: var(--color-onyx); }
+.texto-blanco-calido { color: var(--color-blanco-calido); }
+
+.fondo-amarillo { background: var(--color-school-bus-yellow); }
+.fondo-rosa { background: var(--color-hot-pink-web); }
+.fondo-naranja { background: var(--color-pumpkin-spice); }
+.fondo-verde { background: var(--color-spring-green); }
+.fondo-esmeralda { background: var(--color-emerald-depths); }
+.fondo-onyx { background: var(--color-onyx); }
+.fondo-blanco-calido { background: var(--color-blanco-calido); }

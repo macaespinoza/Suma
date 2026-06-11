@@ -28,10 +28,10 @@ import {
 } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
-// Paleta de colores para barras de categorías de egresos.
+// Paleta de colores para barras de categorías de egresos (oficial SUMA).
 const COLORES_CATEGORIAS = [
-  '#3B82F6', '#8B5CF6', '#10B981', '#F59E0B',
-  '#EC4899', '#14B8A6', '#F97316', '#6366F1',
+  '#4ded97', '#f765ab', '#ffc20b', '#ff7300',
+  '#074e36', '#3dd98a', '#e0559a', '#e6af00',
 ];
 
 // Iconos decorativos para las pasarelas de pago.

@@ -22,6 +22,8 @@ import {
   User,
 } from '@phosphor-icons/react';
 import styles from './layout.module.css';
+import Logo from '../../componentes/ui/Logo.jsx';
+import FondoGradiente from '../../componentes/ui/FondoGradiente.jsx';
 
 /**
  * Definición de navegación del sidebar.
@@ -45,16 +47,13 @@ export default function LayoutDashboard({ children }) {
 
   return (
     <div className={styles.layoutDashboard}>
-      {/* --- Blobs decorativos de fondo --- */}
-      <div className={`blob blob--primario ${styles.blobDecorativo1}`} />
-      <div className={`blob blob--secundario ${styles.blobDecorativo2}`} />
-      <div className={`blob blob--acento ${styles.blobDecorativo3}`} />
+      <FondoGradiente />
 
       {/* --- Sidebar --- */}
       <aside className={styles.sidebar}>
         <div className={styles.sidebarHeader}>
           <Link href="/dashboard" className={styles.sidebarLogoLink}>
-            <span className={styles.sidebarLogo}><Buildings size={24} weight="fill" /></span>
+            <Logo className={styles.sidebarLogo} />
             <span className={styles.sidebarTitulo}>SUMA</span>
           </Link>
         </div>

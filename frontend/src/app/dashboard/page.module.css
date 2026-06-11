@@ -41,15 +41,23 @@
   align-items: center;
   gap: var(--espacio-5);
   padding: var(--espacio-6);
-  background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
+  border: 2px solid var(--color-onyx);
   border-radius: var(--radio-xl);
   text-decoration: none;
+  box-shadow: var(--sombra-neo);
+  transition: all var(--transicion-normal);
 }
 
 .metricaCard:hover {
-  border-color: var(--color-borde-subtle);
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 #000000;
 }
+
+/* Fondos sólido de colores protagonistas */
+.metricaPrimario { background: var(--color-spring-green); }
+.metricaExito { background: var(--color-hot-pink-web); }
+.metricaAdvertencia { background: var(--color-school-bus-yellow); }
+.metricaInfo { background: var(--color-pumpkin-spice); }
 
 .metricaIcono {
   width: 48px;
@@ -58,8 +66,9 @@
   align-items: center;
   justify-content: center;
   border-radius: var(--radio-lg);
-  background: var(--color-superficie-elevada);
-  border: 1px solid var(--color-borde);
+  background: var(--color-onyx);
+  color: var(--color-blanco-calido);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
@@ -71,38 +80,18 @@
 
 .metricaValor {
   font-size: var(--texto-2xl);
-  font-weight: var(--peso-bold);
-  color: var(--color-texto);
+  font-weight: var(--peso-extrabold);
+  color: var(--color-onyx);
   line-height: 1;
 }
 
 .metricaEtiqueta {
   font-size: var(--texto-xs);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto-secundario);
+  font-weight: var(--peso-bold);
+  color: var(--color-onyx);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-}
-
-/* --- Variantes de acento para metricas --- */
-.metricaPrimario .metricaIcono {
-  color: var(--color-primario);
-  border-color: var(--color-primario);
-}
-
-.metricaExito .metricaIcono {
-  color: var(--color-exito);
-  border-color: var(--color-exito);
-}
-
-.metricaAdvertencia .metricaIcono {
-  color: var(--color-advertencia);
-  border-color: var(--color-advertencia);
-}
-
-.metricaInfo .metricaIcono {
-  color: var(--color-info);
-  border-color: var(--color-info);
+  opacity: 0.85;
 }
 
 /* =============================================================================

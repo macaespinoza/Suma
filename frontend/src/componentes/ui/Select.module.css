@@ -53,7 +53,7 @@
 }
 
 .selectError:focus {
-  box-shadow: 0 0 0 2px hsla(8, 100%, 69%, 0.12);
+  box-shadow: 0 0 0 2px var(--color-pumpkin-spice-light);
 }
 
 .error {

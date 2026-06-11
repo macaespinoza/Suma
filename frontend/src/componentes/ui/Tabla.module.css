@@ -79,7 +79,7 @@
 }
 
 .accion--peligro:hover {
-  background: hsla(8, 100%, 69%, 0.08);
+  background: var(--color-pumpkin-spice-light);
 }
 
 /* --- Estado vacio --- */

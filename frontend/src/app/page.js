@@ -13,6 +13,8 @@ import {
 } from '@phosphor-icons/react';
 import styles from './page.module.css';
 import { mockAuth } from '../lib/auth-mock.js';
+import Logo from '../componentes/ui/Logo.jsx';
+import FondoGradiente from '../componentes/ui/FondoGradiente.jsx';
 
 function GoogleIcon() {
   return (
@@ -52,13 +54,15 @@ export default function PaginaInicio() {
   };
 
   return (
-    <main className={styles.principal}>
+    <>
+      <FondoGradiente />
+      <main className={styles.principal}>
       {/* --- Panel Izquierdo: Branding Evocador --- */}
       <div className={styles.panelBranding}>
         <div className={styles.brandingContenido}>
           <div className={styles.brandingLogo}>
             <div className={styles.brandingIcono}>
-              <Buildings size={48} weight="fill" />
+              <Logo style={{ width: '100%', height: 'auto' }} />
             </div>
             <span className={styles.brandingNombre}>SUMA</span>
           </div>
@@ -96,7 +100,7 @@ export default function PaginaInicio() {
         <div className={styles.formularioContenedor}>
           <div className={styles.formularioHeader}>
             <span className={styles.formularioLogo}>
-              <Buildings size={32} weight="fill" />
+              <Logo style={{ width: '40px', height: 'auto' }} />
             </span>
             <h2 className={styles.formularioTitulo}>Iniciar Sesión</h2>
             <p className={styles.formularioSubtitulo}>
@@ -209,5 +213,6 @@ export default function PaginaInicio() {
         </div>
       </div>
     </main>
+    </>
   );
 }

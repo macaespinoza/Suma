@@ -91,7 +91,7 @@
   padding-right: 36px;
   border: 1px solid var(--color-borde);
   border-radius: var(--radio-lg);
-  background-color: rgba(24, 25, 30, 0.7);
+  background-color: rgba(19, 22, 20, 0.7);
   backdrop-filter: blur(8px);
   font-family: var(--fuente-principal);
   font-size: var(--texto-sm);
@@ -131,10 +131,8 @@
   gap: var(--espacio-4);
   padding: var(--espacio-6);
   border-radius: var(--radio-2xl);
-  background: rgba(24, 25, 30, 0.7);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(24, 25, 30, 0.6);
-  box-shadow: var(--sombra-sm);
+  border: 2px solid var(--color-onyx);
+  box-shadow: var(--sombra-neo);
   transition: all var(--transicion-normal);
   animation: fadeInUp 0.5s ease-out backwards;
 }
@@ -145,58 +143,30 @@
 .kpiTarjeta:nth-child(4) { animation-delay: 0.2s; }
 
 .kpiTarjeta:hover {
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: var(--sombra-lg);
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0 #000000;
 }
 
-/* Círculo decorativo de fondo */
-.kpiTarjeta::before {
-  content: '';
-  position: absolute;
-  top: -30px;
-  right: -30px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  opacity: 0.08;
-  z-index: 0;
-}
-
-/* Variantes de color de KPI */
-.kpiGastos::before { background: var(--color-secundario); }
-.kpiRecaudado::before { background: var(--color-exito); }
-.kpiPendiente::before { background: var(--color-advertencia); }
-.kpiTasa::before { background: var(--color-info); }
+/* Variantes de fondo sólido */
+.kpiGastos { background: var(--color-pumpkin-spice); }
+.kpiRecaudado { background: var(--color-spring-green); }
+.kpiPendiente { background: var(--color-school-bus-yellow); }
+.kpiTasa { background: var(--color-hot-pink-web); }
 
 .kpiIcono {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radio-xl);
-  font-size: 1.2rem;
-  box-shadow: var(--sombra-sm);
+  border-radius: var(--radio-lg);
+  font-size: 1.3rem;
+  background: var(--color-onyx);
+  color: var(--color-blanco-calido);
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
   position: relative;
   z-index: 1;
-}
-
-.kpiGastos .kpiIcono {
-  background: linear-gradient(135deg, var(--color-secundario), var(--color-primario));
-  color: white;
-}
-.kpiRecaudado .kpiIcono {
-  background: linear-gradient(135deg, var(--color-exito), var(--color-exito));
-  color: white;
-}
-.kpiPendiente .kpiIcono {
-  background: linear-gradient(135deg, var(--color-advertencia), var(--color-advertencia));
-  color: white;
-}
-.kpiTasa .kpiIcono {
-  background: linear-gradient(135deg, var(--color-info), var(--color-primario));
-  color: white;
 }
 
 .kpiContenido {
@@ -212,22 +182,24 @@
   font-size: var(--texto-xl);
   font-weight: var(--peso-extrabold);
   line-height: var(--interlineado-tight);
-  color: var(--color-texto);
+  color: var(--color-onyx);
   white-space: nowrap;
 }
 
 .kpiEtiqueta {
   font-size: var(--texto-xs);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto-secundario);
+  font-weight: var(--peso-bold);
+  color: var(--color-onyx);
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  opacity: 0.85;
 }
 
 .kpiSubtexto {
   font-size: var(--texto-xs);
-  color: var(--color-texto-terciario);
+  color: var(--color-onyx);
   font-weight: var(--peso-medium);
+  opacity: 0.7;
 }
 
 /* Badge de tasa de recaudación */
@@ -243,9 +215,9 @@
   margin-top: var(--espacio-1);
 }
 
-.tasaAlta { background: hsla(152, 52%, 58%, 0.12); color: var(--color-exito); }
-.tasaMedia { background: hsla(262, 100%, 72%, 0.12); color: var(--color-advertencia); }
-.tasaBaja { background: hsla(8, 100%, 69%, 0.12); color: var(--color-error); }
+.tasaAlta { background: var(--color-spring-green-light); color: var(--color-exito); }
+.tasaMedia { background: var(--color-school-bus-yellow-light); color: var(--color-advertencia); }
+.tasaBaja { background: var(--color-pumpkin-spice-light); color: var(--color-error); }
 
 /* --- Grid de Contenido (2 columnas) --- */
 .contenidoGrid {
@@ -256,9 +228,9 @@
 
 /* --- Tarjeta Glassmorphism (reutilizable) --- */
 .tarjeta {
-  background: rgba(24, 25, 30, 0.65);
+  background: rgba(19, 22, 20, 0.65);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(24, 25, 30, 0.5);
+  border: 1px solid rgba(19, 22, 20, 0.5);
   border-radius: var(--radio-2xl);
   padding: var(--espacio-8);
   box-shadow: var(--sombra-sm);
@@ -327,7 +299,7 @@
 .egresoBarra {
   width: 100%;
   height: 8px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 248, 240, 0.05);
   border-radius: var(--radio-full);
   overflow: hidden;
 }
@@ -358,7 +330,7 @@
   text-align: center;
   padding: var(--espacio-4);
   border-radius: var(--radio-xl);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 248, 240, 0.03);
   border: 1px solid var(--color-borde);
   transition: all var(--transicion-normal);
 }
@@ -393,7 +365,7 @@
   display: flex;
   border-radius: var(--radio-full);
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 248, 240, 0.05);
   margin-bottom: var(--espacio-6);
 }
 
@@ -540,12 +512,12 @@
 }
 
 .estadoPublicado {
-  background: hsla(152, 52%, 58%, 0.12);
+  background: var(--color-spring-green-light);
   color: var(--color-exito);
 }
 
 .estadoBorrador {
-  background: hsla(262, 100%, 72%, 0.12);
+  background: var(--color-school-bus-yellow-light);
   color: var(--color-advertencia);
 }
 
@@ -563,17 +535,17 @@
   gap: var(--espacio-2);
   padding: var(--espacio-2) var(--espacio-4);
   border-radius: var(--radio-full);
-  background: rgba(163, 112, 255, 0.08);
+  background: var(--color-hot-pink-web-light);
   color: var(--color-secundario);
   font-size: var(--texto-sm);
   font-weight: var(--peso-semibold);
-  border: 1px solid rgba(163, 112, 255, 0.15);
+  border: 1px solid var(--color-hot-pink-web);
   text-transform: capitalize;
   transition: all var(--transicion-normal);
 }
 
 .pasarelaBadge:hover {
-  background: rgba(163, 112, 255, 0.15);
+  background: var(--color-hot-pink-web);
   transform: translateY(-2px);
   box-shadow: var(--sombra-sm);
 }
@@ -586,7 +558,7 @@
   justify-content: center;
   padding: var(--espacio-16) var(--espacio-8);
   text-align: center;
-  background: rgba(24, 25, 30, 0.5);
+  background: rgba(19, 22, 20, 0.5);
   backdrop-filter: blur(16px);
   border-radius: var(--radio-2xl);
   border: 1px dashed var(--color-borde);
@@ -620,19 +592,19 @@
   gap: var(--espacio-3);
   padding: var(--espacio-3) var(--espacio-4);
   border-radius: var(--radio-lg);
-  background: hsla(262, 100%, 72%, 0.08);
+  background: var(--color-school-bus-yellow-light);
   color: var(--color-info);
   font-size: var(--texto-sm);
   font-weight: var(--peso-medium);
-  border: 1px solid hsla(262, 100%, 72%, 0.15);
+  border: 1px solid var(--color-school-bus-yellow);
   animation: fadeInUp 0.4s ease-out;
 }
 
 /* --- Error --- */
 .error {
   padding: var(--espacio-4);
-  background: hsla(8, 100%, 69%, 0.08);
-  border: 1px solid hsla(8, 100%, 69%, 0.2);
+  background: var(--color-pumpkin-spice-light);
+  border: 1px solid var(--color-pumpkin-spice);
   border-radius: var(--radio-lg);
   color: var(--color-error);
   font-size: var(--texto-sm);
@@ -651,9 +623,9 @@
 .esqueleto {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.04) 25%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.04) 75%
+    rgba(255, 248, 240, 0.05) 25%,
+    rgba(255, 248, 240, 0.08) 50%,
+    rgba(255, 248, 240, 0.05) 75%
   );
   background-size: 200% 100%;
   animation: pulso 1.5s ease-in-out infinite;
