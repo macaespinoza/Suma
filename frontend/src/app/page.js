@@ -17,8 +17,8 @@ import Logo from '../componentes/ui/Logo.jsx';
 /** Pantalla de inicio de sesión, diseño 100% mobile-first. */
 export default function PaginaInicio() {
   const router = useRouter();
-  const [email, setEmail]                     = useState('');
-  const [password, setPassword]               = useState('');
+  const [email, setEmail]                     = useState('demo@suma.cl');
+  const [password, setPassword]               = useState('demo123');
   const [error, setError]                     = useState('');
   const [cargando, setCargando]               = useState(false);
   const [mostrarPassword, setMostrarPassword] = useState(false);
