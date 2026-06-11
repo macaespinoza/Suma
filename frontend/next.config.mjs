@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Optimización para despliegue en Cloud Run (output standalone).
-  output: 'standalone',
+  // output: 'export',
 
   // Variables de entorno públicas accesibles desde el cliente.
   env: {
@@ -10,6 +10,7 @@ const nextConfig = {
 
   // Configuración de imágenes remotas (Cloud Storage).
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
