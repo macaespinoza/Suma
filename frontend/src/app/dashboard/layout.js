@@ -8,6 +8,7 @@
 import { usePathname } from 'next/navigation';
 import { Bell } from '@phosphor-icons/react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import styles from './layout.module.css';
 import Logo from '../../componentes/ui/Logo.jsx';
 import BottomNav from '../../componentes/ui/BottomNav.jsx';
@@ -83,7 +84,18 @@ export default function LayoutDashboard({ children }) {
         id="contenido-principal"
         tabIndex={-1}
       >
-        {children}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* ===== Bottom Navigation Bar ===== */}

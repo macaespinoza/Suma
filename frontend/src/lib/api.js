@@ -60,7 +60,15 @@ const obtenerToken = async () => {
  * @returns {Promise<object>} Datos de la respuesta.
  * @throws {ErrorAPI} Si la respuesta no es exitosa.
  */
+import { interceptarRuta } from './mocks';
+
 export const peticion = async (ruta, opciones = {}) => {
+  // === MOCK INTERCEPTION PARA PROTOTIPO CORFO ===
+  if (process.env.NEXT_PUBLIC_USE_MOCKS !== 'false') {
+    return await interceptarRuta(ruta, opciones.metodo || 'GET', opciones.cuerpo);
+  }
+  // ===============================================
+
   const {
     metodo = 'GET',
     cuerpo = null,

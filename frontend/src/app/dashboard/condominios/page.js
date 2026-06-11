@@ -16,6 +16,7 @@ import {
   Warning,
   Plus,
 } from '@phosphor-icons/react';
+import { motion } from 'framer-motion';
 import styles from './page.module.css';
 
 // ---------------------------------------------------------------------------
@@ -142,17 +143,28 @@ export default function PaginaCondominios() {
       {/* ===== Bloques ===== */}
       <section aria-label="Bloques del condominio" className={styles.seccion}>
         <h2 className={styles.seccionTitulo}>Bloques</h2>
-        <div className={styles.bloquesList}>
+        <motion.div
+          className={styles.bloquesList}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+          }}
+        >
           {c.bloques.map((bloque, i) => {
             const { pagadas, pendientes, morosas } = bloque.estado_pago;
             const total = bloque.unidades_total;
             const tasaPago = Math.round((pagadas / total) * 100);
 
             return (
-              <article
+              <motion.article
                 key={bloque.id}
                 className={styles.bloqueCard}
-                style={{ animationDelay: `${i * 0.08}s` }}
+                variants={{
+                  hidden: { opacity: 0, scale: 0.95 },
+                  visible: { opacity: 1, scale: 1 }
+                }}
                 aria-label={`${bloque.nombre}: ${total} unidades, ${bloque.pisos} pisos, tasa de pago ${tasaPago}%`}
               >
                 <div className={styles.bloqueHeader}>
@@ -185,15 +197,17 @@ export default function PaginaCondominios() {
 
                 {/* Barra de progreso */}
                 <div className={styles.barraProgreso} aria-hidden="true">
-                  <div
+                  <motion.div
                     className={styles.barraRelleno}
-                    style={{ width: `${tasaPago}%` }}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${tasaPago}%` }}
+                    transition={{ duration: 1, delay: 0.2 + (i * 0.1), ease: "easeOut" }}
                   />
                 </div>
-              </article>
+              </motion.article>
             );
           })}
-        </div>
+        </motion.div>
       </section>
 
       {/* FAB Agregar condominio */}

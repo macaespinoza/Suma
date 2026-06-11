@@ -7,6 +7,7 @@
 'use client';
 
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Megaphone,
   CalendarBlank,
@@ -146,130 +147,152 @@ export default function PaginaComunidad() {
       </div>
 
       {/* ===== Panel: Feed ===== */}
-      {tabActiva === 0 && (
-        <div
-          id="panel-feed"
-          role="tabpanel"
-          aria-labelledby="tab-feed"
-          className={styles.panel}
-        >
-          {MOCK_FEED.map((pub, i) => (
-            <article
-              key={pub.id}
-              className={styles.publicacionCard}
-              style={{ animationDelay: `${i * 0.07}s` }}
-              aria-label={`Publicación de ${pub.autor}: ${pub.contenido.slice(0, 50)}…`}
-            >
-              {/* Cabecera */}
-              <div className={styles.pubHeader}>
-                <div
-                  className={`${styles.pubAvatar} ${styles[`avatar--${pub.color}`]}`}
-                  aria-hidden="true"
-                >
-                  {pub.autor.charAt(0)}
-                </div>
-                <div className={styles.pubInfo}>
-                  <p className={styles.pubAutor}>{pub.autor}</p>
-                  <p className={styles.pubMeta}>
-                    <span className={styles.pubUnidad}>{pub.unidad}</span>
-                    <span aria-hidden="true">·</span>
-                    <time>{pub.tiempo}</time>
-                  </p>
-                </div>
-                <span
-                  className={`${styles.tipoBadge} ${styles[`tipo--${pub.color}`]}`}
-                  aria-label={`Tipo: ${TIPO_LABEL[pub.tipo]}`}
-                >
-                  {TIPO_ICONO[pub.tipo]}
-                  {TIPO_LABEL[pub.tipo]}
-                </span>
-              </div>
-
-              {/* Contenido */}
-              <p className={styles.pubContenido}>{pub.contenido}</p>
-
-              {/* Acciones */}
-              <div className={styles.pubAcciones}>
-                <button
-                  className={styles.btnAccion}
-                  aria-label={`${pub.reacciones} reacciones. Me gusta`}
-                  type="button"
-                >
-                  <Heart size={16} weight="regular" aria-hidden="true" />
-                  <span>{pub.reacciones}</span>
-                </button>
-                <button
-                  className={styles.btnAccion}
-                  aria-label={`${pub.comentarios} comentarios. Comentar`}
-                  type="button"
-                >
-                  <Chat size={16} weight="regular" aria-hidden="true" />
-                  <span>{pub.comentarios}</span>
-                </button>
-              </div>
-            </article>
-          ))}
-
-          {/* FAB Publicar */}
-          <button
-            className={styles.fab}
-            aria-label="Crear nueva publicación en el muro comunitario"
-            type="button"
+      <AnimatePresence mode="wait">
+        {tabActiva === 0 && (
+          <motion.div
+            id="panel-feed"
+            role="tabpanel"
+            aria-labelledby="tab-feed"
+            className={styles.panel}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+            }}
           >
-            <Plus size={22} weight="bold" aria-hidden="true" />
-          </button>
-        </div>
-      )}
+            {MOCK_FEED.map((pub, i) => (
+              <motion.article
+                key={pub.id}
+                className={styles.publicacionCard}
+                aria-label={`Publicación de ${pub.autor}: ${pub.contenido.slice(0, 50)}…`}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                {/* Cabecera */}
+                <div className={styles.pubHeader}>
+                  <div
+                    className={`${styles.pubAvatar} ${styles[`avatar--${pub.color}`]}`}
+                    aria-hidden="true"
+                  >
+                    {pub.autor.charAt(0)}
+                  </div>
+                  <div className={styles.pubInfo}>
+                    <p className={styles.pubAutor}>{pub.autor}</p>
+                    <p className={styles.pubMeta}>
+                      <span className={styles.pubUnidad}>{pub.unidad}</span>
+                      <span aria-hidden="true">·</span>
+                      <time>{pub.tiempo}</time>
+                    </p>
+                  </div>
+                  <span
+                    className={`${styles.tipoBadge} ${styles[`tipo--${pub.color}`]}`}
+                    aria-label={`Tipo: ${TIPO_LABEL[pub.tipo]}`}
+                  >
+                    {TIPO_ICONO[pub.tipo]}
+                    {TIPO_LABEL[pub.tipo]}
+                  </span>
+                </div>
 
-      {/* ===== Panel: Mercadito ===== */}
-      {tabActiva === 1 && (
-        <div
-          id="panel-mercadito"
-          role="tabpanel"
-          aria-labelledby="tab-mercadito"
-          className={styles.panel}
-        >
-          <p className={styles.panelSubtitulo}>
-            Compra, vende o intercambia con tus vecinos del Condominio Chinchorro.
-          </p>
-          {MOCK_MERCADITO.map((item, i) => (
-            <article
-              key={item.id}
-              className={styles.mercaditoCard}
-              style={{ animationDelay: `${i * 0.07}s` }}
-              aria-label={`${item.titulo} — ${item.precio}, publicado por unidad ${item.unidad}`}
+                {/* Contenido */}
+                <p className={styles.pubContenido}>{pub.contenido}</p>
+
+                {/* Acciones */}
+                <div className={styles.pubAcciones}>
+                  <button
+                    className={styles.btnAccion}
+                    aria-label={`${pub.reacciones} reacciones. Me gusta`}
+                    type="button"
+                  >
+                    <Heart size={16} weight="regular" aria-hidden="true" />
+                    <span>{pub.reacciones}</span>
+                  </button>
+                  <button
+                    className={styles.btnAccion}
+                    aria-label={`${pub.comentarios} comentarios. Comentar`}
+                    type="button"
+                  >
+                    <Chat size={16} weight="regular" aria-hidden="true" />
+                    <span>{pub.comentarios}</span>
+                  </button>
+                </div>
+              </motion.article>
+            ))}
+
+            {/* FAB Publicar */}
+            <button
+              className={styles.fab}
+              aria-label="Crear nueva publicación en el muro comunitario"
+              type="button"
             >
-              <div className={styles.mercaditoEmoji} aria-hidden="true">
-                {item.emoji}
-              </div>
-              <div className={styles.mercaditoInfo}>
-                <p className={styles.mercaditoTitulo}>{item.titulo}</p>
-                <p className={styles.mercaditoDesc}>{item.descripcion}</p>
-                <p className={styles.mercaditoMeta}>Unidad {item.unidad}</p>
-              </div>
-              <div className={styles.mercaditorDerecha}>
-                <span className={styles.mercaditorPrecio}>{item.precio}</span>
-                <button
-                  className={styles.btnContactar}
-                  type="button"
-                  aria-label={`Contactar vecino de unidad ${item.unidad} por ${item.titulo}`}
-                >
-                  <Chat size={14} aria-hidden="true" />
-                </button>
-              </div>
-            </article>
-          ))}
+              <Plus size={22} weight="bold" aria-hidden="true" />
+            </button>
+          </motion.div>
+        )}
 
-          {/* FAB Publicar */}
-          <button
-            className={styles.fab}
-            aria-label="Publicar nuevo artículo en el Mercadito"
-            type="button"
+        {/* ===== Panel: Mercadito ===== */}
+        {tabActiva === 1 && (
+          <motion.div
+            id="panel-mercadito"
+            role="tabpanel"
+            aria-labelledby="tab-mercadito"
+            className={styles.panel}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+              hidden: { opacity: 0 },
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+            }}
           >
-            <Plus size={22} weight="bold" aria-hidden="true" />
-          </button>
-        </div>
-      )}
+            <p className={styles.panelSubtitulo}>
+              Compra, vende o intercambia con tus vecinos del Condominio Chinchorro.
+            </p>
+            {MOCK_MERCADITO.map((item, i) => (
+              <motion.article
+                key={item.id}
+                className={styles.mercaditoCard}
+                aria-label={`${item.titulo} — ${item.precio}, publicado por unidad ${item.unidad}`}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0 }
+                }}
+              >
+                <div className={styles.mercaditoEmoji} aria-hidden="true">
+                  {item.emoji}
+                </div>
+                <div className={styles.mercaditoInfo}>
+                  <p className={styles.mercaditoTitulo}>{item.titulo}</p>
+                  <p className={styles.mercaditoDesc}>{item.descripcion}</p>
+                  <p className={styles.mercaditoMeta}>Unidad {item.unidad}</p>
+                </div>
+                <div className={styles.mercaditorDerecha}>
+                  <span className={styles.mercaditorPrecio}>{item.precio}</span>
+                  <button
+                    className={styles.btnContactar}
+                    type="button"
+                    aria-label={`Contactar vecino de unidad ${item.unidad} por ${item.titulo}`}
+                  >
+                    <Chat size={14} aria-hidden="true" />
+                  </button>
+                </div>
+              </motion.article>
+            ))}
+
+            {/* FAB Publicar */}
+            <button
+              className={styles.fab}
+              aria-label="Publicar nuevo artículo en el Mercadito"
+              type="button"
+            >
+              <Plus size={22} weight="bold" aria-hidden="true" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
 
     </div>
