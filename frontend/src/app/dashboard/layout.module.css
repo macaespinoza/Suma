@@ -1,274 +1,145 @@
 /* =============================================================================
- * SUMA — Estilos del Layout Dashboard (Neo-Brutalismo Oscuro Premium)
- * CSS Modules para el sidebar, header y contenido principal.
+ * SUMA — Dashboard Layout Styles (Mobile-First, Material Design 3)
  * ============================================================================= */
 
-.layoutDashboard {
+/* --- Shell: contenedor raíz de toda la app --- */
+.shell {
   display: flex;
+  flex-direction: column;
   min-height: 100dvh;
+  max-width: var(--max-movil, 430px);
+  margin: 0 auto;
   position: relative;
-  z-index: 1;
-  background: transparent;
+  background: var(--color-fondo);
+  /* Sombra lateral para simular app en desktop */
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.15);
 }
 
 /* =============================================================================
- * SIDEBAR (Estructural, plano, sin glassmorphism)
+ * TOP APP BAR
  * ============================================================================= */
-.sidebar {
-  width: var(--sidebar-ancho);
-  display: flex;
-  flex-direction: column;
+.topBar {
   position: fixed;
-  top: 16px;
-  left: 16px;
-  bottom: 16px;
-  z-index: 100;
-  overflow-y: auto;
-  border-radius: var(--radio-xl);
-  background: var(--color-superficie);
-  border: 1.5px solid var(--color-borde);
-  box-shadow: var(--sombra-neo);
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-movil, 430px);
+  height: var(--appbar-alto, 64px);
+  background: rgba(19, 22, 20, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: none;
+  z-index: 90;
 }
 
-.sidebarHeader {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-3);
-  padding: var(--espacio-6);
-  border-bottom: 1px solid var(--color-borde);
-}
-
-.sidebarLogo {
-  width: 32px;
-  height: auto;
-  color: var(--color-texto);
-}
-
-.sidebarTitulo {
-  font-size: var(--texto-2xl);
-  font-weight: var(--peso-extrabold);
-  color: var(--color-texto);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-/* --- Navegacion --- */
-.sidebarNav {
-  flex: 1;
-  padding: var(--espacio-4);
-  overflow-y: auto;
-}
-
-.navLista {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-2);
-}
-
-.navItem {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-3);
-  padding: var(--espacio-3) var(--espacio-4);
-  border-radius: var(--radio-lg);
-  font-size: var(--texto-sm);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto-secundario);
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  border: 1.5px solid transparent;
-}
-
-.navItem:hover {
-  background: var(--color-superficie-elevada);
-  color: var(--color-texto);
-}
-
-.navItemActivo {
-  background: var(--color-primario);
-  color: var(--color-texto-invertido);
-  font-weight: var(--peso-bold);
-  border: 1.5px solid var(--color-emerald-depths);
-  box-shadow: var(--sombra-neo-primario);
-}
-
-.navItemActivo:hover {
-  color: var(--color-texto-invertido);
-  background: var(--color-primario-hover);
-}
-
-.navItemDeshabilitado {
-  opacity: 0.35;
-  cursor: not-allowed;
-  pointer-events: none;
-}
-
-.sidebarLogoLink {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-3);
-  text-decoration: none;
-}
-
-.navIcono {
-  font-size: 1.25rem;
-  width: 28px;
-  text-align: center;
-}
-
-.navSeparador {
-  font-size: var(--texto-xs);
-  font-weight: var(--peso-bold);
-  color: var(--color-texto-terciario);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  padding: var(--espacio-4) var(--espacio-4) var(--espacio-2);
-  margin-top: var(--espacio-2);
-}
-
-/* --- Footer del Sidebar (Usuario) --- */
-.sidebarFooter {
-  padding: var(--espacio-4);
-  margin: var(--espacio-4);
-  margin-top: auto;
-  border-radius: var(--radio-lg);
-  background: var(--color-superficie-elevada);
-  border: 1.5px solid var(--color-borde);
-}
-
-.usuarioInfo {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-3);
-}
-
-.usuarioAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radio-full);
-  background: var(--color-primario);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-  color: var(--color-texto-invertido);
-}
-
-.usuarioNombre {
-  font-size: var(--texto-sm);
-  font-weight: var(--peso-bold);
-  color: var(--color-texto);
-}
-
-.usuarioRol {
-  font-size: var(--texto-xs);
-  color: var(--color-texto-secundario);
-}
-
-/* =============================================================================
- * CONTENIDO PRINCIPAL
- * ============================================================================= */
-.contenidoPrincipal {
-  flex: 1;
-  margin-left: calc(var(--sidebar-ancho) + 32px);
-  display: flex;
-  flex-direction: column;
-  padding: 16px;
-  padding-left: 0;
-  position: relative;
-  z-index: 10;
-}
-
-/* --- Header (Estructural, plano) --- */
-.header {
-  height: var(--header-alto);
+.topBarContenido {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 var(--espacio-8);
-  border-radius: var(--radio-xl);
-  margin-bottom: var(--espacio-4);
-  background: var(--color-superficie);
-  border: 1.5px solid var(--color-borde);
-  box-shadow: var(--sombra-neo);
+  height: 100%;
+  padding: 0 1.25rem;
 }
 
-.headerTitulo {
-  font-size: var(--texto-lg);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto);
-  letter-spacing: 0.02em;
-}
-
-.headerDerecha {
+.topBarIzquierda {
   display: flex;
   align-items: center;
-  gap: var(--espacio-4);
+  min-width: 0;
+  flex: 1;
 }
 
-.headerIcono {
-  font-size: 1.25rem;
-  cursor: pointer;
-  padding: var(--espacio-2);
-  border-radius: var(--radio-md);
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 4px 0;
+}
+
+.logoTop {
+  height: 26px;
+  width: auto;
+  color: var(--color-spring-green);
+  filter: none;
+}
+
+.topBarTitulo {
+  font-family: var(--fuente-titulos), sans-serif;
+  font-weight: var(--peso-bold);
+  font-size: var(--texto-lg);
+  color: var(--color-blanco-calido);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+/* --- Acciones (derecha) --- */
+.topBarAcciones {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.btnIcono {
   position: relative;
-}
-
-.headerIcono:hover {
-  background: var(--color-superficie-elevada);
-  color: var(--color-primario);
-}
-
-/* Notificacion badge */
-.headerIcono::after {
-  content: '';
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  width: 8px;
-  height: 8px;
-  background: var(--color-acento);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
   border-radius: 50%;
-  border: 2px solid var(--color-superficie);
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: background var(--transicion-rapida), color var(--transicion-rapida);
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* --- Area de Contenido --- */
+.btnIcono:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-blanco-calido);
+}
+
+.btnIcono:focus-visible {
+  outline: 2.5px solid var(--color-spring-green);
+  outline-offset: 2px;
+}
+
+.badgeNotif {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 16px;
+  height: 16px;
+  background: var(--color-hot-pink-web);
+  color: white;
+  font-size: 9px;
+  font-weight: var(--peso-bold);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* =============================================================================
+ * MAIN — Área scrollable central
+ * ============================================================================= */
 .main {
   flex: 1;
-  padding: var(--espacio-4) var(--espacio-8) var(--espacio-8) var(--espacio-8);
-  animation: fadeInUp 0.3s ease-out;
-}
-
-/* --- Responsive (ocultar sidebar en mobile) --- */
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(-120%);
-    top: 0;
-    left: 0;
-    bottom: 0;
-    border-radius: 0;
-    margin: 0;
-    width: 80%;
-    max-width: 300px;
-  }
-
-  .sidebar.abierto {
-    transform: translateX(0);
-  }
-
-  .contenidoPrincipal {
-    margin-left: 0;
-    padding: var(--espacio-4);
-  }
-
-  .header {
-    border-radius: var(--radio-lg);
-    padding: 0 var(--espacio-4);
-  }
-
-  .main {
-    padding: var(--espacio-4) 0;
-  }
+  /* Compensar altura de TopBar y BottomNav */
+  margin-top: calc(var(--appbar-alto, 64px) + 8px);
+  padding-bottom: calc(var(--navbar-alto, 72px) + 32px);
+  padding-top: 1.5rem;
+  background: var(--color-blanco-calido);
+  border-radius: 32px 32px 0 0;
+  color: var(--color-onyx);
+  overflow-y: auto;
+  overflow-x: hidden;
+  /* Scroll suave */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }

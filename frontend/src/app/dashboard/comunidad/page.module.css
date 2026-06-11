@@ -1,0 +1,336 @@
+/* =============================================================================
+ * SUMA — Pantalla Comunidad Styles (Mobile-First, Material Design 3)
+ * ============================================================================= */
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  min-height: calc(100vh - 136px);
+}
+
+/* =============================================================================
+ * TABS
+ * ============================================================================= */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem 0;
+  border-bottom: 1.5px solid var(--color-borde);
+  position: sticky;
+  top: 0;
+  background: var(--color-fondo);
+  z-index: 10;
+  margin-bottom: 0;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.625rem 0.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  margin-bottom: -1.5px;
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    color var(--transicion-normal),
+    border-color var(--transicion-normal);
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab:hover {
+  color: var(--color-texto-secundario);
+}
+
+.tabActiva {
+  color: var(--color-primario);
+  border-bottom-color: var(--color-primario);
+}
+
+.tab:focus-visible {
+  outline: 2.5px solid var(--color-spring-green);
+  outline-offset: -2px;
+  border-radius: var(--radio-sm) var(--radio-sm) 0 0;
+}
+
+/* =============================================================================
+ * PANEL GENÉRICO
+ * ============================================================================= */
+.panel {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  position: relative;
+  padding-bottom: 5rem; /* espacio para FAB */
+}
+
+.panelSubtitulo {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+  margin-bottom: 0.25rem;
+}
+
+/* =============================================================================
+ * FEED — PUBLICACIONES
+ * ============================================================================= */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.publicacionCard {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  box-shadow: var(--elevacion-1);
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/* Cabecera de publicación */
+.pubHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.pubAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-bold);
+  color: var(--color-onyx);
+  flex-shrink: 0;
+}
+
+.avatar--amarillo { background: var(--color-school-bus-yellow); }
+.avatar--verde    { background: var(--color-spring-green); }
+.avatar--rosa     { background: var(--color-hot-pink-web); }
+.avatar--naranja  { background: var(--color-pumpkin-spice); }
+
+.pubInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.pubAutor {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.pubMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
+}
+
+.pubUnidad {
+  color: var(--color-primario);
+  font-weight: var(--peso-medium);
+}
+
+/* Badge de tipo */
+.tipoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 3px 8px;
+  border-radius: var(--radio-full);
+  font-size: 10px;
+  font-weight: var(--peso-bold);
+  flex-shrink: 0;
+}
+
+.tipo--amarillo { background: var(--color-school-bus-yellow-light); color: var(--color-school-bus-yellow); }
+.tipo--verde    { background: var(--color-spring-green-light);      color: var(--color-spring-green); }
+.tipo--rosa     { background: var(--color-hot-pink-web-light);      color: var(--color-hot-pink-web); }
+
+/* Texto de publicación */
+.pubContenido {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  line-height: 1.55;
+}
+
+/* Acciones */
+.pubAcciones {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--color-borde);
+}
+
+.btnAccion {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+  border: none;
+  color: var(--color-texto-terciario);
+  font-size: var(--texto-sm);
+  cursor: pointer;
+  padding: 0.375rem 0.5rem;
+  min-height: 36px;
+  border-radius: var(--radio-md);
+  font-family: inherit;
+  transition: color var(--transicion-normal), background var(--transicion-rapida);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btnAccion:hover {
+  color: var(--color-texto-secundario);
+  background: var(--color-superficie-elevada);
+}
+
+.btnAccion:focus-visible {
+  outline: 2.5px solid var(--color-spring-green);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+ * MERCADITO
+ * ============================================================================= */
+.mercaditoCard {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  box-shadow: var(--elevacion-1);
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+.mercaditoEmoji {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radio-lg);
+  background: var(--color-superficie-elevada);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  flex-shrink: 0;
+}
+
+.mercaditoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.mercaditoTitulo {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.mercaditoDesc {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
+}
+
+.mercaditoMeta {
+  font-size: var(--texto-xs);
+  color: var(--color-spring-green);
+  font-weight: var(--peso-medium);
+  margin-top: 4px;
+}
+
+.mercaditorDerecha {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mercaditorPrecio {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-bold);
+  color: var(--color-school-bus-yellow);
+  white-space: nowrap;
+}
+
+.btnContactar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-spring-green-light);
+  border: 1px solid rgba(77, 237, 151, 0.25);
+  color: var(--color-spring-green);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transicion-normal);
+}
+
+.btnContactar:hover {
+  background: rgba(77, 237, 151, 0.2);
+}
+
+
+/* =============================================================================
+ * FAB — Floating Action Button
+ * ============================================================================= */
+.fab {
+  position: fixed;
+  bottom: calc(var(--navbar-alto, 72px) + 1.25rem);
+  right: calc(50% - 215px); /* centrado dentro del max-width 430px */
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-spring-green);
+  color: var(--color-onyx);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(77, 237, 151, 0.4);
+  transition:
+    transform var(--transicion-rapida),
+    box-shadow var(--transicion-normal);
+  z-index: 80;
+}
+
+.fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 28px rgba(77, 237, 151, 0.5);
+}
+
+.fab:active {
+  transform: scale(0.95);
+}
+
+.fab:focus-visible {
+  outline: 3px solid var(--color-spring-green);
+  outline-offset: 3px;
+}
+
+/* En mobile real, el FAB va a la derecha estándar */
+@media (max-width: 480px) {
+  .fab {
+    right: 1.25rem;
+  }
+}

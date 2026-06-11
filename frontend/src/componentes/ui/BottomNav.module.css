@@ -1,0 +1,92 @@
+/* =============================================================================
+ * SUMA — BottomNav Styles (Material Design 3 Navigation Bar)
+ * ============================================================================= */
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: var(--max-movil, 430px);
+  height: var(--navbar-alto, 72px);
+  background: rgba(19, 22, 20, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: none;
+  display: flex;
+  align-items: stretch;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* --- Ítem de navegación --- */
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  position: relative;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  padding: 8px 4px 12px;
+  min-height: 44px; /* WCAG 2.2 tap target */
+  -webkit-tap-highlight-color: transparent;
+  transition: color var(--transicion-normal);
+}
+
+.item:hover {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.item:focus-visible {
+  outline: 2.5px solid var(--color-spring-green);
+  outline-offset: -2px;
+  border-radius: var(--radio-sm);
+}
+
+/* --- Ítem activo --- */
+.itemActivo {
+  color: var(--color-spring-green);
+}
+
+/* --- Indicador pill superior (activo) --- */
+.indicador {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 32px;
+  height: 3px;
+  border-radius: 0 0 4px 4px;
+  background: var(--color-spring-green);
+  opacity: 0;
+  transition: opacity var(--transicion-normal), width var(--transicion-normal);
+}
+
+.itemActivo .indicador {
+  opacity: 1;
+}
+
+/* --- Ícono --- */
+.icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform var(--transicion-rapida);
+}
+
+.itemActivo .icono {
+  transform: translateY(-1px);
+}
+
+/* --- Etiqueta texto --- */
+.etiqueta {
+  font-size: 10px;
+  font-weight: var(--peso-semibold);
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1;
+}

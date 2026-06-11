@@ -21,11 +21,11 @@
   --color-emerald-depths: #074e36;
   --color-blanco-calido: #fff8f0;
 
-  /* --- Derivados estructurales (capas sobre Onyx) --- */
-  --color-superficie-base: #1c1f1d;
-  --color-superficie-elevada-base: #252927;
-  --color-borde-base: #2f3330;
-  --color-borde-subtle-base: #3a3f3c;
+  /* --- Derivados estructurales (Light Mode Amigable) --- */
+  --color-superficie-base: #ffffff;
+  --color-superficie-elevada-base: #f5f5f4;
+  --color-borde-base: #e5e3df;
+  --color-borde-subtle-base: #f0eee9;
 
   /* --- Acentos Derivados (hover / light) --- */
   --color-spring-green-hover: #3dd98a;
@@ -43,10 +43,17 @@
   --color-emerald-depths-hover: #0a6648;
   --color-emerald-depths-light: rgba(7, 78, 54, 0.14);
 
+  /* --- Variantes WCAG AA para Texto sobre fondo claro (Contraste >= 4.5:1) --- */
+  --color-spring-green-texto: #1c8c54;
+  --color-hot-pink-texto: #c42672;
+  --color-pumpkin-spice-texto: #bd5500;
+  --color-school-bus-yellow-texto: #8a6800;
+  --color-emerald-depths-texto: var(--color-emerald-depths); /* Ya cumple (10.4:1) */
+
   /* --- Semanticos (Neobrutalismo Colorido) --- */
-  --color-primario: var(--color-spring-green);
-  --color-primario-hover: var(--color-spring-green-hover);
-  --color-primario-light: var(--color-spring-green-light);
+  --color-primario: var(--color-emerald-depths);
+  --color-primario-hover: var(--color-emerald-depths-hover);
+  --color-primario-light: var(--color-emerald-depths-light);
 
   --color-secundario: var(--color-emerald-depths);
   --color-secundario-hover: var(--color-emerald-depths-hover);
@@ -54,11 +61,11 @@
   --color-acento: var(--color-hot-pink-web);
   --color-acento-hover: var(--color-hot-pink-web-hover);
 
-  --color-exito: var(--color-spring-green);
-  --color-advertencia: var(--color-school-bus-yellow);
-  --color-error: var(--color-pumpkin-spice);
-  --color-error-hover: var(--color-pumpkin-spice-hover);
-  --color-info: var(--color-school-bus-yellow);
+  --color-exito: var(--color-spring-green-texto);
+  --color-advertencia: var(--color-school-bus-yellow-texto);
+  --color-error: var(--color-pumpkin-spice-texto);
+  --color-error-hover: #994400;
+  --color-info: var(--color-emerald-depths-texto);
 
   /* --- Neutros Estructurales --- */
   --color-fondo: var(--color-onyx);
@@ -66,26 +73,26 @@
   --color-superficie-elevada: var(--color-superficie-elevada-base);
   --color-borde: var(--color-borde-base);
   --color-borde-subtle: var(--color-borde-subtle-base);
-  --color-borde-focus: var(--color-spring-green);
+  --color-borde-focus: var(--color-emerald-depths);
 
   /* --- Texto --- */
-  --color-texto: var(--color-blanco-calido);
-  --color-texto-secundario: #c8c5c0;
-  --color-texto-terciario: #8a8782;
-  --color-texto-invertido: var(--color-onyx);
+  --color-texto: var(--color-onyx);
+  --color-texto-secundario: #4b524e;
+  --color-texto-terciario: #737875;
+  --color-texto-invertido: #ffffff;
 
   /* --- Tipografia --- */
   --fuente-principal: var(--fuente-cuerpo), -apple-system, BlinkMacSystemFont, sans-serif;
   --fuente-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-  --texto-xs: 0.75rem;     /* 12px */
-  --texto-sm: 0.875rem;    /* 14px */
-  --texto-base: 1rem;      /* 16px */
-  --texto-lg: 1.125rem;    /* 18px */
-  --texto-xl: 1.25rem;     /* 20px */
-  --texto-2xl: 1.5rem;     /* 24px */
-  --texto-3xl: 1.875rem;   /* 30px */
-  --texto-4xl: 2.25rem;    /* 36px */
+  --texto-xs: 0.875rem;    /* 14px */
+  --texto-sm: 1rem;        /* 16px */
+  --texto-base: 1.125rem;  /* 18px */
+  --texto-lg: 1.25rem;     /* 20px */
+  --texto-xl: 1.375rem;    /* 22px */
+  --texto-2xl: 1.625rem;   /* 26px */
+  --texto-3xl: 2rem;       /* 32px */
+  --texto-4xl: 2.375rem;   /* 38px */
 
   --peso-light: 300;
   --peso-regular: 400;
@@ -131,15 +138,28 @@
   --sombra-lg: none;
   --sombra-xl: none;
 
-  /* --- Transiciones: NINGUNA (regla sagrada del brutalismo) --- */
-  --transicion-rapida: 0ms;
-  --transicion-normal: 0ms;
-  --transicion-lenta: 0ms;
+  /* --- Transiciones: Material Design 3 Motion Tokens --- */
+  --transicion-rapida: 120ms cubic-bezier(0.2, 0, 0, 1);
+  --transicion-normal: 200ms cubic-bezier(0.2, 0, 0, 1);
+  --transicion-lenta: 300ms cubic-bezier(0.2, 0, 0, 1);
 
-  /* --- Layout --- */
+  /* --- Layout Mobile-First --- */
   --ancho-maximo: 1280px;
-  --sidebar-ancho: 260px;
-  --header-alto: 64px;
+  --max-movil: 430px;
+  --navbar-alto: 72px;
+  --appbar-alto: 64px;
+
+  /* --- Material Design 3 — Elevation (Light Mode) --- */
+  --elevacion-0: none;
+  --elevacion-1: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --elevacion-2: 0 3px 8px rgba(0, 0, 0, 0.08), 0 1px 4px rgba(0, 0, 0, 0.05);
+  --elevacion-3: 0 6px 18px rgba(0, 0, 0, 0.08), 0 3px 8px rgba(0, 0, 0, 0.06);
+  --elevacion-4: 0 10px 28px rgba(0, 0, 0, 0.09), 0 6px 12px rgba(0, 0, 0, 0.07);
+
+  /* --- Radios MD3 --- */
+  --radio-card: 20px;
+  --radio-card-grande: 28px;
+  --radio-chip: 8px;
 }
 
 /* =============================================================================
@@ -165,7 +185,7 @@ body {
   font-size: var(--texto-base);
   font-weight: var(--peso-regular);
   line-height: var(--interlineado);
-  color: var(--color-texto);
+  color: var(--color-blanco-calido);
   background-color: var(--color-fondo);
   min-height: 100dvh;
 }
@@ -256,21 +276,28 @@ input, textarea, select, button {
   background: var(--color-texto-terciario);
 }
 
-/* --- Animacion de entrada (fade-in-up) --- */
+/* --- Animaciones MD3 --- */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInBottom {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 .animar-entrada {
-  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
 }
+
+/* --- Stagger helper (usar con style={{ animationDelay }}) --- */
+.animar-stagger { animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both; }
 
 /* --- Focus visible (accesibilidad) --- */
 :focus-visible {
@@ -315,7 +342,7 @@ input, textarea, select, button {
 
 .etiqueta--info {
   background: var(--color-emerald-depths-light);
-  color: var(--color-emerald-depths);
+  color: var(--color-emerald-depths-texto);
 }
 
 /* --- Separador de linea fina --- */
@@ -329,11 +356,11 @@ input, textarea, select, button {
  * UTILIDADES DE COLORES PROTAGONISTAS
  * ============================================================================= */
 
-.texto-amarillo { color: var(--color-school-bus-yellow); }
-.texto-rosa { color: var(--color-hot-pink-web); }
-.texto-naranja { color: var(--color-pumpkin-spice); }
-.texto-verde { color: var(--color-spring-green); }
-.texto-esmeralda { color: var(--color-emerald-depths); }
+.texto-amarillo { color: var(--color-school-bus-yellow-texto); }
+.texto-rosa { color: var(--color-hot-pink-texto); }
+.texto-naranja { color: var(--color-pumpkin-spice-texto); }
+.texto-verde { color: var(--color-spring-green-texto); }
+.texto-esmeralda { color: var(--color-emerald-depths-texto); }
 .texto-onyx { color: var(--color-onyx); }
 .texto-blanco-calido { color: var(--color-blanco-calido); }
 

@@ -1,296 +1,356 @@
 /* =============================================================================
- * SUMA — Dashboard Principal (Bento Grid — Neo-Brutalismo Oscuro Premium)
+ * SUMA — Dashboard Home Styles (Mobile-First, Material Design 3)
  * ============================================================================= */
 
-.dashboard {
+.pagina {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-8);
+  gap: 0;
+  padding-bottom: 0.5rem;
 }
 
-/* --- Saludo / Header de pagina --- */
+/* =============================================================================
+ * SALUDO
+ * ============================================================================= */
 .saludo {
-  margin-bottom: var(--espacio-2);
-}
-
-.saludoTitulo {
-  font-size: var(--texto-3xl);
-  font-weight: var(--peso-bold);
-  color: var(--color-texto);
-  letter-spacing: -0.02em;
-  margin-bottom: var(--espacio-2);
-}
-
-.saludoSubtitulo {
-  font-size: var(--texto-base);
-  color: var(--color-texto-secundario);
-}
-
-/* =============================================================================
- * BENTO GRID PRINCIPAL
- * ============================================================================= */
-.bentoGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--espacio-6);
-}
-
-/* --- Tarjetas de metricas (Bento Blocks) --- */
-.metricaCard {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-5);
-  padding: var(--espacio-6);
-  border: 2px solid var(--color-onyx);
-  border-radius: var(--radio-xl);
-  text-decoration: none;
-  box-shadow: var(--sombra-neo);
-  transition: all var(--transicion-normal);
-}
-
-.metricaCard:hover {
-  transform: translateY(-2px);
-  box-shadow: 5px 5px 0 #000000;
-}
-
-/* Fondos sólido de colores protagonistas */
-.metricaPrimario { background: var(--color-spring-green); }
-.metricaExito { background: var(--color-hot-pink-web); }
-.metricaAdvertencia { background: var(--color-school-bus-yellow); }
-.metricaInfo { background: var(--color-pumpkin-spice); }
-
-.metricaIcono {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radio-lg);
-  background: var(--color-onyx);
-  color: var(--color-blanco-calido);
-  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-  overflow: hidden;
-}
-
-.metricaDetalle {
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-1);
-}
-
-.metricaValor {
-  font-size: var(--texto-2xl);
-  font-weight: var(--peso-extrabold);
-  color: var(--color-onyx);
-  line-height: 1;
-}
-
-.metricaEtiqueta {
-  font-size: var(--texto-xs);
-  font-weight: var(--peso-bold);
-  color: var(--color-onyx);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  opacity: 0.85;
-}
-
-/* =============================================================================
- * MODULOS BENTO (Placeholders para funcionalidades futuras)
- * ============================================================================= */
-.moduloBento {
-  background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-xl);
-  padding: var(--espacio-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-4);
-}
-
-.moduloBento:hover {
-  border-color: var(--color-borde-subtle);
-}
-
-.moduloHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 1.5rem 1.25rem 1.25rem;
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.moduloTitulo {
-  font-size: var(--texto-lg);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto);
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.moduloBadge {
-  font-size: var(--texto-xs);
+.saludoHola {
+  font-size: var(--texto-xl);
   font-weight: var(--peso-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: var(--espacio-1) var(--espacio-3);
-  border-radius: var(--radio-full);
-  background: var(--color-superficie-elevada);
-  border: 1px solid var(--color-borde);
-  color: var(--color-texto-terciario);
+  color: var(--color-texto);
+  line-height: 1.2;
 }
 
-.moduloContenido {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-3);
-}
-
-.moduloPlaceholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--espacio-3);
-  padding: var(--espacio-8) var(--espacio-4);
-  border: 1px dashed var(--color-borde);
-  border-radius: var(--radio-lg);
-  color: var(--color-texto-terciario);
-  text-align: center;
-}
-
-.moduloPlaceholderIcono {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.5;
-}
-
-.moduloPlaceholderTexto {
+.saludoUnidad {
   font-size: var(--texto-sm);
-  font-weight: var(--peso-medium);
-}
-
-/* --- Modulo Comunidad Civica (Votaciones) — placeholder --- */
-.moduloCivico {
-  grid-column: span 2;
-}
-
-.moduloCivico .moduloBadge {
   color: var(--color-primario);
-  border-color: var(--color-primario);
+  font-weight: var(--peso-semibold);
+  margin-top: 2px;
 }
 
-/* --- Modulo Economia Circular — placeholder --- */
-.moduloEconomia {
-  grid-column: span 1;
+.saludoCondominio {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 1px;
 }
 
-.moduloEconomia .moduloBadge {
-  color: var(--color-exito);
-  border-color: var(--color-exito);
-}
-
-/* --- Modulo Infraestructura / Propiedad — placeholder --- */
-.moduloInfraestructura {
-  grid-column: span 1;
-}
-
-.moduloInfraestructura .moduloBadge {
-  color: var(--color-acento);
-  border-color: var(--color-acento);
+/* Avatar con iniciales */
+.avatarCirculo {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-spring-green), var(--color-emerald-depths));
+  color: var(--color-onyx);
+  font-weight: var(--peso-bold);
+  font-size: var(--texto-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--elevacion-2);
 }
 
 /* =============================================================================
- * SECCIONES DE CONTENIDO ADICIONALES
+ * SECCIÓN GENÉRICA
  * ============================================================================= */
-.contenidoGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--espacio-6);
+.seccion {
+  padding: 0 1.25rem 1.5rem;
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.seccion {
-  background: var(--color-superficie);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-xl);
-  padding: var(--espacio-6);
-}
+.seccion:nth-child(2) { animation-delay: 0.05s; }
+.seccion:nth-child(3) { animation-delay: 0.10s; }
+.seccion:nth-child(4) { animation-delay: 0.15s; }
 
 .seccionTitulo {
-  font-size: var(--texto-lg);
-  font-weight: var(--peso-semibold);
-  color: var(--color-texto);
-  margin-bottom: var(--espacio-5);
-  padding-bottom: var(--espacio-4);
-  border-bottom: 1px solid var(--color-borde);
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto-terciario);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.875rem;
 }
 
-.accesosRapidos {
-  display: flex;
-  flex-direction: column;
-  gap: var(--espacio-3);
-}
-
-.accesoRapido {
+.seccionHeader {
   display: flex;
   align-items: center;
-  gap: var(--espacio-4);
-  padding: var(--espacio-4);
-  border-radius: var(--radio-lg);
-  background: var(--color-fondo);
-  border: 1px solid var(--color-borde);
+  justify-content: space-between;
+  margin-bottom: 0.875rem;
+}
+
+.verTodo {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--texto-xs);
+  color: var(--color-primario);
   text-decoration: none;
+  font-weight: var(--peso-semibold);
+  min-height: 44px;
+  padding: 0 0.25rem;
+  transition: opacity var(--transicion-normal);
+}
+
+.verTodo:hover { opacity: 0.8; }
+
+/* =============================================================================
+ * TARJETA GASTOS COMUNES
+ * ============================================================================= */
+.tarjetaGC {
+  background: linear-gradient(
+    135deg,
+    var(--color-superficie) 0%,
+    rgba(77, 237, 151, 0.1) 100%
+  );
+  border: 1.5px solid rgba(77, 237, 151, 0.2);
+  border-radius: var(--radio-card, 20px);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  box-shadow: var(--elevacion-2);
+}
+
+.tarjetaGCHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.tarjetaGCLabel {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  font-weight: var(--peso-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tarjetaGCMes {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+  margin-top: 2px;
+}
+
+.tarjetaGCMonto {
+  font-size: 2rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--color-texto);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Badges de estado */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radio-full);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  flex-shrink: 0;
+}
+
+.badge--exito {
+  background: var(--color-spring-green-light);
+  color: var(--color-primario);
+}
+
+.badge--advertencia {
+  background: var(--color-school-bus-yellow-light);
+  color: var(--color-school-bus-yellow);
+}
+
+.badge--error {
+  background: var(--color-pumpkin-spice-light);
+  color: var(--color-pumpkin-spice);
+}
+
+/* Botón ver detalle */
+.btnDetalle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: var(--color-superficie);
+  border: 1px solid rgba(77, 237, 151, 0.4);
+  border-radius: var(--radio-full);
+  color: var(--color-primario);
+  text-decoration: none;
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  transition: background var(--transicion-normal);
+  align-self: flex-start;
+  min-height: 44px;
+}
+
+.btnDetalle:hover {
+  background: rgba(77, 237, 151, 0.2);
+}
+
+.btnDetalle:focus-visible {
+  outline: 2.5px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+ * ACCESOS RÁPIDOS — Grid 2×2
+ * ============================================================================= */
+.gridAccesos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.accesoItem {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color var(--transicion-normal),
+    transform var(--transicion-rapida),
+    box-shadow var(--transicion-normal);
+  min-height: 100px;
+}
+
+.accesoItem:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--elevacion-3);
+}
+
+.accesoItem:active {
+  transform: scale(0.97);
+}
+
+.accesoItem:focus-visible {
+  outline: 2.5px solid var(--color-primario);
+  outline-offset: 2px;
+}
+
+/* Variantes de color */
+.acceso--verde  { border-color: rgba(77, 237, 151, 0.3); }
+.acceso--amarillo { border-color: rgba(255, 194, 11, 0.3); }
+.acceso--rosa   { border-color: rgba(247, 101, 171, 0.3); }
+.acceso--naranja { border-color: rgba(255, 115, 0, 0.3); }
+
+.acceso--verde  .accesoIcono { color: var(--color-primario); }
+.acceso--amarillo .accesoIcono { color: var(--color-school-bus-yellow); }
+.acceso--rosa   .accesoIcono { color: var(--color-hot-pink-web); }
+.acceso--naranja .accesoIcono { color: var(--color-pumpkin-spice); }
+
+.accesoIcono {
+  display: flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-superficie-elevada);
+  border-radius: var(--radio-lg);
+  margin-bottom: 0.25rem;
+}
+
+.accesoLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
   color: var(--color-texto);
 }
 
-.accesoRapido:hover {
-  border-color: var(--color-primario);
-  background: var(--color-superficie-elevada);
+.accesoFlecha {
+  color: var(--color-texto-terciario);
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
 }
 
-.accesoIcono {
+/* =============================================================================
+ * NOVEDADES / NOTICIAS
+ * ============================================================================= */
+.listaNoticias {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.noticiaCard {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem;
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  text-decoration: none;
+  transition:
+    border-color var(--transicion-normal),
+    background var(--transicion-normal);
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+  cursor: pointer;
+}
+
+.noticiaCard:hover {
+  background: var(--color-superficie-elevada);
+  border-color: var(--color-borde-subtle);
+}
+
+/* Ícono de tipo */
+.noticiaIcono {
   width: 40px;
   height: 40px;
+  border-radius: var(--radio-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: var(--radio-md);
-  background: var(--color-superficie-elevada);
-  border: 1px solid var(--color-borde);
-  color: var(--color-texto-secundario);
+  flex-shrink: 0;
 }
 
-.accesoTexto {
+.noticiaIconoAviso {
+  background: var(--color-school-bus-yellow-light);
+  color: var(--color-school-bus-yellow);
+}
+
+.noticiaIconoEvento {
+  background: var(--color-hot-pink-web-light);
+  color: var(--color-hot-pink-web);
+}
+
+.noticiaTexto {
+  flex: 1;
+  min-width: 0;
+}
+
+.noticiaTitulo {
   font-size: var(--texto-sm);
-  font-weight: var(--peso-medium);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* --- Responsive --- */
-@media (max-width: 1024px) {
-  .bentoGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .moduloCivico,
-  .moduloEconomia,
-  .moduloInfraestructura {
-    grid-column: span 2;
-  }
-
-  .contenidoGrid {
-    grid-template-columns: 1fr;
-  }
+.noticiaDesc {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
 }
 
-@media (max-width: 640px) {
-  .bentoGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .moduloCivico,
-  .moduloEconomia,
-  .moduloInfraestructura {
-    grid-column: span 1;
-  }
-
-  .metricaCard {
-    padding: var(--espacio-4);
-  }
+.noticiaFlecha {
+  color: var(--color-texto-terciario);
+  flex-shrink: 0;
 }

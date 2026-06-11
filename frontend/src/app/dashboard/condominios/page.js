@@ -1,119 +1,210 @@
 // =============================================================================
-// SUMA — Página de Lista de Condominios
-// Muestra tabla de condominios activos con acciones CRUD.
+// SUMA — Pantalla Condominios (Mobile-First, 100% Mock Data)
+// Muestra el Condominio Chinchorro con sus 2 bloques y estadísticas.
+// Sin llamadas a API. WCAG 2.2 AA: landmarks, aria-labels.
 // =============================================================================
 
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useCondominios } from '../../../lib/hooks/useCondominios.js';
-import Tabla from '../../../componentes/ui/Tabla.jsx';
-import Boton from '../../../componentes/ui/Boton.jsx';
-import Modal from '../../../componentes/ui/Modal.jsx';
+import {
+  Buildings,
+  House,
+  User,
+  MapPin,
+  CheckCircle,
+  Clock,
+  Warning,
+  Plus,
+} from '@phosphor-icons/react';
 import styles from './page.module.css';
 
-/**
- * Columnas de la tabla de condominios.
- */
-const columnas = [
-  { clave: 'nombre', etiqueta: 'Nombre' },
-  { clave: 'direccion', etiqueta: 'Dirección' },
-  { clave: 'rut_comunidad', etiqueta: 'RUT Comunidad' },
-  {
-    clave: 'cantidad_unidades',
-    etiqueta: 'Unidades',
-    render: (valor) => `${valor} unidades`,
-  },
-];
+// ---------------------------------------------------------------------------
+// Mock data — Condominio Chinchorro
+// ---------------------------------------------------------------------------
+const MOCK_CONDOMINIO = {
+  id: '1',
+  nombre: 'Condominio Chinchorro',
+  direccion: 'Av. Chinchorro 1850',
+  ciudad: 'Arica',
+  region: 'Región de Arica y Parinacota',
+  estado: 'activo',
+  unidades_total: 48,
+  administrador: 'María González',
+  telefono: '+56 9 8765 4321',
+  bloques: [
+    {
+      id: 'A',
+      nombre: 'Bloque A',
+      pisos: 6,
+      unidades_total: 24,
+      estado_pago: { pagadas: 20, pendientes: 3, morosas: 1 },
+    },
+    {
+      id: 'B',
+      nombre: 'Bloque B',
+      pisos: 6,
+      unidades_total: 24,
+      estado_pago: { pagadas: 18, pendientes: 4, morosas: 2 },
+    },
+  ],
+};
 
-/**
- * Página de listado de condominios.
- */
+/** Indicador de estado de pago de un bloque */
+function EstadoPago({ pagadas, pendientes, morosas, total }) {
+  return (
+    <div className={styles.bloquePago} aria-label={`${pagadas} pagadas, ${pendientes} pendientes, ${morosas} morosas`}>
+      <span className={`${styles.pagoBadge} ${styles.pagoVerde}`}>
+        <CheckCircle size={12} weight="fill" aria-hidden="true" />
+        {pagadas}
+      </span>
+      <span className={`${styles.pagoBadge} ${styles.pagoAmarillo}`}>
+        <Clock size={12} weight="fill" aria-hidden="true" />
+        {pendientes}
+      </span>
+      <span className={`${styles.pagoBadge} ${styles.pagoRojo}`}>
+        <Warning size={12} weight="fill" aria-hidden="true" />
+        {morosas}
+      </span>
+    </div>
+  );
+}
+
+/** Pantalla de gestión de condominios — prototipo estático */
 export default function PaginaCondominios() {
-  const { condominios, cargando, error, listar, desactivar } = useCondominios();
-  const [modalEliminar, setModalEliminar] = useState(null);
-
-  useEffect(() => {
-    listar();
-  }, [listar]);
-
-  const handleEliminar = async () => {
-    if (!modalEliminar) return;
-    try {
-      await desactivar(modalEliminar.id);
-      setModalEliminar(null);
-    } catch {
-      // El error ya se maneja en el hook.
-    }
-  };
+  const c = MOCK_CONDOMINIO;
+  const totalPagadas = c.bloques.reduce((s, b) => s + b.estado_pago.pagadas, 0);
 
   return (
     <div className={styles.pagina}>
-      {/* Cabecera */}
-      <div className={styles.cabecera}>
-        <div>
-          <h1 className={styles.titulo}>Condominios</h1>
-          <p className={styles.subtitulo}>
-            Gestiona los condominios registrados en el sistema.
-          </p>
-        </div>
-        <Link href="/dashboard/condominios/nuevo">
-          <Boton variante="primario">+ Nuevo Condominio</Boton>
-        </Link>
-      </div>
 
-      {/* Error */}
-      {error && (
-        <div className={styles.error}>
-          <span>Error al cargar: {error}</span>
-        </div>
-      )}
-
-      {/* Tabla */}
-      <Tabla
-        columnas={columnas}
-        datos={condominios}
-        cargando={cargando}
-        vacioTexto="No hay condominios registrados. Crea uno nuevo para comenzar."
-        onFilaClick={(fila) => window.location.href = `/dashboard/condominios/${fila.id}`}
-        acciones={[
-          {
-            etiqueta: 'Editar',
-            variante: 'fantasma',
-            onClick: (fila) => window.location.href = `/dashboard/condominios/${fila.id}`,
-          },
-          {
-            etiqueta: 'Eliminar',
-            variante: 'peligro',
-            onClick: (fila) => setModalEliminar(fila),
-          },
-        ]}
-      />
-
-      {/* Modal de confirmación de eliminación */}
-      <Modal
-        abierto={!!modalEliminar}
-        onCerrar={() => setModalEliminar(null)}
-        titulo="Desactivar Condominio"
-        tamano="sm"
-        acciones={
-          <>
-            <Boton variante="fantasma" onClick={() => setModalEliminar(null)}>
-              Cancelar
-            </Boton>
-            <Boton variante="peligro" onClick={handleEliminar}>
-              Desactivar
-            </Boton>
-          </>
-        }
+      {/* ===== Tarjeta principal del condominio ===== */}
+      <section
+        aria-label={`Información del condominio: ${c.nombre}`}
+        className={styles.tarjetaHero}
       >
-        <p>
-          ¿Estás seguro de que deseas desactivar el condominio{' '}
-          <strong>{modalEliminar?.nombre}</strong>? Esta acción es reversible
-          desde la base de datos.
-        </p>
-      </Modal>
+        {/* Icono decorativo */}
+        <div className={styles.heroIcono} aria-hidden="true">
+          <Buildings size={40} weight="fill" />
+        </div>
+
+        <div className={styles.heroInfo}>
+          <div className={styles.heroHeader}>
+            <h2 className={styles.heroNombre}>{c.nombre}</h2>
+            <span className={styles.badgeActivo} aria-label="Estado: Activo">
+              Activo
+            </span>
+          </div>
+
+          <p className={styles.heroDireccion}>
+            <MapPin size={13} weight="fill" aria-hidden="true" />
+            {c.direccion}, {c.ciudad}
+          </p>
+          <p className={styles.heroRegion}>{c.region}</p>
+        </div>
+
+        {/* Stats rápidas */}
+        <div className={styles.heroStats} role="group" aria-label="Estadísticas del condominio">
+          <div className={styles.statItem}>
+            <span className={styles.statNum}>{c.unidades_total}</span>
+            <span className={styles.statLabel}>Unidades</span>
+          </div>
+          <div className={styles.statDivider} aria-hidden="true" />
+          <div className={styles.statItem}>
+            <span className={styles.statNum}>{c.bloques.length}</span>
+            <span className={styles.statLabel}>Bloques</span>
+          </div>
+          <div className={styles.statDivider} aria-hidden="true" />
+          <div className={styles.statItem}>
+            <span className={styles.statNum}>{totalPagadas}</span>
+            <span className={styles.statLabel}>Al día</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Administrador ===== */}
+      <section aria-label="Información del administrador" className={styles.seccion}>
+        <h2 className={styles.seccionTitulo}>Administración</h2>
+        <div className={styles.adminCard}>
+          <div className={styles.adminAvatar} aria-hidden="true">
+            {c.administrador.charAt(0)}
+          </div>
+          <div className={styles.adminInfo}>
+            <p className={styles.adminNombre}>{c.administrador}</p>
+            <p className={styles.adminRol}>Administradora General</p>
+            <p className={styles.adminTel}>{c.telefono}</p>
+          </div>
+          <div className={styles.adminIcono} aria-hidden="true">
+            <User size={20} />
+          </div>
+        </div>
+      </section>
+
+      {/* ===== Bloques ===== */}
+      <section aria-label="Bloques del condominio" className={styles.seccion}>
+        <h2 className={styles.seccionTitulo}>Bloques</h2>
+        <div className={styles.bloquesList}>
+          {c.bloques.map((bloque, i) => {
+            const { pagadas, pendientes, morosas } = bloque.estado_pago;
+            const total = bloque.unidades_total;
+            const tasaPago = Math.round((pagadas / total) * 100);
+
+            return (
+              <article
+                key={bloque.id}
+                className={styles.bloqueCard}
+                style={{ animationDelay: `${i * 0.08}s` }}
+                aria-label={`${bloque.nombre}: ${total} unidades, ${bloque.pisos} pisos, tasa de pago ${tasaPago}%`}
+              >
+                <div className={styles.bloqueHeader}>
+                  <div className={styles.bloqueIcono} aria-hidden="true">
+                    <House size={22} weight="fill" />
+                  </div>
+                  <div className={styles.bloqueInfo}>
+                    <p className={styles.bloqueNombre}>{bloque.nombre}</p>
+                    <p className={styles.bloqueMeta}>
+                      {bloque.unidades_total} unidades · {bloque.pisos} pisos
+                    </p>
+                  </div>
+                  <span
+                    className={`${styles.bloqueTasa} ${
+                      tasaPago >= 80 ? styles.tasaVerde : tasaPago >= 60 ? styles.tasaAmarillo : styles.tasaRojo
+                    }`}
+                    aria-label={`Tasa de pago: ${tasaPago}%`}
+                  >
+                    {tasaPago}%
+                  </span>
+                </div>
+
+                {/* Estado de pago de unidades */}
+                <EstadoPago
+                  pagadas={pagadas}
+                  pendientes={pendientes}
+                  morosas={morosas}
+                  total={total}
+                />
+
+                {/* Barra de progreso */}
+                <div className={styles.barraProgreso} aria-hidden="true">
+                  <div
+                    className={styles.barraRelleno}
+                    style={{ width: `${tasaPago}%` }}
+                  />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* FAB Agregar condominio */}
+      <button
+        className={styles.fab}
+        type="button"
+        aria-label="Agregar nuevo condominio"
+      >
+        <Plus size={22} weight="bold" aria-hidden="true" />
+      </button>
+
     </div>
   );
 }

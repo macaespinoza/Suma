@@ -1,712 +1,295 @@
 // =============================================================================
-// SUMA — Dashboard Financiero
-// Vista ejecutiva de la situación financiera del condominio.
-// Consume el endpoint GET /condominios/:id/dashboard/financiero
-// y permite navegar entre períodos históricos.
+// SUMA — Dashboard Financiero (Mobile-First, 100% Mock Data)
+// Condominio Chinchorro — Junio 2026
+// Sin llamadas a API. Datos estáticos para el prototipo inversionista.
+// WCAG 2.2 AA: role="region", aria-label en barras de progreso.
 // =============================================================================
 
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
-import Link from 'next/link';
-import api from '../../../lib/api.js';
 import {
-  Gear,
-  Buildings,
-  Warning,
-  ChartBar,
-  CalendarBlank,
   Coins,
   Check,
   Clock,
+  ChartBar,
   House,
   TrendUp,
-  Info,
-  CreditCard,
-  Link as LinkIcon,
-  Bank,
+  CalendarBlank,
 } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
-// Paleta de colores para barras de categorías de egresos (oficial SUMA).
-const COLORES_CATEGORIAS = [
-  '#4ded97', '#f765ab', '#ffc20b', '#ff7300',
-  '#074e36', '#3dd98a', '#e0559a', '#e6af00',
-];
-
-// Iconos decorativos para las pasarelas de pago.
-const ICONOS_PASARELA = {
-  flow: <LinkIcon size={16} weight="fill" />,
-  fintoc: <LinkIcon size={16} weight="fill" />,
-  mercado_pago: <LinkIcon size={16} weight="fill" />,
-  webpay: <LinkIcon size={16} weight="fill" />,
-  transferencia_manual: <Bank size={16} weight="fill" />,
+// ---------------------------------------------------------------------------
+// Mock data — Condominio Chinchorro
+// ---------------------------------------------------------------------------
+const MOCK = {
+  condominio: 'Condominio Chinchorro',
+  periodoActual: {
+    id: '1',
+    mes_largo: 'Junio 2026',
+    total_gastos: 1840000,
+    total_cobrado: 1840000,
+    total_pagado: 1472000,
+    total_pendiente: 368000,
+    tasa_recaudacion: 80.0,
+  },
+  egresos: [
+    { categoria: 'Conserjería y Seguridad', monto: 480000 },
+    { categoria: 'Agua Potable',            monto: 520000 },
+    { categoria: 'Electricidad AA.CC.',     monto: 380000 },
+    { categoria: 'Mantención Ascensor',     monto: 220000 },
+    { categoria: 'Aseo y Limpieza',         monto: 180000 },
+    { categoria: 'Varios',                  monto: 60000 },
+  ],
+  estado_unidades: {
+    pagadas: 38,
+    pendientes: 7,
+    morosas: 3,
+    total: 48,
+  },
+  historial: [
+    { id: '1', mes: 'Junio 2026',  gastos: 1840000, pagado: 1472000, tasa: 80.0,  estado: 'publicado', actual: true },
+    { id: '2', mes: 'Mayo 2026',   gastos: 1790000, pagado: 1612000, tasa: 90.1,  estado: 'publicado', actual: false },
+    { id: '3', mes: 'Abril 2026',  gastos: 1820000, pagado: 1638000, tasa: 90.0,  estado: 'publicado', actual: false },
+    { id: '4', mes: 'Marzo 2026',  gastos: 1750000, pagado: 1750000, tasa: 100.0, estado: 'publicado', actual: false },
+  ],
 };
 
-/**
- * Formatea un monto numérico a pesos chilenos (CLP).
- * Ejemplo: 1500000 → "$1.500.000"
- */
-const formatearCLP = (monto) =>
+// Paleta de colores oficial SUMA para las barras
+const COLORES = ['#4ded97', '#ffc20b', '#f765ab', '#ff7300', '#3dd98a', '#e6af00'];
+
+/** Formatea a pesos chilenos (CLP) */
+const formatCLP = (n) =>
   new Intl.NumberFormat('es-CL', {
     style: 'currency',
     currency: 'CLP',
     maximumFractionDigits: 0,
-  }).format(monto || 0);
+  }).format(n ?? 0);
 
-/**
- * Formatea una fecha de período (YYYY-MM-DD) a nombre de mes + año.
- * Ejemplo: "2025-06-01" → "Junio 2025"
- */
-const formatearMes = (fecha) => {
-  if (!fecha) return '—';
-  const str = String(fecha).substring(0, 10);
-  const [anio, mes] = str.split('-');
-  const d = new Date(Date.UTC(parseInt(anio), parseInt(mes) - 1, 1));
-  const nombre = d.toLocaleDateString('es-CL', { month: 'long', timeZone: 'UTC' });
-  return `${nombre.charAt(0).toUpperCase() + nombre.slice(1)} ${anio}`;
-};
-
-/**
- * Retorna la clase CSS correspondiente a la tasa de recaudación.
- */
-const obtenerClaseTasa = (tasa) => {
-  if (tasa >= 80) return styles.tasaAlta;
-  if (tasa >= 50) return styles.tasaMedia;
+/** Retorna clase CSS según la tasa de recaudación */
+const claseTasa = (t) => {
+  if (t >= 80) return styles.tasaAlta;
+  if (t >= 50) return styles.tasaMedia;
   return styles.tasaBaja;
 };
 
-/**
- * Página principal del Dashboard Financiero.
- * Muestra KPIs, egresos por categoría, estado de cuenta y tabla histórica.
- */
+/** Retorna etiqueta de salud según la tasa */
+const etiquetaTasa = (t) => {
+  if (t >= 80) return 'Saludable';
+  if (t >= 50) return 'Regular';
+  return 'Crítica';
+};
+
+/** Página principal del Dashboard Financiero — Prototipo Estático */
 export default function PaginaDashboardFinanciero() {
-  // --- Estado ---
-  const [condominios, setCondominios] = useState([]);
-  const [condominioId, setCondominioId] = useState('');
-  const [datosVista, setDatosVista] = useState(null);
-  const [periodos, setPeriodos] = useState([]);
-  const [periodoSelId, setPeriodoSelId] = useState('');
-  const [esUltimoPeriodo, setEsUltimoPeriodo] = useState(true);
-  const [cargando, setCargando] = useState(true);
-  const [cargandoDatos, setCargandoDatos] = useState(false);
-  const [error, setError] = useState(null);
+  const { periodoActual: p, egresos, estado_unidades: eu, historial } = MOCK;
 
-  // Referencia al resumen original (último período publicado) para restaurar.
-  const resumenOriginalRef = useRef(null);
+  // Calcular máximo de egresos para normalizar barras
+  const maxEgreso = Math.max(...egresos.map((e) => e.monto));
+  const { pagadas, pendientes, morosas, total } = eu;
 
-  // --- Cargar condominios al montar ---
-  useEffect(() => {
-    const cargar = async () => {
-      try {
-        const res = await api.get('/condominios');
-        const lista = res.datos || [];
-        setCondominios(lista);
-        if (lista.length > 0) {
-          setCondominioId(lista[0].id);
-        }
-      } catch {
-        setError('No se pudieron cargar los condominios.');
-      } finally {
-        setCargando(false);
-      }
-    };
-    cargar();
-  }, []);
-
-  // --- Cargar datos financieros cuando cambia el condominio ---
-  useEffect(() => {
-    if (!condominioId) return;
-
-    const cargarDatos = async () => {
-      setCargandoDatos(true);
-      setError(null);
-      setDatosVista(null);
-
-      try {
-        const [resDashboard, resPeriodos] = await Promise.all([
-          api.get(`/condominios/${condominioId}/dashboard/financiero`),
-          api.get(`/condominios/${condominioId}/gastos?por_pagina=100`),
-        ]);
-
-        const dashboard = resDashboard.datos;
-        resumenOriginalRef.current = dashboard;
-        setDatosVista(dashboard);
-
-        const listaPeriodos = resPeriodos.datos || [];
-        setPeriodos(listaPeriodos);
-
-        // Sincronizar el selector con el período actual del dashboard.
-        if (dashboard?.periodo_actual?.mes_anio && listaPeriodos.length > 0) {
-          const mesActual = String(dashboard.periodo_actual.mes_anio).substring(0, 10);
-          const periodoActual = listaPeriodos.find(
-            (p) => String(p.mes_anio).substring(0, 10) === mesActual
-          );
-          setPeriodoSelId(periodoActual?.id || listaPeriodos[0]?.id || '');
-        } else if (listaPeriodos.length > 0) {
-          setPeriodoSelId(listaPeriodos[0].id);
-        }
-        setEsUltimoPeriodo(true);
-      } catch {
-        setError('No se pudieron cargar los datos financieros.');
-      } finally {
-        setCargandoDatos(false);
-      }
-    };
-
-    cargarDatos();
-  }, [condominioId]);
-
-  // --- Handler: Cambiar período seleccionado ---
-  const cambiarPeriodo = useCallback(
-    async (gastoId) => {
-      setPeriodoSelId(gastoId);
-
-      const periodoSel = periodos.find((p) => p.id === gastoId);
-      if (!periodoSel) return;
-
-      const mesOriginal = String(
-        resumenOriginalRef.current?.periodo_actual?.mes_anio || ''
-      ).substring(0, 10);
-      const mesSel = String(periodoSel.mes_anio).substring(0, 10);
-
-      // Si es el período actual, restaurar los datos originales completos.
-      if (mesOriginal === mesSel) {
-        setDatosVista(resumenOriginalRef.current);
-        setEsUltimoPeriodo(true);
-        return;
-      }
-
-      // Período histórico: cargar egresos del período seleccionado.
-      setCargandoDatos(true);
-      setEsUltimoPeriodo(false);
-
-      try {
-        const resEgresos = await api.get(
-          `/condominios/${condominioId}/gastos/${gastoId}/egresos`
-        );
-
-        const egresos = resEgresos.datos || [];
-        const egresosMap = {};
-        egresos.forEach((e) => {
-          const cat = e.categoria || 'Otros';
-          egresosMap[cat] = (egresosMap[cat] || 0) + parseFloat(e.monto || 0);
-        });
-
-        const totalCobrado = parseFloat(periodoSel.total_cobrado || 0);
-        const totalPagado = parseFloat(periodoSel.total_pagado || 0);
-
-        setDatosVista({
-          periodo_actual: {
-            mes_anio: periodoSel.mes_anio,
-            total_gastos: parseFloat(periodoSel.total_gastos || 0),
-            total_cobrado: totalCobrado,
-            total_pagado: totalPagado,
-            total_pendiente: parseFloat(periodoSel.total_pendiente || 0),
-            tasa_recaudacion:
-              totalCobrado > 0
-                ? Math.round((totalPagado / totalCobrado) * 10000) / 100
-                : 0,
-          },
-          egresos_mes: {
-            total: parseFloat(periodoSel.total_gastos || 0),
-            por_categoria: egresosMap,
-          },
-          estado_cuenta: null,
-          deuda_historica: null,
-          pasarelas_activas:
-            resumenOriginalRef.current?.pasarelas_activas || [],
-        });
-      } catch {
-        setError('Error al cargar el período histórico.');
-      } finally {
-        setCargandoDatos(false);
-      }
-    },
-    [condominioId, periodos]
-  );
-
-  // --- Valores computados ---
-  const categorias = datosVista?.egresos_mes?.por_categoria
-    ? Object.entries(datosVista.egresos_mes.por_categoria).sort(
-        ([, a], [, b]) => b - a
-      )
-    : [];
-  const maxEgreso =
-    categorias.length > 0 ? Math.max(...categorias.map(([, v]) => v)) : 0;
-
-  const periodo = datosVista?.periodo_actual;
-  const estado = datosVista?.estado_cuenta;
-  const deuda = datosVista?.deuda_historica;
-  const pasarelas = datosVista?.pasarelas_activas || [];
-  const totalUnidades = estado
-    ? parseInt(estado.pagadas) + parseInt(estado.pendientes) + parseInt(estado.morosas)
-    : 0;
-
-  const mesOriginalStr = String(
-    resumenOriginalRef.current?.periodo_actual?.mes_anio || ''
-  ).substring(0, 10);
-
-  // =========================================================================
-  // RENDER: Estado de carga inicial
-  // =========================================================================
-  if (cargando) {
-    return (
-      <div className={styles.pagina}>
-        <div className={styles.cabecera}>
-          <div className={styles.tituloGrupo}>
-          <h1 className={styles.titulo}>Dashboard Financiero</h1>
-          <p className={styles.subtitulo}>Cargando datos...</p>
-        </div>
-        <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
-        </Link>
-      </div>
-        <div className={styles.kpiGrid}>
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={`${styles.esqueleto} ${styles.esqueletoKpi}`} />
-          ))}
-        </div>
-        <div className={styles.contenidoGrid}>
-          <div className={`${styles.esqueleto} ${styles.esqueletoPanel}`} />
-          <div className={`${styles.esqueleto} ${styles.esqueletoPanel}`} />
-        </div>
-      </div>
-    );
-  }
-
-  // =========================================================================
-  // RENDER: Sin condominios registrados
-  // =========================================================================
-  if (condominios.length === 0) {
-    return (
-      <div className={styles.pagina}>
-        <div className={styles.cabecera}>
-        <div className={styles.tituloGrupo}>
-          <h1 className={styles.titulo}>Dashboard Financiero</h1>
-        </div>
-        <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
-        </Link>
-      </div>
-        <div className={styles.estadoVacio}>
-          <span className={styles.estadoVacioIcono}><Buildings size={32} weight="fill" /></span>
-          <h3 className={styles.estadoVacioTitulo}>Sin Condominios</h3>
-          <p className={styles.estadoVacioTexto}>
-            Registra tu primer condominio para comenzar a gestionar las
-            finanzas del edificio.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  // =========================================================================
-  // RENDER: Dashboard completo
-  // =========================================================================
   return (
     <div className={styles.pagina}>
-      {/* --- Cabecera --- */}
-      <div className={styles.cabecera}>
-        <div className={styles.tituloGrupo}>
-          <h1 className={styles.titulo}>Dashboard Financiero</h1>
-          <p className={styles.subtitulo}>
-            Resumen ejecutivo de la situación financiera del condominio.
-          </p>
-        </div>
-        <Link href="/dashboard/finanzas/gestion" className={styles.botonGestion}>
-          <><Gear size={16} weight="bold" /> Gestionar Finanzas</>
-        </Link>
+
+      {/* ===== Chip de período ===== */}
+      <div className={styles.periodoChip} aria-label={`Período actual: ${p.mes_largo}`}>
+        <CalendarBlank size={15} weight="fill" aria-hidden="true" />
+        <span>{p.mes_largo}</span>
+        <span className={styles.chipBadge}>Actual</span>
       </div>
 
-      {/* --- Selectores: Condominio + Período --- */}
-      <div className={styles.selectores}>
-        <div className={styles.selectorGrupo}>
-          <label htmlFor="selector-condominio" className={styles.selectorEtiqueta}>
-            Condominio
-          </label>
-          <select
-            id="selector-condominio"
-            className={styles.selector}
-            value={condominioId}
-            onChange={(e) => setCondominioId(e.target.value)}
+      {/* ===== KPI Grid 2×2 ===== */}
+      <section
+        className={styles.kpiGrid}
+        aria-label="Indicadores financieros del período"
+      >
+        {/* Gastos del mes */}
+        <div className={`${styles.kpi} ${styles.kpiAmarillo}`}>
+          <span className={styles.kpiIcono} aria-hidden="true">
+            <Coins size={22} weight="fill" />
+          </span>
+          <span className={styles.kpiValor}>{formatCLP(p.total_gastos)}</span>
+          <span className={styles.kpiLabel}>Gastos del Mes</span>
+        </div>
+
+        {/* Recaudado */}
+        <div className={`${styles.kpi} ${styles.kpiVerde}`}>
+          <span className={styles.kpiIcono} aria-hidden="true">
+            <Check size={22} weight="bold" />
+          </span>
+          <span className={styles.kpiValor}>{formatCLP(p.total_pagado)}</span>
+          <span className={styles.kpiLabel}>Recaudado</span>
+          <span className={styles.kpiSub}>de {formatCLP(p.total_cobrado)}</span>
+        </div>
+
+        {/* Pendiente */}
+        <div className={`${styles.kpi} ${styles.kpiNaranja}`}>
+          <span className={styles.kpiIcono} aria-hidden="true">
+            <Clock size={22} weight="fill" />
+          </span>
+          <span className={styles.kpiValor}>{formatCLP(p.total_pendiente)}</span>
+          <span className={styles.kpiLabel}>Pendiente</span>
+        </div>
+
+        {/* Tasa de recaudación */}
+        <div className={`${styles.kpi} ${styles.kpiRosa}`}>
+          <span className={styles.kpiIcono} aria-hidden="true">
+            <ChartBar size={22} weight="fill" />
+          </span>
+          <span className={styles.kpiValor}>{p.tasa_recaudacion.toFixed(1)}%</span>
+          <span className={styles.kpiLabel}>Tasa Recaudación</span>
+          <span
+            className={`${styles.tasaBadge} ${claseTasa(p.tasa_recaudacion)}`}
+            aria-label={`Tasa ${etiquetaTasa(p.tasa_recaudacion)}`}
           >
-            {condominios.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.nombre}
-              </option>
-            ))}
-          </select>
+            {etiquetaTasa(p.tasa_recaudacion)}
+          </span>
         </div>
+      </section>
 
-        {periodos.length > 0 && (
-          <div className={styles.selectorGrupo}>
-            <label htmlFor="selector-periodo" className={styles.selectorEtiqueta}>
-              Período
-            </label>
-            <select
-              id="selector-periodo"
-              className={styles.selector}
-              value={periodoSelId}
-              onChange={(e) => cambiarPeriodo(e.target.value)}
-            >
-              {periodos.map((p) => {
-                const esActual =
-                  String(p.mes_anio).substring(0, 10) === mesOriginalStr;
-                return (
-                  <option key={p.id} value={p.id}>
-                    {formatearMes(p.mes_anio)}
-                    {esActual ? ' (Actual)' : ''} — {p.estado}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-        )}
-      </div>
-
-      {/* --- Error --- */}
-      {error && (
-        <div className={styles.error}>
-          <span><Warning size={20} weight="fill" /></span> {error}
-        </div>
-      )}
-
-      {/* --- Skeleton mientras carga datos --- */}
-      {cargandoDatos && (
-        <>
-          <div className={styles.kpiGrid}>
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className={`${styles.esqueleto} ${styles.esqueletoKpi}`} />
-            ))}
-          </div>
-          <div className={styles.contenidoGrid}>
-            <div className={`${styles.esqueleto} ${styles.esqueletoPanel}`} />
-            <div className={`${styles.esqueleto} ${styles.esqueletoPanel}`} />
-          </div>
-        </>
-      )}
-
-      {/* --- Datos cargados --- */}
-      {!cargandoDatos && datosVista && (
-        <>
-          {/* Sin períodos registrados */}
-          {!periodo?.mes_anio && periodos.length === 0 && (
-            <div className={styles.estadoVacio}>
-              <span className={styles.estadoVacioIcono}><ChartBar size={32} weight="fill" /></span>
-              <h3 className={styles.estadoVacioTitulo}>Sin Gastos Registrados</h3>
-              <p className={styles.estadoVacioTexto}>
-                Aún no hay períodos de gastos comunes creados para este
-                condominio. Crea uno desde el módulo de Gastos Comunes.
-              </p>
-            </div>
-          )}
-
-          {/* Contenido financiero */}
-          {(periodo?.mes_anio || periodos.length > 0) && (
-            <>
-              {/* Aviso de período histórico */}
-              {!esUltimoPeriodo && (
-                <div className={styles.infoBox}>
-                  <><CalendarBlank size={16} weight="fill" /> Estás viendo datos del período{' '}</>
-                  <strong>{formatearMes(periodo?.mes_anio)}</strong>. El detalle
-                  de unidades y deuda histórica solo está disponible para el
-                  período actual.
-                </div>
-              )}
-
-              {/* ===== KPI Grid ===== */}
-              <div className={styles.kpiGrid}>
-                {/* KPI: Total Gastos */}
-                <div className={`${styles.kpiTarjeta} ${styles.kpiGastos}`}>
-                  <div className={styles.kpiIcono}><Coins size={24} weight="fill" /></div>
-                  <div className={styles.kpiContenido}>
-                    <span className={styles.kpiValor}>
-                      {formatearCLP(periodo?.total_gastos)}
-                    </span>
-                    <span className={styles.kpiEtiqueta}>Gastos del Mes</span>
-                    <span className={styles.kpiSubtexto}>
-                      {formatearMes(periodo?.mes_anio)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* KPI: Recaudado */}
-                <div className={`${styles.kpiTarjeta} ${styles.kpiRecaudado}`}>
-                  <div className={styles.kpiIcono}><Check size={24} weight="fill" /></div>
-                  <div className={styles.kpiContenido}>
-                    <span className={styles.kpiValor}>
-                      {formatearCLP(periodo?.total_pagado)}
-                    </span>
-                    <span className={styles.kpiEtiqueta}>Recaudado</span>
-                    <span className={styles.kpiSubtexto}>
-                      de {formatearCLP(periodo?.total_cobrado)} cobrado
-                    </span>
-                  </div>
-                </div>
-
-                {/* KPI: Pendiente */}
-                <div className={`${styles.kpiTarjeta} ${styles.kpiPendiente}`}>
-                  <div className={styles.kpiIcono}><Clock size={24} weight="fill" /></div>
-                  <div className={styles.kpiContenido}>
-                    <span className={styles.kpiValor}>
-                      {formatearCLP(periodo?.total_pendiente)}
-                    </span>
-                    <span className={styles.kpiEtiqueta}>Pendiente de Cobro</span>
-                    <span className={styles.kpiSubtexto}>
-                      {periodo?.total_cobrado > 0
-                        ? `${(100 - (periodo?.tasa_recaudacion || 0)).toFixed(1)}% sin cobrar`
-                        : 'Sin cobros generados'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* KPI: Tasa de Recaudación */}
-                <div className={`${styles.kpiTarjeta} ${styles.kpiTasa}`}>
-                  <div className={styles.kpiIcono}><ChartBar size={24} weight="fill" /></div>
-                  <div className={styles.kpiContenido}>
-                    <span className={styles.kpiValor}>
-                      {(periodo?.tasa_recaudacion || 0).toFixed(1)}%
-                    </span>
-                    <span className={styles.kpiEtiqueta}>
-                      Tasa de Recaudación
-                    </span>
+      {/* ===== Distribución de Egresos ===== */}
+      <section
+        className={styles.tarjeta}
+        aria-label="Distribución de egresos por categoría"
+      >
+        <h2 className={styles.tarjetaTitulo}>
+          <Coins size={18} weight="fill" aria-hidden="true" />
+          Distribución de Egresos
+        </h2>
+        <div className={styles.egresosLista}>
+          {egresos.map(({ categoria, monto }, idx) => {
+            const color = COLORES[idx % COLORES.length];
+            const pct = maxEgreso > 0 ? (monto / maxEgreso) * 100 : 0;
+            return (
+              <div key={categoria} className={styles.egresoFila}>
+                <div className={styles.egresoInfo}>
+                  <span className={styles.egresoCategoria}>
                     <span
-                      className={`${styles.tasaBadge} ${obtenerClaseTasa(periodo?.tasa_recaudacion || 0)}`}
-                    >
-                      {periodo?.tasa_recaudacion >= 80
-                        ? 'Saludable'
-                        : periodo?.tasa_recaudacion >= 50
-                          ? 'Regular'
-                          : 'Crítica'}
-                    </span>
-                  </div>
+                      className={styles.egresoColor}
+                      style={{ background: color }}
+                      aria-hidden="true"
+                    />
+                    {categoria}
+                  </span>
+                  <span className={styles.egresoMonto}>{formatCLP(monto)}</span>
+                </div>
+                <div className={styles.egresoBarra}>
+                  <div
+                    className={styles.egresoBarraRelleno}
+                    style={{
+                      width: `${pct}%`,
+                      background: `linear-gradient(90deg, ${color}, ${color}99)`,
+                      animationDelay: `${idx * 0.07}s`,
+                    }}
+                    role="progressbar"
+                    aria-valuenow={Math.round(pct)}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={`${categoria}: ${formatCLP(monto)}`}
+                  />
                 </div>
               </div>
+            );
+          })}
+        </div>
+      </section>
 
-              {/* ===== Grid de Contenido (2 columnas) ===== */}
-              <div className={styles.contenidoGrid}>
-                {/* --- Distribución de Egresos --- */}
-                <div className={styles.tarjeta} style={{ animationDelay: '0.25s' }}>
-                  <h3 className={styles.tarjetaTitulo}>
-                    <ClipboardText size={20} weight="fill" /> Distribución de Egresos
-                  </h3>
-                  {categorias.length > 0 ? (
-                    <div className={styles.egresosLista}>
-                      {categorias.map(([cat, monto], idx) => {
-                        const porcentaje =
-                          maxEgreso > 0 ? (monto / maxEgreso) * 100 : 0;
-                        const color =
-                          COLORES_CATEGORIAS[idx % COLORES_CATEGORIAS.length];
-                        return (
-                          <div key={cat} className={styles.egresoFila}>
-                            <div className={styles.egresoInfo}>
-                              <span className={styles.egresoCategoria}>
-                                <span
-                                  className={styles.egresoColor}
-                                  style={{ background: color }}
-                                />
-                                {cat}
-                              </span>
-                              <span className={styles.egresoMonto}>
-                                {formatearCLP(monto)}
-                              </span>
-                            </div>
-                            <div className={styles.egresoBarra}>
-                              <div
-                                className={styles.egresoBarraRelleno}
-                                style={{
-                                  '--ancho-barra': `${porcentaje}%`,
-                                  background: `linear-gradient(90deg, ${color}, ${color}88)`,
-                                  animationDelay: `${idx * 0.1}s`,
-                                }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <p className={styles.egresosVacio}>
-                      Sin egresos registrados para este período.
-                    </p>
+      {/* ===== Estado de Unidades ===== */}
+      <section
+        className={styles.tarjeta}
+        aria-label="Estado de pago de unidades del condominio"
+      >
+        <h2 className={styles.tarjetaTitulo}>
+          <House size={18} weight="fill" aria-hidden="true" />
+          Estado de Unidades
+        </h2>
+
+        {/* Contadores */}
+        <div className={styles.estadoGrid} role="group" aria-label="Conteo de unidades por estado">
+          <div className={styles.estadoItem}>
+            <span className={`${styles.estadoNum} ${styles.numVerde}`}>{pagadas}</span>
+            <span className={styles.estadoLabel}>Pagadas</span>
+          </div>
+          <div className={styles.estadoItem}>
+            <span className={`${styles.estadoNum} ${styles.numAmarillo}`}>{pendientes}</span>
+            <span className={styles.estadoLabel}>Pendientes</span>
+          </div>
+          <div className={styles.estadoItem}>
+            <span className={`${styles.estadoNum} ${styles.numRojo}`}>{morosas}</span>
+            <span className={styles.estadoLabel}>Morosas</span>
+          </div>
+        </div>
+
+        {/* Barra de progreso segmentada */}
+        <div
+          className={styles.barraProgreso}
+          role="group"
+          aria-label={`Distribución: ${pagadas} pagadas, ${pendientes} pendientes, ${morosas} morosas de ${total} totales`}
+        >
+          <div
+            className={`${styles.barraSegmento} ${styles.segVerde}`}
+            style={{ width: `${(pagadas / total) * 100}%` }}
+          />
+          <div
+            className={`${styles.barraSegmento} ${styles.segAmarillo}`}
+            style={{ width: `${(pendientes / total) * 100}%` }}
+          />
+          <div
+            className={`${styles.barraSegmento} ${styles.segRojo}`}
+            style={{ width: `${(morosas / total) * 100}%` }}
+          />
+        </div>
+
+        <p className={styles.estadoTexto}>
+          <TrendUp size={14} weight="fill" aria-hidden="true" />
+          {pagadas} de {total} unidades al día ({((pagadas / total) * 100).toFixed(0)}%)
+        </p>
+      </section>
+
+      {/* ===== Historial de Períodos ===== */}
+      <section
+        className={styles.tarjeta}
+        aria-label="Historial de períodos de gastos comunes"
+      >
+        <h2 className={styles.tarjetaTitulo}>
+          <CalendarBlank size={18} weight="fill" aria-hidden="true" />
+          Historial de Períodos
+        </h2>
+        <div className={styles.historialLista}>
+          {historial.map((h, i) => (
+            <div
+              key={h.id}
+              className={`${styles.historialItem} ${h.actual ? styles.historialActivo : ''}`}
+              style={{ animationDelay: `${i * 0.06}s` }}
+              aria-label={`${h.mes}: tasa ${h.tasa}%`}
+            >
+              <div className={styles.historialHeader}>
+                <span className={styles.historialMes}>{h.mes}</span>
+                <div className={styles.historialDerecha}>
+                  {h.actual && (
+                    <span className={styles.historialBadgeActual}>Actual</span>
                   )}
-                </div>
-
-                {/* --- Estado de Cuenta por Unidades --- */}
-                <div className={styles.tarjeta} style={{ animationDelay: '0.3s' }}>
-                  <h3 className={styles.tarjetaTitulo}>
-                    <House size={20} weight="fill" /> Estado de Cuenta por Unidades
-                  </h3>
-
-                  {estado && esUltimoPeriodo ? (
-                    <>
-                      {/* Contadores */}
-                      <div className={styles.estadoGrid}>
-                        <div className={styles.estadoItem}>
-                          <div className={`${styles.estadoNumero} ${styles.numExito}`}>
-                            {estado.pagadas}
-                          </div>
-                          <div className={styles.estadoEtiqueta}>Pagadas</div>
-                        </div>
-                        <div className={styles.estadoItem}>
-                          <div className={`${styles.estadoNumero} ${styles.numAdvertencia}`}>
-                            {estado.pendientes}
-                          </div>
-                          <div className={styles.estadoEtiqueta}>Pendientes</div>
-                        </div>
-                        <div className={styles.estadoItem}>
-                          <div className={`${styles.estadoNumero} ${styles.numError}`}>
-                            {estado.morosas}
-                          </div>
-                          <div className={styles.estadoEtiqueta}>Morosas</div>
-                        </div>
-                      </div>
-
-                      {/* Barra de progreso segmentada */}
-                      {totalUnidades > 0 && (
-                        <div className={styles.barraProgreso}>
-                          <div
-                            className={`${styles.barraSegmento} ${styles.segExito}`}
-                            style={{
-                              width: `${(estado.pagadas / totalUnidades) * 100}%`,
-                            }}
-                          />
-                          <div
-                            className={`${styles.barraSegmento} ${styles.segAdvertencia}`}
-                            style={{
-                              width: `${(estado.pendientes / totalUnidades) * 100}%`,
-                            }}
-                          />
-                          <div
-                            className={`${styles.barraSegmento} ${styles.segError}`}
-                            style={{
-                              width: `${(estado.morosas / totalUnidades) * 100}%`,
-                            }}
-                          />
-                        </div>
-                      )}
-
-                      {/* Deuda histórica */}
-                      {deuda && (
-                        <div className={styles.deudaSeccion}>
-                          <h4 className={styles.deudaSeccionTitulo}>
-                            <TrendUp size={20} weight="fill" /> Deuda Histórica
-                          </h4>
-                          <div className={styles.deudaFila}>
-                            <span className={styles.deudaEtiqueta}>
-                              Deuda de meses anteriores
-                            </span>
-                            <span className={styles.deudaMonto}>
-                              {formatearCLP(deuda.total_deuda_anterior)}
-                            </span>
-                          </div>
-                          <div className={styles.deudaFila}>
-                            <span className={styles.deudaEtiqueta}>
-                              Pagado de meses anteriores
-                            </span>
-                            <span className={styles.deudaMonto}>
-                              {formatearCLP(deuda.total_pagado_mes_anterior)}
-                            </span>
-                          </div>
-                          <div className={styles.deudaFila}>
-                            <span className={styles.deudaEtiqueta}>
-                              Deuda del mes actual
-                            </span>
-                            <span className={styles.deudaMonto}>
-                              {formatearCLP(deuda.deuda_reciente)}
-                            </span>
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className={styles.infoBox}>
-                      <><Info size={16} weight="fill" /> El detalle de unidades y deuda histórica está</>
-                      disponible solo para el período más reciente publicado.
-                    </div>
-                  )}
-
-                  {/* Pasarelas de pago activas */}
-                  {pasarelas.length > 0 && esUltimoPeriodo && (
-                    <div
-                      className={styles.deudaSeccion}
-                      style={{ marginTop: 'var(--espacio-4)' }}
-                    >
-                      <h4 className={styles.deudaSeccionTitulo}>
-                        <CreditCard size={20} weight="fill" /> Pasarelas de Pago Activas
-                      </h4>
-                      <div className={styles.pasarelasContenedor}>
-                        {pasarelas.map((p) => (
-                          <span key={p} className={styles.pasarelaBadge}>
-                            {ICONOS_PASARELA[p] || <LinkIcon size={16} weight="fill" />}{' '}
-                            {p.replace(/_/g, ' ')}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  <span
+                    className={`${styles.historialTasa} ${claseTasa(h.tasa)}`}
+                  >
+                    {h.tasa.toFixed(0)}%
+                  </span>
                 </div>
               </div>
+              <div className={styles.historialDetalle}>
+                <span className={styles.historialMonto}>{formatCLP(h.gastos)}</span>
+              </div>
+              {/* Barra de tasa */}
+              <div className={styles.historialBarraBg} aria-hidden="true">
+                <div
+                  className={styles.historialBarraRelleno}
+                  style={{ width: `${h.tasa}%` }}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-              {/* ===== Tabla Histórica de Períodos ===== */}
-              {periodos.length > 0 && (
-                <div className={`${styles.tarjeta} ${styles.tablaContenedor}`}>
-                  <h3 className={styles.tarjetaTitulo}>
-                    <CalendarBlank size={20} weight="fill" /> Historial de Períodos
-                  </h3>
-                  <div className={styles.tablaScroll}>
-                    <table className={styles.tablaHistorico}>
-                      <thead>
-                        <tr>
-                          <th>Período</th>
-                          <th>Total Gastos</th>
-                          <th>Cobrado</th>
-                          <th>Pagado</th>
-                          <th>Pendiente</th>
-                          <th>Estado</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {periodos.map((p) => (
-                          <tr
-                            key={p.id}
-                            className={
-                              p.id === periodoSelId ? styles.filaActiva : ''
-                            }
-                            onClick={() => cambiarPeriodo(p.id)}
-                          >
-                            <td>{formatearMes(p.mes_anio)}</td>
-                            <td>{formatearCLP(p.total_gastos)}</td>
-                            <td>{formatearCLP(p.total_cobrado)}</td>
-                            <td className={styles.tablaMontoPositivo}>
-                              {formatearCLP(p.total_pagado)}
-                            </td>
-                            <td className={styles.tablaMontoPendiente}>
-                              {formatearCLP(p.total_pendiente)}
-                            </td>
-                            <td>
-                              <span
-                                className={`${styles.estadoBadge} ${
-                                  p.estado === 'publicado'
-                                    ? styles.estadoPublicado
-                                    : styles.estadoBorrador
-                                }`}
-                              >
-                                {p.estado}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </>
-      )}
     </div>
   );
 }

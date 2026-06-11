@@ -1,43 +1,350 @@
 /* =============================================================================
- * SUMA — Estilos de la Página de Condominios
+ * SUMA — Condominios Page Styles (Mobile-First, Material Design 3)
  * ============================================================================= */
 
 .pagina {
   display: flex;
   flex-direction: column;
-  gap: var(--espacio-6);
+  gap: 0;
+  padding: 1.25rem 1.25rem 5rem;
+  position: relative;
 }
 
-.cabecera {
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================================================
+ * HERO TARJETA DEL CONDOMINIO
+ * ============================================================================= */
+.tarjetaHero {
+  background: linear-gradient(
+    145deg,
+    var(--color-superficie) 0%,
+    rgba(77, 237, 151, 0.08) 100%
+  );
+  border: 1.5px solid rgba(77, 237, 151, 0.25);
+  border-radius: var(--radio-card, 20px);
+  padding: 1.5rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: var(--elevacion-2);
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+/* Ícono del condominio */
+.heroIcono {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radio-card, 20px);
+  background: rgba(77, 237, 151, 0.15);
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.heroHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: var(--espacio-4);
+  gap: 0.75rem;
 }
 
-.titulo {
-  font-size: var(--texto-2xl);
+.heroNombre {
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-extrabold);
+  color: var(--color-texto);
+  line-height: 1.2;
+}
+
+.badgeActivo {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  background: var(--color-spring-green-light);
+  color: var(--color-primario);
+  border-radius: var(--radio-full);
+  font-size: 11px;
+  font-weight: var(--peso-bold);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.heroDireccion {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--texto-sm);
+  color: var(--color-texto-secundario);
+}
+
+.heroRegion {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Stats rápidas */
+.heroStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 1rem;
+  background: var(--color-superficie-elevada);
+  border-radius: var(--radio-lg);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.statNum {
+  font-size: 1.5rem;
+  font-weight: var(--peso-extrabold);
+  color: var(--color-texto);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 11px;
+  color: var(--color-texto-terciario);
+  font-weight: var(--peso-medium);
+}
+
+.statDivider {
+  width: 1px;
+  height: 32px;
+  background: var(--color-borde);
+}
+
+/* =============================================================================
+ * SECCIÓN GENÉRICA
+ * ============================================================================= */
+.seccion {
+  margin-bottom: 1.25rem;
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) 0.05s both;
+}
+
+.seccionTitulo {
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto-terciario);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+/* =============================================================================
+ * ADMINISTRADOR
+ * ============================================================================= */
+.adminCard {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  box-shadow: var(--elevacion-1);
+}
+
+.adminAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-spring-green), var(--color-emerald-depths));
+  color: var(--color-onyx);
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.adminInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.adminNombre {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.adminRol {
+  font-size: var(--texto-xs);
+  color: var(--color-primario);
+  font-weight: var(--peso-medium);
+  margin-top: 2px;
+}
+
+.adminTel {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
+}
+
+.adminIcono {
+  color: var(--color-texto-terciario);
+  flex-shrink: 0;
+}
+
+/* =============================================================================
+ * BLOQUES
+ * ============================================================================= */
+.bloquesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.bloqueCard {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  padding: 1.125rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  box-shadow: var(--elevacion-1);
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+  transition: border-color var(--transicion-normal);
+}
+
+.bloqueCard:hover {
+  border-color: rgba(77, 237, 151, 0.3);
+}
+
+.bloqueHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.bloqueIcono {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radio-lg);
+  background: rgba(77, 237, 151, 0.1);
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.bloqueInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.bloqueNombre {
+  font-size: var(--texto-base);
   font-weight: var(--peso-bold);
   color: var(--color-texto);
 }
 
-.subtitulo {
-  font-size: var(--texto-sm);
-  color: var(--color-texto-secundario);
-  margin-top: var(--espacio-1);
+.bloqueMeta {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  margin-top: 2px;
 }
 
-.error {
-  padding: var(--espacio-4);
-  background: var(--color-pumpkin-spice-light);
-  border: 1px solid var(--color-pumpkin-spice);
-  border-radius: var(--radio-md);
-  color: var(--color-error);
-  font-size: var(--texto-sm);
+/* Tasa de pago */
+.bloqueTasa {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-extrabold);
+  flex-shrink: 0;
 }
 
-@media (max-width: 768px) {
-  .cabecera {
-    flex-direction: column;
-  }
+.tasaVerde   { color: var(--color-primario); }
+.tasaAmarillo { color: var(--color-school-bus-yellow); }
+.tasaRojo    { color: var(--color-pumpkin-spice); }
+
+/* Estado de pago (badges conteo) */
+.bloquePago {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pagoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 3px 9px;
+  border-radius: var(--radio-full);
+  font-size: 11px;
+  font-weight: var(--peso-bold);
+}
+
+.pagoVerde   { background: var(--color-spring-green-light);      color: var(--color-primario); }
+.pagoAmarillo { background: var(--color-school-bus-yellow-light); color: var(--color-school-bus-yellow); }
+.pagoRojo    { background: var(--color-pumpkin-spice-light);     color: var(--color-pumpkin-spice); }
+
+/* Barra de progreso */
+.barraProgreso {
+  height: 6px;
+  background: var(--color-borde);
+  border-radius: var(--radio-full);
+  overflow: hidden;
+}
+
+.barraRelleno {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-spring-green), var(--color-emerald-depths));
+  border-radius: var(--radio-full);
+  transition: width 0.8s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* =============================================================================
+ * FAB
+ * ============================================================================= */
+.fab {
+  position: fixed;
+  bottom: calc(var(--navbar-alto, 72px) + 1.25rem);
+  right: calc(50% - 215px);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--color-spring-green);
+  color: var(--color-onyx);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(77, 237, 151, 0.4);
+  transition: transform var(--transicion-rapida), box-shadow var(--transicion-normal);
+  z-index: 80;
+}
+
+.fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 28px rgba(77, 237, 151, 0.5);
+}
+
+.fab:active { transform: scale(0.95); }
+
+.fab:focus-visible {
+  outline: 3px solid var(--color-primario);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .fab { right: 1.25rem; }
 }

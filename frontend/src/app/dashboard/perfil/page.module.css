@@ -1,0 +1,197 @@
+/* =============================================================================
+ * SUMA — Perfil Page Styles
+ * ============================================================================= */
+
+.pagina {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem 1.25rem 5rem;
+}
+
+.perfilHero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: linear-gradient(145deg, var(--color-superficie) 0%, rgba(77, 237, 151, 0.08) 100%);
+  border: 1.5px solid rgba(77, 237, 151, 0.2);
+  border-radius: var(--radio-card, 20px);
+  text-align: center;
+  animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.avatarGrande {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-spring-green), var(--color-emerald-depths));
+  color: var(--color-onyx);
+  font-size: 1.75rem;
+  font-weight: var(--peso-extrabold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--elevacion-3);
+  margin-bottom: 0.5rem;
+}
+
+.perfilNombre {
+  font-size: var(--texto-xl);
+  font-weight: var(--peso-bold);
+  color: var(--color-texto);
+}
+
+.perfilEmail {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+}
+
+.perfilBadges {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.badge {
+  background: var(--color-spring-green-light);
+  color: var(--color-primario);
+  font-size: 11px;
+  font-weight: var(--peso-bold);
+  padding: 3px 10px;
+  border-radius: var(--radio-full);
+}
+
+.badgeUnidad {
+  background: var(--color-hot-pink-web-light);
+  color: var(--color-hot-pink-web);
+  font-size: 11px;
+  font-weight: var(--peso-bold);
+  padding: 3px 10px;
+  border-radius: var(--radio-full);
+}
+
+.perfilCondominio {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Logo SUMA centrado */
+.logoSuma {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+}
+
+.logoSumaImg {
+  width: 120px;
+  height: auto;
+  color: var(--color-primario);
+  opacity: 0.7;
+}
+
+.logoVersion {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Opciones */
+.seccion {
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-card, 20px);
+  overflow: hidden;
+}
+
+.opcionItem {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  width: 100%;
+  padding: 1rem;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--color-borde);
+  color: var(--color-texto);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  min-height: 60px;
+  transition: background var(--transicion-normal);
+}
+
+.opcionItem:last-child { border-bottom: none; }
+.opcionItem:hover { background: var(--color-superficie-elevada); }
+
+.opcionItem:focus-visible {
+  outline: 2.5px solid var(--color-primario);
+  outline-offset: -2px;
+}
+
+.opcionIcono {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-lg);
+  background: rgba(77, 237, 151, 0.1);
+  color: var(--color-primario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.opcionTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.opcionLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+}
+
+.opcionDesc {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Botón cerrar sesión */
+.btnCerrarSesion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  background: var(--color-pumpkin-spice-light);
+  border: 1.5px solid rgba(255, 115, 0, 0.3);
+  border-radius: var(--radio-full);
+  padding: 0.875rem 1.5rem;
+  color: var(--color-pumpkin-spice);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semibold);
+  font-family: inherit;
+  cursor: pointer;
+  min-height: 52px;
+  transition: background var(--transicion-normal);
+}
+
+.btnCerrarSesion:hover {
+  background: rgba(255, 115, 0, 0.2);
+}
+
+.btnCerrarSesion:focus-visible {
+  outline: 2.5px solid var(--color-pumpkin-spice);
+  outline-offset: 2px;
+}

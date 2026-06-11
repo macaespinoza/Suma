@@ -1,146 +1,94 @@
-'use client';
 // =============================================================================
-// SUMA — Layout del Dashboard (con Sidebar)
-// Estructura de layout para las páginas internas post-login.
+// SUMA — Layout del Dashboard (Mobile-First, Material Design 3)
+// Reemplaza el sidebar lateral por TopAppBar + BottomNav de Android.
 // =============================================================================
 
-import Link from 'next/link';
+'use client';
+
 import { usePathname } from 'next/navigation';
-import {
-  ChartBar,
-  Buildings,
-  House,
-  Users,
-  Coins,
-  FileText,
-  CreditCard,
-  Megaphone,
-  ShoppingCart,
-  CalendarBlank,
-  PawPrint,
-  Bell,
-  User,
-} from '@phosphor-icons/react';
+import { Bell } from '@phosphor-icons/react';
+import Link from 'next/link';
 import styles from './layout.module.css';
 import Logo from '../../componentes/ui/Logo.jsx';
-import FondoGradiente from '../../componentes/ui/FondoGradiente.jsx';
+import BottomNav from '../../componentes/ui/BottomNav.jsx';
 
 /**
- * Definición de navegación del sidebar.
+ * Títulos de página para el TopAppBar.
+ * Si no hay título, se muestra el logo (en el Home).
  */
-const navegacion = [
-  { href: '/dashboard', icono: <ChartBar size={20} weight="fill" />, etiqueta: 'Dashboard' },
-  { href: '/dashboard/condominios', icono: <Buildings size={20} weight="fill" />, etiqueta: 'Condominios' },
-  { href: '/dashboard/unidades', icono: <House size={20} weight="fill" />, etiqueta: 'Unidades' },
-  { href: '/dashboard/usuarios', icono: <Users size={20} weight="fill" />, etiqueta: 'Usuarios' },
-];
+const TITULOS_PAGINA = {
+  '/dashboard':              null,              // Muestra logo en home
+  '/dashboard/finanzas':     'Finanzas',
+  '/dashboard/comunidad':    'Comunidad',
+  '/dashboard/condominios':  'Condominios',
+  '/dashboard/perfil':       'Mi Perfil',
+};
 
 /**
- * Layout del Dashboard.
- * Envuelve las páginas internas con sidebar + header.
+ * Layout principal del dashboard post-login.
+ * Estructura: TopAppBar (fija) + main (scrollable) + BottomNav (fija).
  *
- * @param {object} props
- * @param {React.ReactNode} props.children - Contenido de la página del dashboard.
+ * @param {{ children: React.ReactNode }} props
  */
 export default function LayoutDashboard({ children }) {
   const pathname = usePathname();
+  const esHome = pathname === '/dashboard';
+
+  // Buscar el título exacto primero, luego por prefijo para sub-rutas
+  let titulo = TITULOS_PAGINA[pathname];
+  if (titulo === undefined) {
+    const prefijo = Object.keys(TITULOS_PAGINA)
+      .filter((k) => k !== '/dashboard')
+      .find((k) => pathname.startsWith(k));
+    titulo = prefijo ? TITULOS_PAGINA[prefijo] : '';
+  }
 
   return (
-    <div className={styles.layoutDashboard}>
-      <FondoGradiente />
+    <div className={styles.shell}>
 
-      {/* --- Sidebar --- */}
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>
-          <Link href="/dashboard" className={styles.sidebarLogoLink}>
-            <Logo className={styles.sidebarLogo} />
-            <span className={styles.sidebarTitulo}>SUMA</span>
-          </Link>
-        </div>
-
-        <nav className={styles.sidebarNav}>
-          <ul className={styles.navLista}>
-            {/* Módulo Core */}
-            {navegacion.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`${styles.navItem} ${pathname === item.href ? styles.navItemActivo : ''}`}
-                >
-                  <span className={styles.navIcono}>{item.icono}</span>
-                  <span>{item.etiqueta}</span>
-                </Link>
-              </li>
-            ))}
-
-            <li className={styles.navSeparador}>Administración</li>
-            <li>
+      {/* ===== Top App Bar ===== */}
+      <header className={styles.topBar} role="banner">
+        <div className={styles.topBarContenido}>
+          <div className={styles.topBarIzquierda}>
+            {esHome ? (
               <Link
-                href="/dashboard/finanzas"
-                className={`${styles.navItem} ${pathname === '/dashboard/finanzas' ? styles.navItemActivo : ''}`}
+                href="/dashboard"
+                className={styles.logoLink}
+                aria-label="SUMA — Ir al inicio"
               >
-                <span className={styles.navIcono}><Coins size={20} weight="fill" /></span>
-                <span>Dashboard Financiero</span>
+                <Logo className={styles.logoTop} />
               </Link>
-            </li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><FileText size={20} weight="fill" /></span>
-              <span>Cobros</span>
-            </li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><CreditCard size={20} weight="fill" /></span>
-              <span>Pagos</span>
-            </li>
+            ) : (
+              <h1 className={styles.topBarTitulo}>{titulo}</h1>
+            )}
+          </div>
 
-            <li className={styles.navSeparador}>Comunidad</li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><Megaphone size={20} weight="fill" /></span>
-              <span>Muro Social</span>
-            </li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><ShoppingCart size={20} weight="fill" /></span>
-              <span>Mercadito</span>
-            </li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><CalendarBlank size={20} weight="fill" /></span>
-              <span>Eventos</span>
-            </li>
-            <li className={`${styles.navItem} ${styles.navItemDeshabilitado}`}>
-              <span className={styles.navIcono}><PawPrint size={20} weight="fill" /></span>
-              <span>Mascotas</span>
-            </li>
-          </ul>
-        </nav>
-
-        <div className={styles.sidebarFooter}>
-          <div className={styles.usuarioInfo}>
-            <div className={styles.usuarioAvatar}><User size={20} weight="fill" /></div>
-            <div>
-              <p className={styles.usuarioNombre}>Admin</p>
-              <p className={styles.usuarioRol}>Administrador</p>
-            </div>
+          <div className={styles.topBarAcciones}>
+            <button
+              className={styles.btnIcono}
+              aria-label="Notificaciones — 2 sin leer"
+              type="button"
+            >
+              <Bell size={22} weight="fill" aria-hidden="true" />
+              <span className={styles.badgeNotif} aria-hidden="true">2</span>
+            </button>
           </div>
         </div>
-      </aside>
+      </header>
 
-      {/* --- Contenido Principal --- */}
-      <div className={styles.contenidoPrincipal}>
-        {/* --- Header --- */}
-        <header className={styles.header}>
-          <div className={styles.headerIzquierda}>
-            <h2 className={styles.headerTitulo}>Dashboard</h2>
-          </div>
-          <div className={styles.headerDerecha}>
-            {/* TODO (Open Code): Notificaciones, búsqueda, perfil */}
-            <span className={styles.headerIcono}><Bell size={20} weight="fill" /></span>
-          </div>
-        </header>
+      {/* ===== Contenido principal scrollable ===== */}
+      <main
+        className={styles.main}
+        role="main"
+        id="contenido-principal"
+        tabIndex={-1}
+      >
+        {children}
+      </main>
 
-        {/* --- Área de Contenido --- */}
-        <main className={styles.main}>
-          {children}
-        </main>
-      </div>
+      {/* ===== Bottom Navigation Bar ===== */}
+      <BottomNav />
+
     </div>
   );
 }
