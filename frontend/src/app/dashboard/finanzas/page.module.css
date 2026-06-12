@@ -206,15 +206,11 @@
   overflow: hidden;
 }
 
-@keyframes expandirBarra {
-  from { width: 0%; }
-  to   { width: var(--ancho-final); }
-}
-
 .egresoBarraRelleno {
   height: 100%;
   border-radius: var(--radio-full);
-  animation: expandirBarra 0.7s cubic-bezier(0.2, 0, 0, 1) both;
+  width: 0%;
+  transition: width 0.8s cubic-bezier(0.2, 0, 0, 1);
 }
 
 /* =============================================================================

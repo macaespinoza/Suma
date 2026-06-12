@@ -45,6 +45,9 @@
 }
 
 .seccionTitulo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: var(--texto-lg);
   font-weight: var(--peso-semibold);
   color: var(--color-texto);
@@ -101,6 +104,77 @@
   margin-top: 2px;
 }
 
+/* Grid Contactos */
+.gridContactos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--espacio-4);
+}
+
+.tarjetaContacto {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4);
+  background: var(--color-superficie);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-xl);
+  box-shadow: var(--sombra-xs);
+}
+
+.contactoAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-spring-green), var(--color-emerald-depths));
+  color: var(--color-onyx);
+  font-size: var(--texto-base);
+  font-weight: var(--peso-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.contactoInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.contactoNombre {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.contactoTipo {
+  font-size: var(--texto-xs);
+  color: var(--color-primario);
+  font-weight: var(--peso-medium);
+  margin-top: 2px;
+}
+
+.contactoDetalles {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--espacio-2);
+}
+
+.contactoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+  text-decoration: none;
+  transition: color var(--transicion-normal);
+}
+
+.contactoItem:hover {
+  color: var(--color-primario);
+}
+
 /* Grid Titulares */
 .gridTitulares {
   display: grid;
@@ -147,6 +221,174 @@
   color: var(--color-texto-secundario);
 }
 
+/* Historial de Pagos */
+.listaHistorial {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemHistorial {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem 1rem;
+  background: var(--color-superficie-elevada);
+  border-radius: var(--radio-lg);
+  border-left: 4px solid var(--color-borde);
+}
+
+.itemHistorial.estado--pagado {
+  border-left-color: var(--color-primario);
+  background: rgba(77, 237, 151, 0.05);
+}
+
+.itemHistorial.estado--pendiente {
+  border-left-color: var(--color-school-bus-yellow);
+  background: rgba(255, 194, 11, 0.05);
+}
+
+.itemHistorial.estado--moroso {
+  border-left-color: var(--color-pumpkin-spice);
+  background: rgba(255, 115, 0, 0.05);
+}
+
+.itemHistorialHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.itemPeriodo {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.estadoBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 2px 8px;
+  border-radius: var(--radio-full);
+  font-size: 10px;
+  font-weight: var(--peso-bold);
+}
+
+.badge--pagado {
+  background: var(--color-spring-green-light);
+  color: var(--color-primario);
+}
+
+.badge--pendiente {
+  background: var(--color-school-bus-yellow-light);
+  color: var(--color-school-bus-yellow);
+}
+
+.badge--moroso {
+  background: var(--color-pumpkin-spice-light);
+  color: var(--color-pumpkin-spice);
+}
+
+.itemHistorialDetalle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.itemMonto {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.itemFecha {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+/* Deudas Pendientes */
+.seccionDeudas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+.totalDeuda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--espacio-3) var(--espacio-4);
+  background: var(--color-pumpkin-spice-light);
+  border-radius: var(--radio-lg);
+  border: 1px solid rgba(255, 115, 0, 0.3);
+}
+
+.totalDeudaLabel {
+  font-size: var(--texto-sm);
+  font-weight: var(--peso-semibold);
+  color: var(--color-pumpkin-spice);
+}
+
+.totalDeudaMonto {
+  font-size: var(--texto-lg);
+  font-weight: var(--peso-extrabold);
+  color: var(--color-pumpkin-spice);
+}
+
+.listaDeudas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.itemDeuda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--color-superficie-elevada);
+  border-radius: var(--radio-lg);
+  border-left: 4px solid var(--color-pumpkin-spice);
+}
+
+.itemDeudaHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.diasMora {
+  font-size: 10px;
+  color: var(--color-pumpkin-spice);
+  font-weight: var(--peso-semibold);
+}
+
+.itemDeudaMonto {
+  font-size: var(--texto-base);
+  font-weight: var(--peso-bold);
+  color: var(--color-pumpkin-spice);
+}
+
+.sinDeudas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: var(--espacio-6);
+  text-align: center;
+}
+
+.sinDeudasIcono {
+  color: var(--color-primario);
+  font-size: 2rem;
+}
+
+.sinDeudas p {
+  font-size: var(--texto-sm);
+  color: var(--color-texto-terciario);
+}
+
 /* Lista de items */
 .lista {
   list-style: none;
@@ -188,6 +430,7 @@
 .itemDetalle {
   font-size: var(--texto-xs);
   color: var(--color-texto-terciario);
+  margin-left: auto;
 }
 
 /* Vacío */
@@ -221,18 +464,19 @@
 /* Responsive */
 @media (max-width: 768px) {
   .mosaico,
-  .gridTitulares {
+  .gridTitulares,
+  .gridContactos {
     grid-template-columns: 1fr;
   }
 
   .cabecera {
     flex-direction: column;
   }
-  
+
   .selectorResponsable {
     grid-template-columns: 1fr !important;
   }
-  
+
   .gridForm {
     grid-template-columns: 1fr !important;
   }

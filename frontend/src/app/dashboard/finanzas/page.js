@@ -83,8 +83,8 @@ const etiquetaTasa = (t) => {
 export default function PaginaDashboardFinanciero() {
   const { periodoActual: p, egresos, estado_unidades: eu, historial } = MOCK;
 
-  // Calcular máximo de egresos para normalizar barras
-  const maxEgreso = Math.max(...egresos.map((e) => e.monto));
+  // Calcular total de egresos para porcentaje real
+  const totalEgresos = egresos.reduce((sum, e) => sum + e.monto, 0);
   const { pagadas, pendientes, morosas, total } = eu;
 
   return (
@@ -158,7 +158,7 @@ export default function PaginaDashboardFinanciero() {
         <div className={styles.egresosLista}>
           {egresos.map(({ categoria, monto }, idx) => {
             const color = COLORES[idx % COLORES.length];
-            const pct = maxEgreso > 0 ? (monto / maxEgreso) * 100 : 0;
+            const pct = totalEgresos > 0 ? (monto / totalEgresos) * 100 : 0;
             return (
               <div key={categoria} className={styles.egresoFila}>
                 <div className={styles.egresoInfo}>

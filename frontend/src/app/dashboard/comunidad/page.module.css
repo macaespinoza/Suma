@@ -67,7 +67,7 @@
   flex-direction: column;
   gap: 0.875rem;
   position: relative;
-  padding-bottom: 5rem; /* espacio para FAB */
+  padding-bottom: 5rem;
 }
 
 .panelSubtitulo {
@@ -77,7 +77,7 @@
 }
 
 /* =============================================================================
- * FEED — PUBLICACIONES
+ * FEED — PUBLICACIONES (MURO)
  * ============================================================================= */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(12px); }
@@ -169,8 +169,8 @@
   line-height: 1.55;
 }
 
-/* Acciones */
-.pubAcciones {
+/* Estadísticas */
+.pubEstadisticas {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -178,31 +178,173 @@
   border-top: 1px solid var(--color-borde);
 }
 
-.btnAccion {
+.estadistica {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+}
+
+.btnVerComentarios {
   display: flex;
   align-items: center;
   gap: 0.35rem;
   background: transparent;
   border: none;
-  color: var(--color-texto-terciario);
-  font-size: var(--texto-sm);
+  color: var(--color-primario);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-medium);
   cursor: pointer;
   padding: 0.375rem 0.5rem;
   min-height: 36px;
   border-radius: var(--radio-md);
   font-family: inherit;
-  transition: color var(--transicion-normal), background var(--transicion-rapida);
-  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transicion-rapida);
 }
 
-.btnAccion:hover {
-  color: var(--color-texto-secundario);
+.btnVerComentarios:hover {
+  background: var(--color-spring-green-light);
+}
+
+/* =============================================================================
+ * SECCIÓN DE COMENTARIOS
+ * ============================================================================= */
+.seccionComentarios {
+  border-top: 1px solid var(--color-borde);
+  padding-top: 0.875rem;
+  overflow: hidden;
+}
+
+.listaComentarios {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.875rem;
+}
+
+.comentarioItem {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.comentarioAvatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
   background: var(--color-superficie-elevada);
+  color: var(--color-texto-secundario);
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-bold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
 
-.btnAccion:focus-visible {
-  outline: 2.5px solid var(--color-spring-green);
-  outline-offset: 2px;
+.comentarioContenido {
+  flex: 1;
+  min-width: 0;
+}
+
+.comentarioHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2px;
+}
+
+.comentarioAutor {
+  font-size: var(--texto-xs);
+  font-weight: var(--peso-semibold);
+  color: var(--color-texto);
+}
+
+.comentarioTiempo {
+  font-size: 10px;
+  color: var(--color-texto-terciario);
+}
+
+.comentarioTexto {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+  line-height: 1.5;
+}
+
+.respuestaVendedor {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--color-spring-green-light);
+  border-radius: var(--radio-md);
+  border-left: 3px solid var(--color-primario);
+}
+
+.respuestaLabel {
+  font-size: 10px;
+  font-weight: var(--peso-semibold);
+  color: var(--color-primario);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.respuestaTexto {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-secundario);
+  line-height: 1.4;
+}
+
+.inputComentario {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  padding: 0.625rem 0.875rem;
+  background: var(--color-superficie-elevada);
+  border: 1.5px solid var(--color-borde);
+  border-radius: var(--radio-full);
+  font-size: var(--texto-sm);
+  color: var(--color-texto);
+  font-family: inherit;
+  min-height: 40px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.input::placeholder {
+  color: var(--color-texto-terciario);
+}
+
+.btnEnviar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--color-spring-green);
+  border: none;
+  color: var(--color-onyx);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform var(--transicion-rapida);
+}
+
+.btnEnviar:hover {
+  transform: scale(1.05);
+}
+
+.sinComentarios {
+  font-size: var(--texto-xs);
+  color: var(--color-texto-terciario);
+  text-align: center;
+  padding: 0.5rem;
+  font-style: italic;
 }
 
 /* =============================================================================
@@ -214,22 +356,33 @@
   border-radius: var(--radio-card, 20px);
   padding: 1rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.875rem;
   box-shadow: var(--elevacion-1);
   animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
-.mercaditoEmoji {
-  width: 52px;
-  height: 52px;
+.mercaditoImagen {
+  width: 100%;
+  height: 160px;
   border-radius: var(--radio-lg);
+  overflow: hidden;
   background: var(--color-superficie-elevada);
+}
+
+.imagenProducto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholderImagen {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.75rem;
-  flex-shrink: 0;
+  color: var(--color-texto-terciario);
 }
 
 .mercaditoInfo {
@@ -247,25 +400,29 @@
   font-size: var(--texto-xs);
   color: var(--color-texto-terciario);
   margin-top: 2px;
+  line-height: 1.4;
 }
 
-.mercaditoMeta {
+.mercaditoVendedor {
   font-size: var(--texto-xs);
-  color: var(--color-spring-green);
-  font-weight: var(--peso-medium);
+  color: var(--color-texto-secundario);
   margin-top: 4px;
 }
 
-.mercaditorDerecha {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.5rem;
-  flex-shrink: 0;
+.mercaditoUnidad {
+  color: var(--color-primario);
+  font-weight: var(--peso-medium);
 }
 
-.mercaditorPrecio {
-  font-size: var(--texto-sm);
+.mercaditoDerecha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.mercaditoPrecio {
+  font-size: var(--texto-base);
   font-weight: var(--peso-bold);
   color: var(--color-school-bus-yellow);
   white-space: nowrap;
@@ -289,6 +446,12 @@
   background: rgba(77, 237, 151, 0.2);
 }
 
+/* Sección de comentarios del Mercadito */
+.seccionComentariosMercadito {
+  border-top: 1px solid var(--color-borde);
+  padding-top: 0.875rem;
+  overflow: hidden;
+}
 
 /* =============================================================================
  * FAB — Floating Action Button
@@ -296,7 +459,7 @@
 .fab {
   position: fixed;
   bottom: calc(var(--navbar-alto, 72px) + 1.25rem);
-  right: calc(50% - 215px); /* centrado dentro del max-width 430px */
+  right: calc(50% - 215px);
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -328,7 +491,6 @@
   outline-offset: 3px;
 }
 
-/* En mobile real, el FAB va a la derecha estándar */
 @media (max-width: 480px) {
   .fab {
     right: 1.25rem;
