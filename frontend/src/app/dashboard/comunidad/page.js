@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -379,9 +379,9 @@ function ProductoMercadito({ producto, comentarios }) {
 }
 
 // ---------------------------------------------------------------------------
-// Página Principal
+// Contenido de la Página (Usa useSearchParams)
 // ---------------------------------------------------------------------------
-export default function PaginaComunidad() {
+function ComunidadContenido() {
   const searchParams = useSearchParams();
   const tabInicial = searchParams.get('tab') === 'mercadito' ? 1 : 0;
   const [tabActiva, setTabActiva] = useState(tabInicial);
@@ -483,5 +483,16 @@ export default function PaginaComunidad() {
       </AnimatePresence>
 
     </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Página Principal (Export) con Suspense
+// ---------------------------------------------------------------------------
+export default function PaginaComunidad() {
+  return (
+    <Suspense fallback={<div className={styles.pagina}><p style={{ padding: '2rem', textAlign: 'center', color: 'var(--color-texto-secundario)' }}>Cargando comunidad...</p></div>}>
+      <ComunidadContenido />
+    </Suspense>
   );
 }
