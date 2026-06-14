@@ -127,7 +127,7 @@ export default function PaginaCondominios() {
         <h2 className={styles.seccionTitulo}>Administración</h2>
         <div className={styles.adminCard}>
           <div className={styles.adminAvatar} aria-hidden="true">
-            {c.administrador.charAt(0)}
+            <img src="/images/maria.jpg" alt={c.administrador} className={styles.avatarImagen} />
           </div>
           <div className={styles.adminInfo}>
             <p className={styles.adminNombre}>{c.administrador}</p>

@@ -15,17 +15,24 @@
 .tabs {
   display: flex;
   gap: 0.25rem;
-  padding: 1rem 1.25rem 0;
+  padding: 0 1.25rem;
   border-bottom: 1.5px solid var(--color-borde);
   position: sticky;
   top: 0;
-  background: var(--color-fondo);
+  background: var(--color-blanco-calido);
   z-index: 10;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
+  margin-top: -1.5rem; /* Tirarlo hacia arriba para cubrir el padding de main */
+  padding-top: 1rem;
+  border-radius: 32px 32px 0 0; /* Para coincidir con el radio de main si se asoma */
 }
 
 .tab {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   padding: 0.625rem 0.5rem;
   background: transparent;
   border: none;

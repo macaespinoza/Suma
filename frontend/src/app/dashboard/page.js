@@ -16,6 +16,13 @@ import {
   Warning,
   CalendarCheck,
   CheckCircle,
+  Dog,
+  CalendarBlank,
+  Megaphone,
+  Wrench,
+  FileText,
+  ClipboardText,
+  MapPin,
 } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
@@ -56,30 +63,20 @@ const MOCK = {
 };
 
 const ACCESOS = [
-  {
-    href: '/dashboard/finanzas',
-    Icono: Coins,
-    etiqueta: 'Finanzas',
-    variante: 'verde',
-  },
-  {
-    href: '/dashboard/condominios',
-    Icono: Buildings,
-    etiqueta: 'Condominios',
-    variante: 'amarillo',
-  },
-  {
-    href: '/dashboard/comunidad',
-    Icono: Users,
-    etiqueta: 'Comunidad',
-    variante: 'rosa',
-  },
-  {
-    href: '/dashboard/comunidad',
-    Icono: ShoppingBag,
-    etiqueta: 'Mercadito',
-    variante: 'naranja',
-  },
+  { href: '/dashboard/finanzas', Icono: Coins, etiqueta: 'Finanzas', variante: 'verde' },
+  { href: '/dashboard/condominios', Icono: Buildings, etiqueta: 'Condominios', variante: 'amarillo' },
+  { href: '/dashboard/comunidad', Icono: Users, etiqueta: 'Comunidad', variante: 'rosa' },
+  { href: '/dashboard/comunidad?tab=mercadito', Icono: ShoppingBag, etiqueta: 'Mercadito', variante: 'naranja' },
+];
+
+const ACCESOS_COMUNIDAD = [
+  { href: '/dashboard/eventos', Icono: CalendarBlank, etiqueta: 'Eventos', variante: 'violeta' },
+  { href: '/dashboard/avisos', Icono: Megaphone, etiqueta: 'Avisos', variante: 'naranja' },
+  { href: '/dashboard/mascotas', Icono: Dog, etiqueta: 'Mascotas', variante: 'rosa' },
+  { href: '/dashboard/reservas', Icono: MapPin, etiqueta: 'Reservas', variante: 'verde' },
+  { href: '/dashboard/incidencias', Icono: Wrench, etiqueta: 'Incidencias', variante: 'naranja' },
+  { href: '/dashboard/asambleas', Icono: ClipboardText, etiqueta: 'Asambleas', variante: 'violeta' },
+  { href: '/dashboard/documentos', Icono: FileText, etiqueta: 'Documentos', variante: 'azul' },
 ];
 
 const ESTADOS = {
@@ -114,7 +111,7 @@ export default function PaginaDashboard() {
           <p className={styles.saludoCondominio}>{unidad.condominio}</p>
         </div>
         <div className={styles.avatarCirculo} aria-hidden="true" title={`${usuario.nombre} ${usuario.apellido}`}>
-          {iniciales}
+          <img src="/images/maria.jpg" alt={`${usuario.nombre} ${usuario.apellido}`} className={styles.avatarImagen} />
         </div>
       </section>
 
@@ -156,6 +153,28 @@ export default function PaginaDashboard() {
         <h2 className={styles.seccionTitulo}>Accesos Rápidos</h2>
         <div className={styles.gridAccesos} role="list">
           {ACCESOS.map(({ href, Icono, etiqueta, variante }) => (
+            <Link
+              key={etiqueta}
+              href={href}
+              className={`${styles.accesoItem} ${styles[`acceso--${variante}`]}`}
+              role="listitem"
+              aria-label={`Acceder a ${etiqueta}`}
+            >
+              <span className={styles.accesoIcono} aria-hidden="true">
+                <Icono size={28} weight="fill" />
+              </span>
+              <span className={styles.accesoLabel}>{etiqueta}</span>
+              <ArrowRight size={14} className={styles.accesoFlecha} aria-hidden="true" />
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* ===== Servicios Comunitarios ===== */}
+      <section aria-label="Servicios comunitarios" className={styles.seccion}>
+        <h2 className={styles.seccionTitulo}>Servicios Comunitarios</h2>
+        <div className={styles.gridAccesos} role="list">
+          {ACCESOS_COMUNIDAD.map(({ href, Icono, etiqueta, variante }) => (
             <Link
               key={etiqueta}
               href={href}

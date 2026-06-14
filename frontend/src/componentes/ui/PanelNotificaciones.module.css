@@ -1,0 +1,274 @@
+/* =============================================================================
+ * SUMA — Panel de Notificaciones (Glassmorphismo Oscuro Premium)
+ * ============================================================================= */
+
+.panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 12px;
+  width: min(340px, calc(var(--max-movil, 430px) - 24px));
+  z-index: 200;
+
+  /* Glassmorphismo oscuro */
+  background: linear-gradient(
+    140deg,
+    rgba(25, 30, 27, 0.92) 0%,
+    rgba(19, 22, 20, 0.97) 100%
+  );
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+
+  /* Borde glass */
+  border: 1px solid rgba(77, 237, 151, 0.18);
+  border-radius: 20px;
+
+  /* Sombra atmosférica */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+  overflow: hidden;
+}
+
+/* Línea de acento superior */
+.panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(77, 237, 151, 0.6),
+    transparent
+  );
+  border-radius: 0 0 2px 2px;
+}
+
+/* =============================================================================
+ * ENCABEZADO
+ * ============================================================================= */
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.encabezadoIzq {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titulo {
+  font-family: var(--fuente-titulos), sans-serif;
+  font-size: 0.9375rem;
+  font-weight: var(--peso-bold);
+  color: var(--color-blanco-calido);
+  letter-spacing: -0.01em;
+}
+
+.countBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  background: var(--color-hot-pink-web);
+  color: white;
+  font-size: 10px;
+  font-weight: var(--peso-bold);
+  border-radius: 99px;
+  line-height: 1;
+}
+
+.btnCerrar {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition:
+    background var(--transicion-rapida),
+    color var(--transicion-rapida),
+    transform var(--transicion-rapida);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btnCerrar:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-blanco-calido);
+  transform: scale(1.05);
+}
+
+.btnCerrar:focus-visible {
+  outline: 2px solid var(--color-spring-green);
+  outline-offset: 2px;
+}
+
+/* =============================================================================
+ * LISTA DE AVISOS
+ * ============================================================================= */
+.lista {
+  list-style: none;
+  padding: 0.5rem 0;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(77, 237, 151, 0.2) transparent;
+}
+
+.lista::-webkit-scrollbar { width: 4px; }
+.lista::-webkit-scrollbar-thumb {
+  background: rgba(77, 237, 151, 0.2);
+  border-radius: 4px;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  position: relative;
+  transition: background var(--transicion-rapida);
+  cursor: pointer;
+}
+
+.item:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.itemNoLeido {
+  background: rgba(77, 237, 151, 0.04);
+}
+
+.itemLeido {
+  opacity: 0.65;
+}
+
+/* Punto de no leído */
+.puntoDot {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 7px;
+  height: 7px;
+  background: var(--color-hot-pink-web);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(247, 101, 171, 0.6);
+}
+
+/* =============================================================================
+ * ÍCONO DE TIPO
+ * ============================================================================= */
+.iconoWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.iconoUrgente {
+  background: rgba(255, 194, 11, 0.15);
+  color: var(--color-school-bus-yellow);
+  box-shadow: 0 0 8px rgba(255, 194, 11, 0.15);
+}
+
+.iconoEvento {
+  background: rgba(247, 101, 171, 0.15);
+  color: var(--color-hot-pink-web);
+  box-shadow: 0 0 8px rgba(247, 101, 171, 0.15);
+}
+
+.iconoInfo {
+  background: rgba(77, 237, 151, 0.12);
+  color: var(--color-spring-green);
+  box-shadow: 0 0 8px rgba(77, 237, 151, 0.12);
+}
+
+.iconoExito {
+  background: rgba(77, 237, 151, 0.15);
+  color: var(--color-spring-green);
+}
+
+/* =============================================================================
+ * TEXTO DEL ÍTEM
+ * ============================================================================= */
+.itemTexto {
+  flex: 1;
+  min-width: 0;
+}
+
+.itemTitulo {
+  font-size: 0.875rem;
+  font-weight: var(--peso-semibold);
+  color: var(--color-blanco-calido);
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.itemDesc {
+  font-size: 0.75rem;
+  color: rgba(255, 248, 240, 0.55);
+  line-height: 1.4;
+}
+
+.itemHora {
+  display: block;
+  font-size: 0.6875rem;
+  color: rgba(255, 248, 240, 0.35);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* =============================================================================
+ * FOOTER
+ * ============================================================================= */
+.footer {
+  padding: 0.625rem 1rem 0.875rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.btnVerTodos {
+  width: 100%;
+  padding: 0.625rem;
+  background: rgba(77, 237, 151, 0.1);
+  border: 1px solid rgba(77, 237, 151, 0.2);
+  border-radius: 12px;
+  color: var(--color-spring-green);
+  font-size: 0.8125rem;
+  font-weight: var(--peso-semibold);
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background var(--transicion-normal),
+    border-color var(--transicion-normal);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btnVerTodos:hover {
+  background: rgba(77, 237, 151, 0.18);
+  border-color: rgba(77, 237, 151, 0.4);
+}
+
+.btnVerTodos:focus-visible {
+  outline: 2px solid var(--color-spring-green);
+  outline-offset: 2px;
+}

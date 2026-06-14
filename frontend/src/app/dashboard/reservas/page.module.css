@@ -1,0 +1,28 @@
+.pagina { padding: 1.5rem; max-width: 1300px; margin: 0 auto; }
+.botonVolver { display: inline-flex; align-items: center; gap: 0.5rem; color: #6b7280; text-decoration: none; font-size: 0.875rem; margin-bottom: 1rem; }
+.cabecera { margin-bottom: 1.5rem; }
+.titulo { font-size: 1.75rem; font-weight: 700; color: #1f2937; margin: 0; }
+.subtitulo { color: #6b7280; margin: 0.25rem 0 0; font-size: 0.95rem; }
+.seccionTitulo { font-size: 1.25rem; font-weight: 700; color: #1f2937; margin: 2rem 0 1rem; }
+.areasGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+.areaCard { background: white; padding: 1.25rem; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
+.areaHeader { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; color: #14b8a6; }
+.areaHeader h3 { font-size: 1.1rem; font-weight: 700; color: #1f2937; margin: 0; }
+.areaDesc { color: #6b7280; font-size: 0.85rem; margin: 0 0 0.75rem; line-height: 1.4; }
+.areaInfo { display: flex; flex-direction: column; gap: 0.4rem; font-size: 0.85rem; color: #4b5563; margin-bottom: 1rem; }
+.areaInfo > div { display: flex; align-items: center; gap: 0.4rem; }
+.costo { font-weight: 700; color: #14b8a6; }
+.botonReservar { background: linear-gradient(135deg, #14b8a6, #0d9488); color: white; border: none; padding: 0.6rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; margin-top: auto; }
+.reservasLista { background: white; border-radius: 1rem; padding: 0.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.reservaItem { display: flex; align-items: center; gap: 1rem; padding: 0.75rem; border-bottom: 1px solid #f3f4f6; }
+.reservaItem:last-child { border-bottom: none; }
+.reservaFecha { background: #14b8a6; color: white; padding: 0.5rem 0.75rem; border-radius: 0.5rem; text-align: center; min-width: 60px; }
+.diaNum { display: block; font-size: 1.4rem; font-weight: 800; line-height: 1; }
+.mesCorto { display: block; font-size: 0.7rem; text-transform: uppercase; }
+.reservaInfo { flex: 1; }
+.reservaInfo h4 { margin: 0; font-size: 1rem; color: #1f2937; }
+.reservaInfo p { margin: 0.15rem 0; font-size: 0.85rem; color: #6b7280; }
+.horario { display: flex; align-items: center; gap: 0.25rem; }
+.estado { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.3rem 0.7rem; border-radius: 0.5rem; font-size: 0.8rem; font-weight: 600; }
+.estadoOk { background: #dcfce7; color: #166534; }
+.estadoPend { background: #fef3c7; color: #92400e; }

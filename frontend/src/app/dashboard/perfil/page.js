@@ -17,7 +17,7 @@ import {
   ArrowLeft,
   Check,
   Desktop,
-  Mobile,
+  DeviceMobile,
   Eye,
   EyeSlash,
   CaretRight,
@@ -579,7 +579,7 @@ export default function PaginaPerfil() {
             {/* Avatar y datos del usuario */}
             <section aria-label="Datos del perfil" className={styles.perfilHero}>
               <div className={styles.avatarGrande} aria-hidden="true">
-                {p.nombre.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                <img src="/images/maria.jpg" alt={p.nombre} className={styles.avatarImagen} />
               </div>
               <h2 className={styles.perfilNombre}>{p.nombre}</h2>
               <p className={styles.perfilEmail}>{p.email}</p>

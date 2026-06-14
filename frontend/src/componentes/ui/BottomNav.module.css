@@ -1,5 +1,6 @@
 /* =============================================================================
  * SUMA — BottomNav Styles (Material Design 3 Navigation Bar)
+ * v3: Glow en ítem activo, pill spring, gradiente fondo más rico.
  * ============================================================================= */
 
 .nav {
@@ -10,10 +11,24 @@
   width: 100%;
   max-width: var(--max-movil, 430px);
   height: var(--navbar-alto, 72px);
-  background: rgba(19, 22, 20, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: none;
+
+  /* Gradiente oscuro más rico */
+  background: linear-gradient(
+    to top,
+    rgba(14, 17, 15, 0.99) 0%,
+    rgba(19, 22, 20, 0.96) 100%
+  );
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+
+  /* Borde superior glass con acento verde sutil */
+  border-top: 1px solid rgba(77, 237, 151, 0.1);
+
+  /* Sombra hacia arriba para separar del contenido */
+  box-shadow:
+    0 -1px 16px rgba(0, 0, 0, 0.4),
+    0 0 1px rgba(77, 237, 151, 0.05);
+
   display: flex;
   align-items: stretch;
   z-index: 100;
@@ -29,16 +44,23 @@
   justify-content: center;
   gap: 3px;
   position: relative;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.45);
   text-decoration: none;
   padding: 8px 4px 12px;
   min-height: 44px; /* WCAG 2.2 tap target */
   -webkit-tap-highlight-color: transparent;
-  transition: color var(--transicion-normal);
+  transition:
+    color var(--transicion-normal),
+    transform var(--transicion-spring-rapida);
 }
 
 .item:hover {
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.8);
+  transform: translateY(-1px);
+}
+
+.item:active {
+  transform: scale(0.9) translateY(1px);
 }
 
 .item:focus-visible {
@@ -52,33 +74,50 @@
   color: var(--color-spring-green);
 }
 
-/* --- Indicador pill superior (activo) --- */
+/* --- Indicador pill superior (activo) — spring satisfactoria --- */
 .indicador {
   position: absolute;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 32px;
+  width: 24px;
   height: 3px;
-  border-radius: 0 0 4px 4px;
-  background: var(--color-spring-green);
+  border-radius: 0 0 5px 5px;
+  background: linear-gradient(
+    90deg,
+    rgba(77, 237, 151, 0.6),
+    var(--color-spring-green),
+    rgba(77, 237, 151, 0.6)
+  );
   opacity: 0;
-  transition: opacity var(--transicion-normal), width var(--transicion-normal);
+  transition:
+    opacity var(--transicion-normal),
+    width var(--transicion-spring-normal),
+    box-shadow var(--transicion-normal);
 }
 
 .itemActivo .indicador {
   opacity: 1;
+  width: 32px;
+  box-shadow: 0 0 8px rgba(77, 237, 151, 0.5);
 }
 
-/* --- Ícono --- */
+/* --- Ícono con glow en activo --- */
 .icono {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform var(--transicion-rapida);
+  transition:
+    transform var(--transicion-spring-rapida),
+    filter var(--transicion-normal);
 }
 
 .itemActivo .icono {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 5px rgba(77, 237, 151, 0.5));
+}
+
+.item:hover:not(.itemActivo) .icono {
   transform: translateY(-1px);
 }
 
@@ -89,4 +128,10 @@
   letter-spacing: 0.02em;
   text-align: center;
   line-height: 1;
+  transition: color var(--transicion-normal);
+}
+
+.itemActivo .etiqueta {
+  font-weight: var(--peso-bold);
+  letter-spacing: 0.03em;
 }

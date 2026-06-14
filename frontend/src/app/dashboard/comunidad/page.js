@@ -6,7 +6,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Megaphone,
@@ -17,6 +18,7 @@ import {
   ShoppingBag,
   Plus,
   Image,
+  Users,
 } from '@phosphor-icons/react';
 import styles from './page.module.css';
 
@@ -87,7 +89,7 @@ const MOCK_PRODUCTOS = [
     titulo: 'Vendo Bicicleta Aro 26',
     descripcion: 'Bicicleta en excelente estado, poco uso. Incluye casco y candado.',
     precio: 85000,
-    imagenes: ['https://via.placeholder.com/400x300?text=Bicicleta+Placeholder'],
+    imagenes: ['/images/bicicleta.jpg'],
     fecha_publicacion: '2026-06-10T15:00:00Z',
     cantidad_comentarios: 2,
     estado: 'activo',
@@ -98,7 +100,7 @@ const MOCK_PRODUCTOS = [
     titulo: 'Clases de Yoga',
     descripcion: 'Grupal o individual. Lunes y miércoles 19:00 hrs. Primer clase gratis.',
     precio: 5000,
-    imagenes: ['https://via.placeholder.com/400x300?text=Yoga+Placeholder'],
+    imagenes: ['/images/yoga.jpg'],
     fecha_publicacion: '2026-06-09T10:00:00Z',
     cantidad_comentarios: 1,
     estado: 'activo',
@@ -109,9 +111,20 @@ const MOCK_PRODUCTOS = [
     titulo: 'Sillón en buenas condiciones',
     descripcion: 'Color gris, 2 plazas. Muy cómodo, retiro en depto.',
     precio: 45000,
-    imagenes: ['https://via.placeholder.com/400x300?text=Sillon+Placeholder'],
+    imagenes: ['/images/sillon.jpg'],
     fecha_publicacion: '2026-06-08T14:00:00Z',
     cantidad_comentarios: 3,
+    estado: 'activo',
+  },
+  {
+    id: 'prod-moto',
+    vendedor: { id: 'usr-pedro', nombre: 'Pedro Rojas', unidad: 'Depto B-204' },
+    titulo: 'Moto Honda XR 150',
+    descripcion: 'Moto en excelente estado, papeles al día. Ideal para la ciudad.',
+    precio: 1250000,
+    imagenes: ['/images/moto.jpg'],
+    fecha_publicacion: '2026-06-12T10:00:00Z',
+    cantidad_comentarios: 1,
     estado: 'activo',
   },
 ];
@@ -148,8 +161,8 @@ const COLOR_AVATAR = {
 };
 
 const TABS = [
-  { id: 'muro', label: 'Muro', panel: 'panel-muro' },
-  { id: 'mercadito', label: 'Mercadito', panel: 'panel-mercadito' },
+  { id: 'muro', label: 'Muro', panel: 'panel-muro', Icon: Users },
+  { id: 'mercadito', label: 'Mercadito', panel: 'panel-mercadito', Icon: ShoppingBag },
 ];
 
 const formatearFecha = (fechaStr) => {
@@ -369,7 +382,9 @@ function ProductoMercadito({ producto, comentarios }) {
 // Página Principal
 // ---------------------------------------------------------------------------
 export default function PaginaComunidad() {
-  const [tabActiva, setTabActiva] = useState(0);
+  const searchParams = useSearchParams();
+  const tabInicial = searchParams.get('tab') === 'mercadito' ? 1 : 0;
+  const [tabActiva, setTabActiva] = useState(tabInicial);
 
   return (
     <div className={styles.pagina}>
@@ -390,6 +405,7 @@ export default function PaginaComunidad() {
             className={`${styles.tab} ${tabActiva === i ? styles.tabActiva : ''}`}
             onClick={() => setTabActiva(i)}
           >
+            <tab.Icon size={18} weight={tabActiva === i ? 'fill' : 'regular'} aria-hidden="true" />
             {tab.label}
           </button>
         ))}

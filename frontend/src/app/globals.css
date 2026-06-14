@@ -1,7 +1,8 @@
 /* =============================================================================
- * SUMA — Sistema de Diseño Global (Neo-Brutalismo Oscuro Premium v2)
+ * SUMA — Sistema de Diseño Global (Neo-Brutalismo Oscuro Premium v3)
  * Tokens CSS para colores, tipografia, espaciado y geometria.
  * Forzado a dark mode exclusivo con paleta oficial SUMA.
+ * v3: Tokens glass, glow, spring — optimizado para prototipo Corfo.
  * ============================================================================= */
 
 /* --- Google Fonts: Archivo (titulos) e Inter (cuerpo) ---
@@ -143,6 +144,11 @@
   --transicion-normal: 200ms cubic-bezier(0.2, 0, 0, 1);
   --transicion-lenta: 300ms cubic-bezier(0.2, 0, 0, 1);
 
+  /* --- Transiciones Spring (más expresivas para UI premium) --- */
+  --transicion-spring-rapida: 180ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transicion-spring-normal: 280ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transicion-spring-suave:  350ms cubic-bezier(0.25, 1.0, 0.5, 1);
+
   /* --- Layout Mobile-First --- */
   --ancho-maximo: 1280px;
   --max-movil: 430px;
@@ -160,6 +166,31 @@
   --radio-card: 20px;
   --radio-card-grande: 28px;
   --radio-chip: 8px;
+
+  /* ==========================================================================
+   * TOKENS NUEVOS v3 — Glassmorphismo, Glow, Gradientes Premium
+   * ========================================================================== */
+
+  /* Glassmorphismo claro (sobre fondo blanco-cálido) */
+  --glass-claro-bg: rgba(255, 255, 255, 0.72);
+  --glass-claro-borde: rgba(255, 255, 255, 0.55);
+  --glass-claro-blur: blur(16px) saturate(150%);
+
+  /* Glassmorphismo oscuro (sobre fondo onyx) */
+  --glass-oscuro-bg: rgba(19, 22, 20, 0.88);
+  --glass-oscuro-borde: rgba(77, 237, 151, 0.15);
+  --glass-oscuro-blur: blur(24px) saturate(180%);
+
+  /* Glow tokens por color */
+  --glow-verde:    0 0 16px rgba(77, 237, 151, 0.35);
+  --glow-rosa:     0 0 16px rgba(247, 101, 171, 0.35);
+  --glow-amarillo: 0 0 16px rgba(255, 194, 11, 0.30);
+  --glow-naranja:  0 0 16px rgba(255, 115, 0, 0.30);
+
+  /* Sombra atmosférica suave (light surface) */
+  --sombra-atmos-sm: 0 2px 12px rgba(0, 0, 0, 0.07), 0 1px 4px rgba(0, 0, 0, 0.04);
+  --sombra-atmos-md: 0 4px 24px rgba(0, 0, 0, 0.09), 0 2px 8px rgba(0, 0, 0, 0.05);
+  --sombra-atmos-lg: 0 8px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.07);
 }
 
 /* =============================================================================
@@ -276,7 +307,10 @@ input, textarea, select, button {
   background: var(--color-texto-terciario);
 }
 
-/* --- Animaciones MD3 --- */
+/* =============================================================================
+ * ANIMACIONES — Keyframes del Sistema
+ * ============================================================================= */
+
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(16px) scale(0.98); }
   to   { opacity: 1; transform: translateY(0)  scale(1); }
@@ -292,12 +326,65 @@ input, textarea, select, button {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Pulso suave para badges y dots de notificación */
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 0 0 rgba(247, 101, 171, 0.5); }
+  50%       { transform: scale(1.08); box-shadow: 0 0 0 4px rgba(247, 101, 171, 0); }
+}
+
+/* Glow pulse para elementos de acento */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: var(--glow-verde); }
+  50%       { box-shadow: 0 0 24px rgba(77, 237, 151, 0.55); }
+}
+
+/* Skeleton loading pulse */
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}
+
+/* Shimmer sweep */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+/* Ring pulse para avatar */
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 0 2px rgba(77, 237, 151, 0.4); }
+  50%       { box-shadow: 0 0 0 4px rgba(77, 237, 151, 0.15); }
+}
+
+/* =============================================================================
+ * CLASES UTILITARIAS DE ANIMACIÓN
+ * ============================================================================= */
+
 .animar-entrada {
   animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both;
 }
 
 /* --- Stagger helper (usar con style={{ animationDelay }}) --- */
 .animar-stagger { animation: fadeInUp 0.4s cubic-bezier(0.2, 0, 0, 1) both; }
+
+/* Skeleton loading */
+.skeleton-pulse {
+  animation: skeletonPulse 1.6s ease-in-out infinite;
+  background: var(--color-borde);
+  border-radius: var(--radio-md);
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-borde) 25%,
+    rgba(255,255,255,0.15) 50%,
+    var(--color-borde) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.8s ease-in-out infinite;
+  border-radius: var(--radio-md);
+}
 
 /* --- Focus visible (accesibilidad) --- */
 :focus-visible {

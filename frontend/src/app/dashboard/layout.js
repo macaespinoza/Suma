@@ -1,10 +1,11 @@
 // =============================================================================
 // SUMA — Layout del Dashboard (Mobile-First, Material Design 3)
-// Reemplaza el sidebar lateral por TopAppBar + BottomNav de Android.
+// v3: Panel de notificaciones desplegable + click-outside + AnimatePresence.
 // =============================================================================
 
 'use client';
 
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { Bell } from '@phosphor-icons/react';
 import Link from 'next/link';
@@ -12,6 +13,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './layout.module.css';
 import Logo from '../../componentes/ui/Logo.jsx';
 import BottomNav from '../../componentes/ui/BottomNav.jsx';
+import PanelNotificaciones from '../../componentes/ui/PanelNotificaciones.jsx';
 
 /**
  * Títulos de página para el TopAppBar.
@@ -25,6 +27,9 @@ const TITULOS_PAGINA = {
   '/dashboard/perfil':       'Mi Perfil',
 };
 
+/** Número total de notificaciones sin leer (mock) */
+const NOTIFS_SIN_LEER = 2;
+
 /**
  * Layout principal del dashboard post-login.
  * Estructura: TopAppBar (fija) + main (scrollable) + BottomNav (fija).
@@ -35,6 +40,15 @@ export default function LayoutDashboard({ children }) {
   const pathname = usePathname();
   const esHome = pathname === '/dashboard';
 
+  // Estado del panel de notificaciones
+  const [panelAbierto, setPanelAbierto] = useState(false);
+  const panelRef = useRef(null);
+  const btnRef  = useRef(null);
+
+  // Estado para mostrar/ocultar el top bar al hacer scroll
+  const [mostrarTopBar, setMostrarTopBar] = useState(true);
+  const ultimoScrollY = useRef(0);
+
   // Buscar el título exacto primero, luego por prefijo para sub-rutas
   let titulo = TITULOS_PAGINA[pathname];
   if (titulo === undefined) {
@@ -44,11 +58,67 @@ export default function LayoutDashboard({ children }) {
     titulo = prefijo ? TITULOS_PAGINA[prefijo] : '';
   }
 
+  /** Cierra el panel al hacer click fuera de él */
+  const manejarClickFuera = useCallback((e) => {
+    if (
+      panelRef.current  && !panelRef.current.contains(e.target) &&
+      btnRef.current    && !btnRef.current.contains(e.target)
+    ) {
+      setPanelAbierto(false);
+    }
+  }, []);
+
+  /** Cierra el panel al presionar Escape */
+  const manejarTeclado = useCallback((e) => {
+    if (e.key === 'Escape' && panelAbierto) {
+      setPanelAbierto(false);
+      btnRef.current?.focus();
+    }
+  }, [panelAbierto]);
+
+  useEffect(() => {
+    if (panelAbierto) {
+      document.addEventListener('mousedown', manejarClickFuera);
+      document.addEventListener('keydown',   manejarTeclado);
+    }
+    return () => {
+      document.removeEventListener('mousedown', manejarClickFuera);
+      document.removeEventListener('keydown',   manejarTeclado);
+    };
+  }, [panelAbierto, manejarClickFuera, manejarTeclado]);
+
+  /** Cierra el panel al cambiar de ruta */
+  useEffect(() => {
+    setPanelAbierto(false);
+  }, [pathname]);
+
+  /** Lógica para ocultar el TopBar en scroll hacia abajo */
+  useEffect(() => {
+    const handleScroll = () => {
+      const actualScrollY = window.scrollY;
+
+      // Si el panel de notificaciones está abierto, no ocultar la barra
+      if (panelAbierto) return;
+
+      if (actualScrollY > ultimoScrollY.current && actualScrollY > 64) {
+        // Scroll hacia abajo
+        setMostrarTopBar(false);
+      } else if (actualScrollY < ultimoScrollY.current) {
+        // Scroll hacia arriba
+        setMostrarTopBar(true);
+      }
+      ultimoScrollY.current = Math.max(0, actualScrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [panelAbierto]);
+
   return (
     <div className={styles.shell}>
 
       {/* ===== Top App Bar ===== */}
-      <header className={styles.topBar} role="banner">
+      <header className={`${styles.topBar} ${!mostrarTopBar ? styles.topBarOculta : ''}`} role="banner">
         <div className={styles.topBarContenido}>
           <div className={styles.topBarIzquierda}>
             {esHome ? (
@@ -64,15 +134,33 @@ export default function LayoutDashboard({ children }) {
             )}
           </div>
 
+          {/* Acciones — contenedor de referencia para el panel */}
           <div className={styles.topBarAcciones}>
             <button
+              ref={btnRef}
               className={styles.btnIcono}
-              aria-label="Notificaciones — 2 sin leer"
+              aria-label={`Notificaciones — ${NOTIFS_SIN_LEER} sin leer. ${panelAbierto ? 'Cerrar panel' : 'Abrir panel'}`}
+              aria-expanded={panelAbierto}
+              aria-haspopup="dialog"
               type="button"
+              onClick={() => setPanelAbierto((prev) => !prev)}
             >
-              <Bell size={22} weight="fill" aria-hidden="true" />
-              <span className={styles.badgeNotif} aria-hidden="true">2</span>
+              <Bell size={22} weight={panelAbierto ? 'fill' : 'bold'} aria-hidden="true" />
+              {NOTIFS_SIN_LEER > 0 && (
+                <span className={styles.badgeNotif} aria-hidden="true">
+                  {NOTIFS_SIN_LEER}
+                </span>
+              )}
             </button>
+
+            {/* Panel desplegable con AnimatePresence para entrada/salida suave */}
+            <AnimatePresence>
+              {panelAbierto && (
+                <div ref={panelRef}>
+                  <PanelNotificaciones onCerrar={() => setPanelAbierto(false)} />
+                </div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>
@@ -87,10 +175,10 @@ export default function LayoutDashboard({ children }) {
         <AnimatePresence mode="wait">
           <motion.div
             key={pathname}
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3, ease: 'easeOut' }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.2, 0, 0, 1] }}
             style={{ minHeight: '100%', display: 'flex', flexDirection: 'column' }}
           >
             {children}
